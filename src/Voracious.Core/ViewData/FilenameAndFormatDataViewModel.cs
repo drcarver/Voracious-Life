@@ -1,15 +1,21 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using Voracious.Core.Enum;
 
 namespace Voracious.Database;
 
-public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyPropertyChanging
+public partial class FilenameAndFormatDataViewModel : ObservableObject
 {
-    public FilenameAndFormatData()
+    public FilenameAndFormatDataViewModel()
     {
     }
 
-    public FilenameAndFormatData(FilenameAndFormatData source)
+    public FilenameAndFormatDataViewModel(FilenameAndFormatDataViewModel source)
     {
         this.Id = source.Id;
         this.BookId = source.BookId;
@@ -19,25 +25,30 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
         this.LastModified = source.LastModified;
         this.MimeType = source.MimeType;
     }
+
+    // Book can't be the primary key because there are duplicates. Use a synthasized Id
+    // which will be maintained by the database.
+    [ObservableProperty]
     private int id;
+
+    [ObservableProperty]
     private string fileName = "";
+
+    [ObservableProperty]
     private string fileType = "";
+
+    [ObservableProperty]
     private string lastModified = "";
+
+    [ObservableProperty]
     private string bookId = "";
+
+    [ObservableProperty]
     private int extent = -1;
+
+    [ObservableProperty]
     private string mimeType = "";
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    public event PropertyChangingEventHandler PropertyChanging;
-    
-    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    private void NotifyPropertyChanging([CallerMemberName] String propertyName = "")
-    {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-    }
     /// <summary>
     /// The files are the variants of an ebook (plus ancilary stuff like title pages).
     /// Given a list of possible files, return an ordered list of the most appropriate
@@ -46,7 +57,7 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
     /// </summary>
     /// <param name="start"></param>
     /// <returns></returns>
-    public static IList<FilenameAndFormatData> GetProcessedFileList(IList<FilenameAndFormatData> start)
+    public static IList<FilenameAndFormatDataViewModel> GetProcessedFileList(IList<FilenameAndFormatDataViewModel> start)
     {
         // For example: if there's an epub with images, don't include the epub without images.
         // If there's a high-res cover, don't include a low-res cover.
@@ -57,8 +68,8 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
         // text versions.
         // FAIL: actually, the audio books includes a bazillion OGG etc files.
 
-        var sortedlist = new List<FilenameAndFormatData>();
-        var retval = new List<FilenameAndFormatData>();
+        var sortedlist = new List<FilenameAndFormatDataViewModel>();
+        var retval = new List<FilenameAndFormatDataViewModel>();
 
         foreach (var item in start) sortedlist.Add(item);
         sortedlist.Sort((a, b) => { return a.GetFileType().CompareTo(b.GetFileType()); });
@@ -113,7 +124,7 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
                     break;
                 case ProcessedFileEnum.Html:
                 case ProcessedFileEnum.HtmlNotUtf8:
-                    if (!haveHtml) // Only inlude HTML if we don't have epub. And only include one.
+                    if (!haveHtml) // Only include HTML if we don't have epub. And only include one.
                     {
                         if (!haveEpub)
                         {
@@ -136,16 +147,6 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
         return retval;
     }
 
-    // Book can't be the primary key because there are duplicates. Use a synthasized Id
-    // which will be maintained by the database.
-    public int Id { get => id; set { if (id != value) { NotifyPropertyChanging(); id = value; NotifyPropertyChanged(); } } }
-    public string FileName { get => fileName; set { if (fileName != value) { NotifyPropertyChanging(); fileName = value; NotifyPropertyChanged(); } } }
-    public string FileType { get => fileType; set { if (fileType != value) { NotifyPropertyChanging(); fileType = value; NotifyPropertyChanged(); } } }
-    public string LastModified { get => lastModified; set { if (lastModified != value) { NotifyPropertyChanging(); lastModified = value; NotifyPropertyChanged(); } } }
-    public string BookId { get => bookId; set { if (bookId != value) { NotifyPropertyChanging(); bookId = value; NotifyPropertyChanged(); } } }
-    public int Extent { get => extent; set { if (extent != value) { NotifyPropertyChanging(); extent = value; NotifyPropertyChanged(); } } }
-    public string MimeType { get => mimeType; set { if (mimeType != value) { NotifyPropertyChanging(); mimeType = value; NotifyPropertyChanged(); } } }
-
     public int GutenbergStyleIndexNumber
     {
         get
@@ -159,8 +160,6 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
             return gutIndex;
         }
     }
-
-
 
     public string FileTypeAsString()
     {
@@ -238,6 +237,7 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
                 return ProcessedFileEnum.Unknown;
         }
     }
+
     public bool IsKnownMimeType
     {
         get
@@ -305,8 +305,8 @@ public partial class FilenameAndFormatData : INotifyPropertyChanged, INotifyProp
                     return false;
             }
         }
-
     }
+
     public override string ToString()
     {
         return this.FileName;

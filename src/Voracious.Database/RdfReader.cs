@@ -57,7 +57,7 @@ static class RdfReader
         var startTime = DateTime.Now;
         int nnewfiles = 0;
         int nnodes = 0;
-        List<BookData> newBooks = new List<BookData>();
+        List<BookDataViewModel> newBooks = new List<BookDataViewModel>();
 
         try
         {
@@ -468,9 +468,9 @@ static class RdfReader
 
 
     private static int NUnknownMarcRecords = 0;
-    private static BookData ExtractBook(string logname, XmlNode node)
+    private static BookDataViewModel ExtractBook(string logname, XmlNode node)
     {
-        var book = new BookData();
+        var book = new BookDataViewModel();
         var id = node.Attributes["rdf:about"]?.Value;
         if (!string.IsNullOrEmpty(id))
         {
@@ -563,14 +563,14 @@ static class RdfReader
                     var bookType = ExtractType(logname, value, "???");
                     switch (bookType)
                     {
-                        case "Collection": book.BookType = BookData.FileType.Collection; break;
-                        case "Dataset": book.BookType = BookData.FileType.Dataset; break;
+                        case "Collection": book.BookType = BookDataViewModel.FileType.Collection; break;
+                        case "Dataset": book.BookType = BookDataViewModel.FileType.Dataset; break;
                         // Dataset from e.g. http://www.gutenberg.org/ebooks/3503
                         // These are e.g. the human genome project. They are 100% uninteresting.
-                        case "Image": book.BookType = BookData.FileType.Image; break;
-                        case "MovingImage": book.BookType = BookData.FileType.MovingImage; break;
-                        case "Sound": book.BookType = BookData.FileType.Sound; break;
-                        case "StillImage": book.BookType = BookData.FileType.StillImage; break;
+                        case "Image": book.BookType = BookDataViewModel.FileType.Image; break;
+                        case "MovingImage": book.BookType = BookDataViewModel.FileType.MovingImage; break;
+                        case "Sound": book.BookType = BookDataViewModel.FileType.Sound; break;
+                        case "StillImage": book.BookType = BookDataViewModel.FileType.StillImage; break;
                         case "Text": // OK, this is normal
                             break;
                         default:
@@ -693,7 +693,7 @@ static class RdfReader
         }
         return book;
     }
-    private static BookData[] BookDataArray = new BookData[10];
+    private static BookDataViewModel[] BookDataArray = new BookDataViewModel[10];
     private static int BookDataArrayIndex = -1;
 
     /// <summary>
@@ -704,7 +704,7 @@ static class RdfReader
     /// <param name="xmlData"></param>
     /// <param name="newBooks"></param>
     /// <returns></returns>
-    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logname, string xmlData, IList<BookData> newBooks, UpdateType updateType)
+    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logname, string xmlData, IList<BookDataViewModel> newBooks, UpdateType updateType)
     {
         // This is a state machine, which means that some pretty important parts are just a little
         // bit buried. When a book is done, take a look at "pgterms:ebook" which has ExtractBook,

@@ -2,35 +2,27 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Voracious.Database;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class BookNotes : INotifyPropertyChanged
+namespace Voracious.Core.ViewModel;
+
+public partial class BookNoteViewModel : ObservableObject
 {
+    [ObservableProperty]
     private int id;
+
+    [ObservableProperty]
     private string bookId;
 
-    public int Id { get => id; set { if (id != value) { NotifyPropertyChanging(); id = value; NotifyPropertyChanged(); } } }
-    public string BookId { get => bookId; set { if (bookId != value) { NotifyPropertyChanging(); bookId = value; NotifyPropertyChanged(); } } }
-    public ObservableCollection<UserNote> Notes { get; set; } = new ObservableCollection<UserNote>();
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    public event PropertyChangingEventHandler PropertyChanging;
-
-    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    private void NotifyPropertyChanging([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-    }
+    [ObservableProperty]
+    private ObservableCollection<UserNoteViewModel> notes = [];
 
     /// <summary>
     /// Find the equal-enough matching note by index. Return -1 if not found.
     /// </summary>
     /// <param name="external"></param>
     /// <returns></returns>
-    private int FindSameSpot(UserNote external)
+    private int FindSameSpot(UserNoteViewModel external)
     {
         for (int i = 0; i < Notes.Count; i++)
         {
@@ -49,7 +41,7 @@ public class BookNotes : INotifyPropertyChanged
     /// </summary>
     /// <param name="external"></param>
     /// <returns>0 if there are no changes, 1 or more for the number of changes. </returns>
-    public int Merge(BookNotes external)
+    public int Merge(BookNoteViewModel external)
     {
         int retval = 0;
         if (external != null)

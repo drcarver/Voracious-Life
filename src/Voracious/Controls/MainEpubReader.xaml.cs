@@ -2,6 +2,7 @@
 
 using SimpleEpubReader.Controls;
 
+using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 using Voracious.EpubSharp;
@@ -35,7 +36,7 @@ public sealed partial class MainEpubReader : ContentView, INavigateTo, BookHandl
     // Always set this for convenience
     readonly NavigateControlId ControlId = NavigateControlId.MainReader;
     private EpubBookExt EpubBook { get; set; } = null;
-    private BookData BookData { get; set; } = null;
+    private BookDataViewModel BookData { get; set; } = null;
 
 
 
@@ -63,7 +64,7 @@ public sealed partial class MainEpubReader : ContentView, INavigateTo, BookHandl
     /// </summary>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    public async Task DisplayBook(BookData bookData, BookLocation location = null)
+    public async Task DisplayBook(BookDataViewModel bookData, BookLocation location = null)
     {
         // Reset all of the position values.
         CurrHtml = "";
@@ -319,11 +320,11 @@ public sealed partial class MainEpubReader : ContentView, INavigateTo, BookHandl
         var navigationData = CommonQueries.BookNavigationDataFind(bookdb, BookData.BookId);
         if (navigationData == null)
         {
-            navigationData = new BookNavigationData() { BookId = BookData.BookId, CurrStatus = BookNavigationData.UserStatus.Reading };
+            navigationData = new BookNavigationDataViewModel() { BookId = BookData.BookId, CurrStatus = BookNavigationDataViewModel.UserStatus.Reading };
             CommonQueries.BookNavigationDataAdd(bookdb, navigationData, CommonQueries.ExistHandling.IfNotExists);
         }
         navigationData.CurrSpot = location.Location;
-        navigationData.CurrStatus = BookNavigationData.UserStatus.Reading; // If I'm navigating then I'm reading?
+        navigationData.CurrStatus = BookNavigationDataViewModel.UserStatus.Reading; // If I'm navigating then I'm reading?
 
 
         // And now actually navigate. There are two types of navigation: navigation
@@ -856,12 +857,12 @@ An internal error has occured; unable to load ebook
         await NoteEditor.EditNoteAsync(ControlId, note);
     }
 
-    private BookNavigationData EnsureBookNavigationData(BookDataContext bookdb)
+    private BookNavigationDataViewModel EnsureBookNavigationData(BookDataContext bookdb)
     {
         var nd = CommonQueries.BookNavigationDataFind(bookdb, BookData.BookId);
         if (nd == null)
         {
-            nd = new BookNavigationData()
+            nd = new BookNavigationDataViewModel()
             {
                 BookId = BookData.BookId,
                 CurrSpot = GetCurrBookLocation().ToJson()
@@ -935,7 +936,7 @@ An internal error has occured; unable to load ebook
 
     }
 
-    private void MarkBookUserCurrStatus(BookNavigationData.UserStatus status)
+    private void MarkBookUserCurrStatus(BookNavigationDataViewModel.UserStatus status)
     {
         var bookdb = BookDataContext.Get();
         var nd = EnsureBookNavigationData(bookdb);
@@ -947,17 +948,17 @@ An internal error has occured; unable to load ebook
 
     private void OnFinishedBook(object sender, RoutedEventArgs e)
     {
-        MarkBookUserCurrStatus(BookNavigationData.UserStatus.Done);
+        MarkBookUserCurrStatus(BookNavigationDataViewModel.UserStatus.Done);
     }
 
     private void OnAbandonBook(object sender, RoutedEventArgs e)
     {
-        MarkBookUserCurrStatus(BookNavigationData.UserStatus.Abandoned);
+        MarkBookUserCurrStatus(BookNavigationDataViewModel.UserStatus.Abandoned);
     }
 
     private void OnMakeUnreadBook(object sender, RoutedEventArgs e)
     {
-        MarkBookUserCurrStatus(BookNavigationData.UserStatus.NoStatus);
+        MarkBookUserCurrStatus(BookNavigationDataViewModel.UserStatus.NoStatus);
     }
 
     // Note the subtle different between TappedRoutedEventArgs and RoutedEventArgs :-)

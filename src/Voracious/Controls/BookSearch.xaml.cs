@@ -2,6 +2,7 @@
 
 using SimpleEpubReader.Controls;
 
+using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 using Voracious.Searching;
@@ -20,7 +21,7 @@ public sealed partial class BookSearch : ContentView
     const string BookSearch_SearchType = "BookSearch_SearchType";
     const string BookSearch_Language = "BookSearch_Language";
 
-    public ObservableCollection<BookData> Books { get; set; } = new ObservableCollection<BookData>();
+    public ObservableCollection<BookDataViewModel> Books { get; set; } = new ObservableCollection<BookDataViewModel>();
     static private Dictionary<string, BookNotes> AllNotes { get; set; } = null; // Organized by bookId
     static private Dictionary<string, DownloadData> AllDownloadData { get; set; } = null; // Organized by bookId
     string SearchType = "Downloaded"; // Downloaded Reading
@@ -189,7 +190,7 @@ public sealed partial class BookSearch : ContentView
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             localSettings.Values[SEARCH_SORT] = sortBy;
 
-            List<BookData> resultList = null;
+            List<BookDataViewModel> resultList = null;
             bool andMore = false;
 
             var searchTask = Task.Run(() =>
@@ -239,7 +240,7 @@ public sealed partial class BookSearch : ContentView
     private void OnCardTapped(object sender, TappedRoutedEventArgs e)
     {
         var bookdb = BookDataContext.Get();
-        var book = (sender as BookCard)?.DataContext as BookData;
+        var book = (sender as BookCard)?.DataContext as BookDataViewModel;
         if (book == null) return;
         var dd = CommonQueries.DownloadedBookFind(bookdb, book.BookId);
         if (dd == null) return; // Can't display a book that isn't there!
@@ -247,9 +248,9 @@ public sealed partial class BookSearch : ContentView
         nav.DisplayBook(ControlId, book);
     }
 
-    BookData CurrBook = null;
+    BookDataViewModel CurrBook = null;
     // Is called when the notes are updated. I don't really display a book.
-    public async Task DisplayBook(BookData book, BookLocation location)
+    public async Task DisplayBook(BookDataViewModel book, BookLocation location)
     {
         await Task.Delay(0);
         ReloadAllNotes();
@@ -261,7 +262,7 @@ public sealed partial class BookSearch : ContentView
 
     private BookCard GetBookCardFromSwipe(SwipeItemInvokedEventArgs args)
     {
-        var item = args.SwipeControl.DataContext as BookData;
+        var item = args.SwipeControl.DataContext as BookDataViewModel;
         if (item == null) return null;
         var container = uiBookList.ContainerFromItem(item) as ListViewItem;
         if (container == null) return null;
@@ -271,7 +272,7 @@ public sealed partial class BookSearch : ContentView
         if (bookcard == null) return null;
         return bookcard;
     }
-    private BookCard GetBookCardFromBookData(BookData bookData)
+    private BookCard GetBookCardFromBookData(BookDataViewModel bookData)
     {
         if (bookData == null) return null;
         var container = uiBookList.ContainerFromItem(bookData) as ListViewItem;
@@ -284,7 +285,7 @@ public sealed partial class BookSearch : ContentView
     }
 
 
-    public static async Task DoSwipeDownloadOrReadAsync(BookData bookData)
+    public static async Task DoSwipeDownloadOrReadAsync(BookDataViewModel bookData)
     {
         if (BookSearchSingleton == null) return;
         var bookcard = BookSearchSingleton.GetBookCardFromBookData(bookData);
@@ -304,7 +305,7 @@ public sealed partial class BookSearch : ContentView
 
 
 
-    private async Task DoSwipeDownload(BookData bookData)
+    private async Task DoSwipeDownload(BookDataViewModel bookData)
     {
         var bookcard = GetBookCardFromBookData(bookData);
 
@@ -342,11 +343,11 @@ public sealed partial class BookSearch : ContentView
         nd.NSwipeLeft++;
         CommonQueries.BookSaveChanges(bookdb);
 
-        bookData = args.SwipeControl.DataContext as BookData;
+        bookData = args.SwipeControl.DataContext as BookDataViewModel;
         Books.Remove(bookData);
     }
 
-    private void SetupDownloadsIfNeeded(BookData bookData)
+    private void SetupDownloadsIfNeeded(BookDataViewModel bookData)
     {
         if (bookData != null)
         {
@@ -363,7 +364,7 @@ public sealed partial class BookSearch : ContentView
 
     private void OnBookListSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var bookData = e.RemovedItems.Count == 1 ? e.RemovedItems[0] as BookData : null;
+        var bookData = e.RemovedItems.Count == 1 ? e.RemovedItems[0] as BookDataViewModel : null;
         if (bookData != null)
         {
             var containerObject = uiBookList.ContainerFromItem(bookData);
@@ -375,7 +376,7 @@ public sealed partial class BookSearch : ContentView
             }
         }
 
-        bookData = e.AddedItems.Count == 1 ? e.AddedItems[0] as BookData : null;
+        bookData = e.AddedItems.Count == 1 ? e.AddedItems[0] as BookDataViewModel : null;
         SetupDownloadsIfNeeded(bookData);
     }
 

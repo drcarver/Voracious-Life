@@ -32,7 +32,7 @@ namespace SimpleEpubReader.Controls
         {
             if (BookData != null && BookData.Review == null)
             {
-                BookData.Review = new UserReview() { BookId = BookData.BookId };
+                BookData.Review = new UserReviewViewModel() { BookId = BookData.BookId };
             }
         }
 
@@ -59,9 +59,9 @@ namespace SimpleEpubReader.Controls
             PotentialNote = potentialNote;
         }
 
-        public BookData BookData { get { return this.DataContext as BookData; } set { if (this.DataContext != value) this.DataContext = value; } }
+        public BookDataViewModel BookData { get { return this.DataContext as BookDataViewModel; } set { if (this.DataContext != value) this.DataContext = value; } }
 
-        public void SetBookData(BookData bookData, string defaultText)
+        public void SetBookData(BookDataViewModel bookData, string defaultText)
         {
             BookData = bookData;
             if (BookData == null) return; // should never happen.
@@ -101,13 +101,13 @@ namespace SimpleEpubReader.Controls
             {
                 switch (BookData.NavigationData.CurrStatus)
                 {
-                    case BookNavigationData.UserStatus.Abandoned:
+                    case BookNavigationDataViewModel.UserStatus.Abandoned:
                         uiUserStatusAbandoned.IsChecked = true;
                         break;
-                    case BookNavigationData.UserStatus.Done:
+                    case BookNavigationDataViewModel.UserStatus.Done:
                         uiUserStatusDone.IsChecked = true;
                         break;
-                    case BookNavigationData.UserStatus.Reading:
+                    case BookNavigationDataViewModel.UserStatus.Reading:
                         uiUserStatusReading.IsChecked = true;
                         break;
                 }
@@ -132,9 +132,9 @@ namespace SimpleEpubReader.Controls
         {
             if (BookData.NavigationData != null)
             {
-                if (uiUserStatusAbandoned.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationData.UserStatus.Abandoned;
-                if (uiUserStatusDone.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationData.UserStatus.Done;
-                if (uiUserStatusReading.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationData.UserStatus.Reading;
+                if (uiUserStatusAbandoned.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationDataViewModel.UserStatus.Abandoned;
+                if (uiUserStatusDone.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationDataViewModel.UserStatus.Done;
+                if (uiUserStatusReading.IsChecked.Value) BookData.NavigationData.CurrStatus = BookNavigationDataViewModel.UserStatus.Reading;
                 var bookdb = BookDataContext.Get();
                 CommonQueries.BookSaveChanges(bookdb);
             }

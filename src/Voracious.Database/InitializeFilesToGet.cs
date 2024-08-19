@@ -127,7 +127,7 @@ class InitializeFilesToGet
         var root = await PCLStorage.FileSystem.Current.GetFolderFromPathAsync(rootPath);
         var folder = await root.CreateFolderAsync("initial_books", CreationCollisionOption.OpenIfExists);
 
-        IQueryable<BookData> includeList = bookdb.Books
+        IQueryable<BookDataViewModel> includeList = bookdb.Books
             .Include(b => b.People)
             .Include(b => b.Files)
             .AsQueryable();

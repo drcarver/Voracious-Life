@@ -3,7 +3,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-using Voracious.EbookReader;
+using Voracious.Core.Model;
 
 namespace Voracious.Database;
 

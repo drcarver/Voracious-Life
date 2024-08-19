@@ -29,9 +29,9 @@ namespace Voracious.Controls
             }
         }
 
-        private IList<BookData> GetSelectedBooks()
+        private IList<BookDataViewModel> GetSelectedBooks()
         {
-            var retval = new List<BookData>();
+            var retval = new List<BookDataViewModel>();
             foreach (var book in Books)
             {
                 if (book.IsSelected)
@@ -52,7 +52,7 @@ namespace Voracious.Controls
             var sortBy = "title";
             var language = "en";
 
-            List<BookData> resultList = null;
+            List<BookDataViewModel> resultList = null;
             bool andMore = false;
 
             Books.Clear();
@@ -147,7 +147,7 @@ namespace Voracious.Controls
                             // re-copy the file, or verify that it's at least the same size or something.
                         }
                         var nd = CommonQueries.BookNavigationDataEnsure(bookdb, bookData);
-                        nd.CurrStatus = BookNavigationData.UserStatus.CopiedToEBookReader;
+                        nd.CurrStatus = BookNavigationDataViewModel.UserStatus.CopiedToEBookReader;
                         nok++;
                     }
                     catch (Exception ex)

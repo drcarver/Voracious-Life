@@ -12,8 +12,11 @@ public partial class BookDataContext : DbContext
         ILogger logger = loggerFactory.CreateLogger<BookDataContext>();
     }
 
+    public const string BookSourceUser = "User-imported";
+    public const string BookSourceBookMarkFile = "From-bookmark-file:";
+
     public static string BookDataDatabaseFilename = "BookData.db";
-    public DbSet<BookData> Books { get; set; }
+    public DbSet<BookDataViewModel> Books { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         var folder = Windows.Storage.ApplicationData.Current.LocalFolder;

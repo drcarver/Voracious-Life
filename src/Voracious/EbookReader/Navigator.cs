@@ -1,4 +1,5 @@
-﻿using Voracious.Database;
+﻿using Voracious.Core.Model;
+using Voracious.Database;
 
 namespace Voracious.EbookReader;
 
@@ -101,7 +102,7 @@ public class Navigator
         SimpleBookHandlers.Add(id, simple);
     }
 
-    public bool DisplayBook(NavigateControlId id, BookData bookData, BookLocation location = null)
+    public bool DisplayBook(NavigateControlId id, BookDataViewModel bookData, BookLocation location = null)
     {
         if (MainBookHandler == null) return false;
 

@@ -1,4 +1,4 @@
-﻿using Voracious.EbookReader;
+﻿using Voracious.Core.Model;
 using Voracious.EpubSharp;
 using Voracious.Interface;
 

@@ -155,7 +155,7 @@ public sealed partial class GutenbergDownloadControl : UserControl, IndexReader
     }
 
 
-    public void BookEnd(BookStatusEnum status, BookData book)
+    public void BookEnd(BookStatusEnum status, BookDataViewModel book)
     {
     }
 
@@ -208,7 +208,7 @@ public sealed partial class GutenbergDownloadControl : UserControl, IndexReader
         FileBytes = size; // set to the specific size
     }
 
-    public async Task OnAddNewBook(BookData bookData)
+    public async Task OnAddNewBook(BookDataViewModel bookData)
     {
         NNewBooks++;
         await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>

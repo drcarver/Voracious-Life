@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui.Controls.PlatformConfiguration;
 
 using Voracious.Controls;
+using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 using Voracious.FileWizards;
@@ -107,7 +108,7 @@ public partial class App : Application
         Logger.Log($"App:OnActivated:done");
     }
 
-    public static BookData SavedActivatedBookData = null;
+    public static BookDataViewModel SavedActivatedBookData = null;
     public static BookLocation SavedActivatedBookLocation = null;
 
     /// <summary>

@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 using Newtonsoft.Json;
 
-namespace Voracious.EbookReader;
+namespace Voracious.Core.Model;
 
 /// <summary>
 /// Is the location within a book. Does not include the book ID.
@@ -24,14 +25,16 @@ public class BookLocation
         HtmlIndex = htmlIndex;
         ScrollPercent = scrollPercent;
     }
+
     /// <summary>
-    /// Location via unique ID in the book OR to a JSON represenations of a BookLocation
+    /// Location via unique ID in the book OR to a JSON 
+    /// representations of a BookLocation
     /// </summary>
     public string Location { get; set; } = "";
 
     /// <summary>
-    /// Location via the current scroll position. This requires both the scroll position
-    /// and the index of the html
+    /// Location via the current scroll position. This requires 
+    /// both the scroll position and the index of the html
     /// </summary>
     public double ScrollPercent { get; set; } = double.NaN;
     public int HtmlIndex { get; set; } = -1;

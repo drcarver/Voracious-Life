@@ -12,7 +12,7 @@ namespace Voracious.Controls
             DisplayTitle = displayTitle;
         }
         public UserNote BaseNote { get; set; }
-        public BookData CorrespondingBook = null;
+        public BookDataViewModel CorrespondingBook = null;
 
         public string Title 
         { 

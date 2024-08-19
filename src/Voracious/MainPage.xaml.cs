@@ -4,6 +4,7 @@ using SimpleEpubReader.Controls;
 using SimpleEpubReader.Database;
 
 using Voracious.Controls;
+using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 using Voracious.Interface;
@@ -188,9 +189,9 @@ public partial class MainPage : Page, Navigator.ISetAppColors, SimpleBookHandler
     }
 #endif
 
-    private static async Task<BookData> InsertFileIntoDatabase(BookDataContext bookdb, IFolder folder, string filename, bool getFullData = false)
+    private static async Task<BookDataViewModel> InsertFileIntoDatabase(BookDataContext bookdb, IFolder folder, string filename, bool getFullData = false)
     {
-        BookData bookData = null;
+        BookDataViewModel bookData = null;
         if (bookdb == null) bookdb = BookDataContext.Get();
         string fullfname = $"{folder.Path}\\{filename}";
         var wd = new WizardData() { FilePath = fullfname, FileName = filename };
@@ -204,7 +205,7 @@ public partial class MainPage : Page, Navigator.ISetAppColors, SimpleBookHandler
                 //TODO: when I drop a book that's been added to the database because it was
                 // in a bookmark file (which should happen reasonably often!)
                 // then the bookData here is non-null, but also not really filled in well.
-                if (bookData == null || bookData.BookSource.StartsWith(BookData.BookSourceBookMarkFile))
+                if (bookData == null || bookData.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
                 {
                     if (wd.BD != null)
                     {
@@ -217,7 +218,7 @@ public partial class MainPage : Page, Navigator.ISetAppColors, SimpleBookHandler
                                 BookId = wd.BookId,
                                 MimeType = "application/epub+zip"
                             });
-                            wd.BD.BookSource = BookData.BookSourceUser;
+                            wd.BD.BookSource = BookDataViewModel.BookSourceUser;
 
                             // Add in possible data from the bookData set by the user
                             if (bookData != null)
@@ -698,7 +699,7 @@ public partial class MainPage : Page, Navigator.ISetAppColors, SimpleBookHandler
 
 
 
-    public Task DisplayBook(BookData book, BookLocation location)
+    public Task DisplayBook(BookDataViewModel book, BookLocation location)
     {
         // The primary purpose of the DisplayBook to to turn off the help display!
         uiReaderControl.Visibility = Visibility.Visible;
@@ -870,7 +871,7 @@ public partial class MainPage : Page, Navigator.ISetAppColors, SimpleBookHandler
         {
             popup.IsOpen = false;
         }
-        var content = new EBookReaderMark(BookNavigationData.UserStatus.Done);
+        var content = new EBookReaderMark(BookNavigationDataViewModel.UserStatus.Done);
         var dlg = new ContentDialog()
         {
             Title = "Mark books sent to eBook Reader as read",

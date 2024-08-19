@@ -8,13 +8,13 @@ namespace Voracious.Controls
 {
     public sealed partial class ReviewNoteStatusListControl : ContentView
     {
-        public ObservableCollection<BookData> BookList { get; } = new ObservableCollection<BookData>();
+        public ObservableCollection<BookDataViewModel> BookList { get; } = new ObservableCollection<BookDataViewModel>();
         public ReviewNoteStatusListControl()
         {
             this.DataContext = this;
             this.InitializeComponent();
         }
-        public void SetBookList(IList<BookData> list)
+        public void SetBookList(IList<BookDataViewModel> list)
         {
             BookList.Clear();
             foreach (var bookData in list)

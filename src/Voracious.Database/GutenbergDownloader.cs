@@ -1,13 +1,10 @@
-﻿using Voracious.Controls;
-using Voracious.Enum;
-using Windows.Storage;
-using Windows.UI.Core;
+﻿using Voracious.Core.ViewModel;
 
 namespace Voracious.Database;
 
 public class NullIndexReader : IndexReader
 {
-    public void BookEnd(BookStatusEnum status, BookData book)
+    public void BookEnd(BookStatusEnum status, BookDataViewModel book)
     {
     }
 
@@ -36,7 +33,7 @@ public class NullIndexReader : IndexReader
     {
         await Task.Delay(0);
     }
-    public async Task OnAddNewBook(BookData bookData)
+    public async Task OnAddNewBook(BookDataViewModel bookData)
     {
         await Task.Delay(0);
     }

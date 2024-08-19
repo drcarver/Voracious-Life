@@ -25,14 +25,14 @@ public sealed partial class BookCard : ContentView
 
     private void BookCard_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         //System.Diagnostics.Debug.WriteLine($"DBG: BookCard: DataContext: changed: {book?.Title}");
         SetupUINicely();
     }
 
     private void BookCard_Loaded(object sender, RoutedEventArgs e)
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         //System.Diagnostics.Debug.WriteLine($"DBG: BookCard: Loaded: changed: {book?.Title}");
         SetupUINicely();
     }
@@ -44,9 +44,9 @@ public sealed partial class BookCard : ContentView
             : Visibility.Visible;
     }
 
-    public BookData GetBookData()
+    public BookDataViewModel GetBookData()
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         return book;
     }
 
@@ -54,7 +54,7 @@ public sealed partial class BookCard : ContentView
 
     private void SetupUINicely()
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         if (book == null) return;
         var notTwo = (string.IsNullOrWhiteSpace(book.LCC) || string.IsNullOrWhiteSpace(book.LCSH));
         uiLCCSep.Text = notTwo ? "" : " : ";
@@ -78,7 +78,7 @@ public sealed partial class BookCard : ContentView
 
     public void ResetDownloadPanel()
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
 
         // Set up the uiDownload combo box
         uiDownloadList.Items.Clear();
@@ -122,7 +122,7 @@ public sealed partial class BookCard : ContentView
     {
         var file = (uiDownloadList.SelectedItem as ComboBoxItem)?.Tag as FilenameAndFormatData;
         if (file == null) return;
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         if (book == null) return;
         var bookdb = BookDataContext.Get();
         await DownloadBookAsync(bookdb, book, file);
@@ -133,7 +133,7 @@ public sealed partial class BookCard : ContentView
 
         var file = (uiDownloadList.SelectedItem as ComboBoxItem)?.Tag as FilenameAndFormatData;
         if (file == null) return;
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         if (book == null) return;
         var bookdb = BookDataContext.Get();
         await DownloadBookAsync(bookdb, book, file);
@@ -151,7 +151,7 @@ public sealed partial class BookCard : ContentView
         //uiLog2.Text = str;
     }
 
-    private async Task DownloadBookAsync(BookDataContext bookdb, BookData book, FilenameAndFormatData file)
+    private async Task DownloadBookAsync(BookDataContext bookdb, BookDataViewModel book, FilenameAndFormatData file)
     {
         Uri uri;
         var fileName = FileWizards.UriWizard.FixupUrl(file.FileName);
@@ -341,7 +341,7 @@ public sealed partial class BookCard : ContentView
 
     private void EnableDownloadPanel(bool enable)
     {
-        var book = DataContext as BookData;
+        var book = DataContext as BookDataViewModel;
         //System.Diagnostics.Debug.WriteLine($"DBG: BookCard: EnableDownloadPanel: enable={enable}: {book?.Title}");
         uiDownloadPanel.Visibility = enable ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -350,6 +350,6 @@ public sealed partial class BookCard : ContentView
     {
         var nav = Navigator.Get();
         var parentControlId = Navigator.NavigateControlId.BookSearchDisplay;
-        nav.DisplayBook(parentControlId, DataContext as BookData);
+        nav.DisplayBook(parentControlId, DataContext as BookDataViewModel);
     }
 }

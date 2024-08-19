@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
+using Voracious.Core.Model;
 using Voracious.EbookReader;
 using Voracious.EpubSharp;
 using Voracious.Interface;

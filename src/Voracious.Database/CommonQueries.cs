@@ -34,7 +34,7 @@ static partial class CommonQueries
     /// </summary>
     /// <param name="bookData"></param>
     /// <returns>0=not added, 1=added. Technical is the count of the number added.</returns>
-    public static int BookAdd(BookDataContext bookdb, BookData book, ExistHandling handling)
+    public static int BookAdd(BookDataContext bookdb, BookDataViewModel book, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -59,12 +59,12 @@ static partial class CommonQueries
                         }
                         else // have to be smart.
                         {
-                            if (dbbook.BookSource.StartsWith(BookData.BookSourceBookMarkFile))
+                            if (dbbook.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
                             {
                                 // The database was added to from a bookmark file.
                                 // For these books, the dbbook top-level data isn't correct but the user data is correct.
                                 // At the same time, the new book top-level data IS correct, but the user data is not correct.
-                                BookData.Merge(dbbook, book);
+                                BookDataViewModel.Merge(dbbook, book);
                                 retval++;
                             }
                         }
@@ -80,12 +80,12 @@ static partial class CommonQueries
                         }
                         else // have to be smart.
                         {
-                            if (dbbook.BookSource.StartsWith(BookData.BookSourceBookMarkFile))
+                            if (dbbook.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
                             {
                                 // The database was added to from a bookmark file.
                                 // For these books, the dbbook top-level data isn't correct but the user data is correct.
                                 // At the same time, the new book top-level data IS correct, but the user data is not correct.
-                                BookData.Merge(dbbook, book);
+                                BookDataViewModel.Merge(dbbook, book);
                                 retval++;
                             }
                             else
@@ -113,7 +113,7 @@ static partial class CommonQueries
                                 //    mustReplace = !BookData.FilesMatchEpub(book, dbbook);
                                 //}
                                 // Ignore everything we just did :-)
-                                var mustReplace = !BookData.FilesMatchEpub(book, dbbook);
+                                var mustReplace = !BookDataViewModel.FilesMatchEpub(book, dbbook);
                                 if (mustReplace)
                                 {
                                     //FAIL: project gutenberg LOVES changing their URLs. If the old list doesn't match the 
@@ -152,7 +152,7 @@ static partial class CommonQueries
         }
     }
 
-    public static BookData BookGet(BookDataContext bookdb, string bookId)
+    public static BookDataViewModel BookGet(BookDataContext bookdb, string bookId)
     {
         NQueries++;
         lock (bookdb)
@@ -186,7 +186,7 @@ static partial class CommonQueries
     /// <param name="bookdb"></param>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    public static BookData BookGetFiles(BookDataContext bookdb, string bookId)
+    public static BookDataViewModel BookGetFiles(BookDataContext bookdb, string bookId)
     {
         NQueries++;
         lock (bookdb)
@@ -205,7 +205,7 @@ static partial class CommonQueries
         }
     }
 
-    public static List<BookData> BookGetAllWhichHaveUserData(BookDataContext bookdb)
+    public static List<BookDataViewModel> BookGetAllWhichHaveUserData(BookDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -230,7 +230,7 @@ static partial class CommonQueries
         return recentTimeSpan;
     }
 
-    public static List<BookData> BookGetRecentWhichHaveUserData(BookDataContext bookdb)
+    public static List<BookDataViewModel> BookGetRecentWhichHaveUserData(BookDataContext bookdb)
     {
         NQueries++;
         var now = DateTimeOffset.Now;
@@ -304,7 +304,7 @@ static partial class CommonQueries
         }
     }
 
-    public static int BookNavigationDataAdd(BookDataContext bookdb, BookNavigationData bn, ExistHandling handling)
+    public static int BookNavigationDataAdd(BookDataContext bookdb, BookNavigationDataViewModel bn, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -323,12 +323,12 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static BookNavigationData BookNavigationDataEnsure(BookDataContext bookdb, BookData bookData)
+    public static BookNavigationDataViewModel BookNavigationDataEnsure(BookDataContext bookdb, BookDataViewModel bookData)
     {
         var nd = BookNavigationDataFind(bookdb, bookData.BookId);
         if (nd == null)
         {
-            nd = new BookNavigationData()
+            nd = new BookNavigationDataViewModel()
             {
                 BookId = bookData.BookId,
             };
@@ -343,7 +343,7 @@ static partial class CommonQueries
         return nd;
     }
 
-    public static BookNavigationData BookNavigationDataFind(BookDataContext bookdb, string bookId)
+    public static BookNavigationDataViewModel BookNavigationDataFind(BookDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -489,7 +489,7 @@ static partial class CommonQueries
         }
     }
 
-    public static int UserReviewAdd(BookDataContext bookdb, UserReview review, ExistHandling handling)
+    public static int UserReviewAdd(BookDataContext bookdb, UserReviewViewModel review, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -508,7 +508,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static UserReview UserReviewFind(BookDataContext bookdb, string bookId)
+    public static UserReviewViewModel UserReviewFind(BookDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -521,7 +521,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static List<UserReview> UserReviewsGetAll(BookDataContext bookdb)
+    public static List<UserReviewViewModel> UserReviewsGetAll(BookDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)

@@ -1,17 +1,28 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
-using Voracious.Database.Interface;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Voracious.Database;
+using Voracious.Core.Enum;
+using Voracious.Core.Extension;
+using Voracious.Core.Interface;
+using Voracious.Database;
+
+namespace Voracious.Core.ViewModel;
 
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyChanging
+public partial class BookDataViewModel : ObservableObject, IGetSearchArea
 {
+    private const string BookSourceGutenberg = "gutenberg.org";
+    private const int NICE_MIN_LEN = 20;
+    private const int NICE_MAX_LEN = 30;
+
     /// <summary>
     /// Return either "" (is valid) or a loggable string of why
     /// the book has problems.
@@ -30,51 +41,57 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         return retval;
     }
 
-    [System.ComponentModel.DataAnnotations.Key]
-    public string BookId { get => bookId; set { if (bookId != value) { NotifyPropertyChanging(); bookId = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    [property: Key]
+    private string? bookId;
 
-    public const string BookSourceGutenberg = "gutenberg.org";
-    public const string BookSourceUser = "User-imported";
-    public const string BookSourceBookMarkFile = "From-bookmark-file:";
-    public string BookSource { get => bookSource; set { if (bookSource != value) { NotifyPropertyChanging(); bookSource = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string? bookSource = BookSourceGutenberg;
 
-    public enum FileType { other, Text, Collection, Dataset, Image, MovingImage, Sound, StillImage }; // most are Text. Human genome project e.g 3501 is Dataset.
-    public FileType BookType { get => bookType; set { if (bookType != value) { NotifyPropertyChanging(); bookType = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private FileTypeEnum bookType;
+
     /// <summary>
     /// Examples:
     /// <dcterms:description>There is an improved edition of this title, eBook #29888</dcterms:description>
     /// <dcterms:description>Illustrated by the author.</dcterms:description>
     /// </summary>
-    public string Description { get => description; set { if (description != value) { NotifyPropertyChanging(); description = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string? description;
 
     /// <summary>
     /// Examples:
     /// #28: <pgterms:marc260>Houston: Advantage International, The PaperLess Readers Club, 1992</pgterms:marc260>
     /// </summary>
-    public string Imprint { get => imprint; set { if (imprint != value) { NotifyPropertyChanging(); imprint = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string? imprint;
 
-    public string Issued { get => issued; set { if (issued != value) { NotifyPropertyChanging(); issued = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string issued = "";
+
     /// <summary>
     /// <dcterms:title>Three Little Kittens</dcterms:title>
     /// </summary>
-    public string Title { get => title; set { if (title != value) { NotifyPropertyChanging(); title = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string? title;
 
-    /// <summary>
-    /// Used when there is already a title
-    /// <dcterms:alternative>Alice in Wonderland</dcterms:alternative>
-    /// </summary>
-    public string TitleAlternative { get => titleAlternative; set { if (titleAlternative != value) { NotifyPropertyChanging(); titleAlternative = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string? titleAlternative;
 
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    public ObservableCollection<Person> People { get; set; } = new ObservableCollection<Person>();
+    [ObservableProperty]
+    private ObservableCollection<PersonViewModel> people = [];
 
     public string BestAuthorDefaultIsNull
     {
         get
         {
-            var personlist = from person in People orderby person.GetImportance() ascending select person;
+            var p = new PersonViewModel(); 
+            var personlist = from person in People
+                             orderby p.GetImportance() ascending
+                             select person;
             var author = personlist.FirstOrDefault();
             if (author == null)
             {
@@ -90,44 +107,9 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// <returns></returns>
     public string GetBestTitleForFilename()
     {
-        var personlist = from person in People orderby person.GetImportance() ascending select person;
-        var author = personlist.FirstOrDefault();
+        var personList = People.ToList().OrderByDescending(p => Utility.GetImportance(p)); 
+        var author = personList.FirstOrDefault();
         return TitleConverter(Title, author?.Name);
-    }
-    const int NICE_MIN_LEN = 20;
-    const int NICE_MAX_LEN = 30;
-    private string bookId;
-    private string bookSource = BookSourceGutenberg;
-    private FileType bookType = FileType.other;
-    private string description;
-    private string imprint;
-    private string issued = "";
-    private string title;
-    private string titleAlternative;
-    private string language;
-    private string lCSH = "";
-    private string lCCN = "";
-    private string pGEditionInfo;
-    private string pGProducedBy;
-    private string pGNotes;
-    private string bookSeries;
-    private string lCC = "";
-    private UserReview review = null;
-    private BookNotes notes = null;
-    private DownloadData downloadData = null;
-    private BookNavigationData navigationData = null;
-    private long denormDownloadDate; // unix time seconds
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    public event PropertyChangingEventHandler PropertyChanging;
-
-    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    private void NotifyPropertyChanging([CallerMemberName] String propertyName = "")
-    {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
     }
 
     /// <summary>
@@ -138,7 +120,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// <param name="min"></param>
     /// <param name="max"></param>
     /// <returns></returns>
-    private static string ChopString(string value, int min = NICE_MIN_LEN, int max = NICE_MAX_LEN)
+    private string ChopString(string value, int min = NICE_MIN_LEN, int max = NICE_MAX_LEN)
     {
         if (value == null) return value;
         if (value.Length > min)
@@ -166,6 +148,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         value = value.Trim();
         return value;
     }
+
     /// <summary>
     /// Given a title and author, generate a nice possible file string. Uses ASCII only (sorry, everyone
     /// with a name or title that doesn't convert)
@@ -173,7 +156,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// <param name="title"></param>
     /// <param name="author"></param>
     /// <returns></returns>
-    private static string TitleConverter(string title, string author)
+    private string TitleConverter(string title, string author)
     {
         title = ChopString(title);
         author = ChopString(author);
@@ -202,7 +185,8 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// <summary>
     /// List of all of the files for this book and their formats.
     /// </summary>
-    public ObservableCollection<FilenameAndFormatData> Files { get; set; } = new ObservableCollection<FilenameAndFormatData>();
+    public ObservableCollection<FilenameAndFormatDataViewModel> Files { get; set; } = [];
+
     /// <summary>
     /// <dcterms:language>
     ///     <rdf:Description rdf:nodeID="Nc3827dd334c44413ab159b8f40d432ec">
@@ -211,7 +195,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// </dcterms:language>
     /// </summary>
     /// 
-    public static bool FilesMatch(BookData a, BookData b)
+    public bool FilesMatch(BookDataViewModel a, BookDataViewModel b)
     {
         var retval = true;
         foreach (var afile in a.Files)
@@ -234,7 +218,8 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         }
         return retval;
     }
-    public static bool FilesMatchEpub(BookData a, BookData b)
+
+    public bool FilesMatchEpub(BookDataViewModel a, BookDataViewModel b)
     {
         var retval = true;
         foreach (var afile in a.Files)
@@ -257,18 +242,18 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         }
         return retval;
     }
-    public static bool FileIsEpub(string fname)
+
+    public bool FileIsEpub(string fname)
     {
-        var retval = fname.EndsWith(".epub") || fname.Contains(".epub."); // why does Gutenberg do this :-(
-        return retval;
-    }
-    public static bool FileIsKindle(string fname)
-    {
-        var retval = fname.Contains(".kindle.");
-        return retval;
+        return fname.EndsWith(".epub") || fname.Contains(".epub."); // why does Gutenberg do this :-(
     }
 
-    public static bool FilesIncludesEpub(BookData bd)
+    public bool FileIsKindle(string fname)
+    {
+        return fname.Contains(".kindle.");
+    }
+
+    public bool FilesIncludesEpub(BookDataViewModel bd)
     {
         var retval = false;
         foreach (var afile in bd.Files)
@@ -282,8 +267,11 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         return retval;
     }
 
-    public string Language { get => language; set { if (language != value) { NotifyPropertyChanging(); language = value; NotifyPropertyChanged(); } } }
-    // e.g. en. Apress raw data can be captialized as En, which IMHO is wrong.
+    /// <summary>
+    /// e.g. en. A press raw data can be capitalized as En, which IMHO is wrong.
+    /// </summary>
+    [ObservableProperty]
+    private string language;
 
     /// <summary>
     /// <dcterms:subject>
@@ -293,24 +281,35 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     ///     </rdf:Description>
     ///     </dcterms:subject>
     /// </summary>
-    public string LCSH { get => lCSH; set { if (lCSH != value) { NotifyPropertyChanging(); lCSH = value; NotifyPropertyChanged(); } } }
-    // is the Cats -- Juvenile fiction
+    [ObservableProperty]
+    private string lCSH;
 
-    public string LCCN { get => lCCN; set { if (lCCN != value) { NotifyPropertyChanging(); lCCN = value; NotifyPropertyChanged(); } } }
-    // Marc010 e.g. 18020634 is https://catalog.loc.gov/vwebv/search?searchArg=18020634&searchCode=GKEY%5E*&searchType=0&recCount=25&sk=en_US
+    /// <summary>
+    /// Marc010 e.g. 18020634 is 
+    /// https://catalog.loc.gov/vwebv/search?searchArg=18020634&searchCode=GKEY%5E*&searchType=0&recCount=25&sk=en_US
+    /// </summary>
+    [ObservableProperty]
+    private string lCCN;
 
-    public string PGEditionInfo { get => pGEditionInfo; set { if (pGEditionInfo != value) { NotifyPropertyChanging(); pGEditionInfo = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string pGEditionInfo;
 
     // Marc250
-    public string PGProducedBy { get => pGProducedBy; set { if (pGProducedBy != value) { NotifyPropertyChanging(); pGProducedBy = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private string pGProducedBy;
 
-    // Marc508 e.g. Produced by Biblioteca Nacional Digital (http://bnd.bn.pt),\n
-    public string PGNotes { get => pGNotes; set { if (pGNotes != value) { NotifyPropertyChanging(); pGNotes = value; NotifyPropertyChanged(); } } }
+    /// <summary>
+    /// Marc508 e.g. Produced by Biblioteca Nacional Digital (http://bnd.bn.pt),
+    /// </summary>
+    [ObservableProperty]
+    private string pGNotes;
 
-    // Marc546 e.g. This ebook uses a 19th century spelling for pg11299.rdf
-    public string BookSeries { get => bookSeries; set { if (bookSeries != value) { NotifyPropertyChanging(); bookSeries = value; NotifyPropertyChanged(); } } }
-
-    // Marc440 e.g. The Pony Rider Boys, number 8 for pg12980.rdf
+    /// <summary>
+    /// Marc546 e.g. This ebook uses a 19th century spelling for pg11299.rdf
+    /// Marc440 e.g. The Pony Rider Boys, number 8 for pg12980.rdf
+    /// </summary>
+    [ObservableProperty]
+    private string bookSeries;
 
     /// <summary>
     /// Example. Note that 'subject' might be LCC or LCSH
@@ -320,26 +319,34 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     ///         <rdf:value>PZ</rdf:value>
     ///     </rdf:Description>
     /// </dcterms:subject>
-    /// 
+    /// is the PZ. Is a CSV because e.g. book 1 is both JK and E201
     /// </summary>
-    public string LCC { get => lCC; set { if (lCC != value) { NotifyPropertyChanging(); lCC = value; NotifyPropertyChanged(); } } }
-    // is the PZ. Is a CSV because e.g. book 1 is both JK and E201
+    [ObservableProperty]
+    private string lCC;
+
+    [ObservableProperty]
+    private long denormDownloadDate;
 
     //
-    // Denormalized data used the make sorting go faster
+    // De normalized data used the make sorting go faster
     //
     public string DenormPrimaryAuthor { get; set; }
-    public long DenormDownloadDate { get => denormDownloadDate; set { if (denormDownloadDate != value) { NotifyPropertyChanging(); denormDownloadDate = value; NotifyPropertyChanged(); } } }
-
 
     //
     // Next is all of the user-settable things
     //
+    [ObservableProperty]
+    private UserReviewViewModel review;
 
-    public UserReview Review { get => review; set { if (review != value) { NotifyPropertyChanging(); review = value; NotifyPropertyChanged(); } } }
-    public BookNotes Notes { get => notes; set { if (notes != value) { NotifyPropertyChanging(); notes = value; NotifyPropertyChanged(); } } }
-    public DownloadData DownloadData { get => downloadData; set { if (downloadData != value) { NotifyPropertyChanging(); downloadData = value; NotifyPropertyChanged(); } } }
-    public BookNavigationData NavigationData { get => navigationData; set { if (navigationData != value) { NotifyPropertyChanging(); navigationData = value; NotifyPropertyChanged(); } } }
+    [ObservableProperty]
+    private BookNoteViewModel notes;
+
+    [ObservableProperty]
+    private DownloadDataViewModel downloadData;
+
+    [ObservableProperty]
+    public BookNavigationDataViewModel navigationData;
+    
     // Used by the search system
     public IList<string> GetSearchArea(string inputArea)
     {
@@ -365,11 +372,11 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
             case "aut": // author is part of by
                 foreach (var person in People)
                 {
-                    if (person.PersonType == Person.Relator.author
-                        || person.PersonType == Person.Relator.artist
-                        || person.PersonType == Person.Relator.collaborator
-                        || person.PersonType == Person.Relator.contributor
-                        || person.PersonType == Person.Relator.dubiousAuthor)
+                    if (person.PersonType == RelatorEnum.author
+                        || person.PersonType == RelatorEnum.artist
+                        || person.PersonType == RelatorEnum.collaborator
+                        || person.PersonType == RelatorEnum.contributor
+                        || person.PersonType == RelatorEnum.dubiousAuthor)
                     {
                         retval.Add(person.Name);
                         if (!string.IsNullOrEmpty(person.Aliases)) retval.Add(person.Aliases);
@@ -380,10 +387,10 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
             case "edi": // editor is part of by
                 foreach (var person in People)
                 {
-                    if (person.PersonType == Person.Relator.editor
-                        || person.PersonType == Person.Relator.editorOfCompilation
-                        || person.PersonType == Person.Relator.printer
-                        || person.PersonType == Person.Relator.publisher
+                    if (person.PersonType == RelatorEnum.editor
+                        || person.PersonType == RelatorEnum.editorOfCompilation
+                        || person.PersonType == RelatorEnum.printer
+                        || person.PersonType == RelatorEnum.publisher
                         )
                     {
                         retval.Add(person.Name);
@@ -403,10 +410,10 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
             case "ill": // illustrator is part of by
                 foreach (var person in People)
                 {
-                    if (person.PersonType == Person.Relator.illustrator
-                        || person.PersonType == Person.Relator.artist
-                        || person.PersonType == Person.Relator.engraver
-                        || person.PersonType == Person.Relator.photographer)
+                    if (person.PersonType == RelatorEnum.illustrator
+                        || person.PersonType == RelatorEnum.artist
+                        || person.PersonType == RelatorEnum.engraver
+                        || person.PersonType == RelatorEnum.photographer)
                     {
                         retval.Add(person.Name);
                         if (!string.IsNullOrEmpty(person.Aliases)) retval.Add(person.Aliases);
@@ -449,6 +456,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
             }
         }
     }
+
     private void AddPeople(List<string> retval)
     {
         foreach (var person in People)
@@ -457,12 +465,14 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
             if (!string.IsNullOrEmpty(person.Aliases)) retval.Add(person.Aliases);
         }
     }
+
     private void AddTitle(List<string> retval)
     {
         retval.Add(Title);
         if (!string.IsNullOrEmpty(TitleAlternative)) retval.Add(TitleAlternative);
         if (!string.IsNullOrEmpty(BookSeries)) retval.Add(BookSeries);
     }
+
     /// <summary>
     /// Merge two book data items together where one is directly from a catalog and has
     /// no user data (like a review or notes)
@@ -470,7 +480,7 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
     /// </summary>
     /// <param name="existing"></param>
     /// <param name="catalog"></param>
-    public static void Merge(BookData existing, BookData catalog)
+    public void Merge(BookDataViewModel existing, BookDataViewModel catalog)
     {
         // book id: keep existing
         existing.BookSource = catalog.BookSource;
@@ -510,8 +520,14 @@ public class BookData : IGetSearchArea, INotifyPropertyChanged, INotifyPropertyC
         existing.LCC = catalog.LCC;
         existing.DenormPrimaryAuthor = catalog.DenormPrimaryAuthor;
     }
+
     public override string ToString()
     {
         return $"{Title.Substring(0, Math.Min(Title.Length, 20))} for {BookId}";
+    }
+
+    IList<string> IGetSearchArea.GetSearchArea(string inputArea)
+    {
+        throw new System.NotImplementedException();
     }
 }

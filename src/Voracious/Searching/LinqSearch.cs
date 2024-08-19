@@ -31,19 +31,19 @@ static public class AllBookSearch
     /// <param name="sortBy">One of author, title, date_download_asc, date_download_desc</param>
     /// <param name="andMore"></param>
     /// <returns></returns>
-    static public List<BookData> SearchInternal(BookDataContext bookdb, string searchScope, string search, string language, string sortBy, out bool andMore)
+    static public List<BookDataViewModel> SearchInternal(BookDataContext bookdb, string searchScope, string search, string language, string sortBy, out bool andMore)
     {
         // Query list is for the part of the query that can be done in the database.
         // This includes picking what data is returned, simple selection based on whether
         // a book is downloaded or not, and sorting.
-        IQueryable<BookData> queryList = bookdb.Books;
+        IQueryable<BookDataViewModel> queryList = bookdb.Books;
 
         // Enumerable list is after getting a superset of books from the database. It will 
         // reduce the number of books based on the actual search query.
-        IEnumerable<BookData> enumerableList = null;
+        IEnumerable<BookDataViewModel> enumerableList = null;
 
         // Final list of books to return.
-        var resultList = new List<BookData>();
+        var resultList = new List<BookDataViewModel>();
 
         //languages: cases are "*", "en" or anything else.
         // * get all language; "en" get books in english OR with no language, anything else requires that language.
@@ -113,7 +113,7 @@ static public class AllBookSearch
         // The include list (queryable) is set up correctly.
         // Now do the match list.
         //
-        IQueryable<BookData> matchList;
+        IQueryable<BookDataViewModel> matchList;
 
         switch (searchScope)
         {
@@ -130,7 +130,7 @@ static public class AllBookSearch
                     .Where(b => b.DownloadData == null || b.DownloadData.CurrFileStatus != DownloadData.FileStatus.Downloaded)
                     .Where(b => b.NavigationData == null
                         || b.NavigationData.NSwipeLeft < 1
-                            && b.NavigationData.CurrStatus == BookNavigationData.UserStatus.NoStatus
+                            && b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.NoStatus
                         )
                     ;
                 mustIncludeEpub = true;
@@ -140,7 +140,7 @@ static public class AllBookSearch
                     .Where(b => b.DownloadData != null && b.DownloadData.CurrFileStatus == DownloadData.FileStatus.Downloaded)
                     .Where(b => b.NavigationData == null
                         || b.NavigationData.NSwipeLeft < 1
-                            && b.NavigationData.CurrStatus == BookNavigationData.UserStatus.NoStatus
+                            && b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.NoStatus
                         )
                     ;
                 break;
@@ -149,7 +149,7 @@ static public class AllBookSearch
                     .Where(b => b.DownloadData != null && b.DownloadData.CurrFileStatus == DownloadData.FileStatus.Downloaded)
                     .Where(b => b.NavigationData != null)
                     .Where(b => b.NavigationData.NSwipeLeft < 1)
-                    .Where(b => b.NavigationData.CurrStatus == BookNavigationData.UserStatus.Reading)
+                    .Where(b => b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.Reading)
                     ;
                 break;
             case "Finished":
@@ -157,8 +157,8 @@ static public class AllBookSearch
                     .Where(b => b.NavigationData != null)
                     .Where(b => b.NavigationData.NSwipeLeft < 1)
                     .Where(b =>
-                        b.NavigationData.CurrStatus == BookNavigationData.UserStatus.Abandoned
-                        || b.NavigationData.CurrStatus == BookNavigationData.UserStatus.Done)
+                        b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.Abandoned
+                        || b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.Done)
                     ;
                 // Matchlist used to also insist that the book be downloaded. But in reality, I might 
                 // finish a book on computer "A" and then want to see that it's finished on computer "B"
@@ -168,7 +168,7 @@ static public class AllBookSearch
                 matchList = queryList
                     .Where(b => b.NavigationData != null)
                     .Where(b => b.NavigationData.NSwipeLeft < 1)
-                    .Where(b => b.NavigationData.CurrStatus == BookNavigationData.UserStatus.CopiedToEBookReader)
+                    .Where(b => b.NavigationData.CurrStatus == BookNavigationDataViewModel.UserStatus.CopiedToEBookReader)
                     ;
                 break;
         }
@@ -194,12 +194,12 @@ static public class AllBookSearch
         // Step three: filter based on search. Blank searches are special.
         if (searchOperations == null)
         {
-            var newlist = new List<BookData>();
+            var newlist = new List<BookDataViewModel>();
             enumerableList = newlist;
             foreach (var book in matchList)
             {
                 if (true || !mustIncludeEpub // turn this off until it works; the .Files are always the same
-                    || BookData.FilesIncludesEpub(book))
+                    || BookDataViewModel.FilesIncludesEpub(book))
                 {
                     newlist.Add(book);
                     if (newlist.Count > MaxMatch)
@@ -215,7 +215,7 @@ static public class AllBookSearch
         }
         else
         {
-            var newlist = new List<BookData>();
+            var newlist = new List<BookDataViewModel>();
             enumerableList = newlist;
             foreach (var book in matchList)
             {

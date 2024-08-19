@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
+using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 
@@ -216,9 +217,9 @@ namespace Voracious.Controls
             CommonQueries.BookSaveChanges(bookdb);
         }
 
-        BookData CurrBookData = null;
+        BookDataViewModel CurrBookData = null;
 
-        private void SetNotes(BookData bookData)
+        private void SetNotes(BookDataViewModel bookData)
         {
             var bookdb = BookDataContext.Get();
             if (bookData == null)
@@ -248,7 +249,7 @@ namespace Voracious.Controls
             }
         }
 
-        public async Task DisplayBook(BookData book, BookLocation location)
+        public async Task DisplayBook(BookDataViewModel book, BookLocation location)
         {
             await Task.Delay(0); // just to make the compiler happy.
             SetNotes(book);

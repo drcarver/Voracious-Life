@@ -1,4 +1,5 @@
-﻿using Voracious.EbookReader;
+﻿using Voracious.Core.Model;
+using Voracious.EbookReader;
 using Voracious.EpubSharp;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236

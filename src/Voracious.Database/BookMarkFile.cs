@@ -19,7 +19,7 @@ public class BookMarkFile
 
     public DateTimeOffset SaveTime { get; set; } = DateTimeOffset.Now;
     public string SavedFromName { get; set; } = ThisComputerName();
-    public List<BookData> BookMarkList { get; set; }
+    public List<BookDataViewModel> BookMarkList { get; set; }
 
 
     public static async Task<StorageFolder> SetSaveFolderAsync()
@@ -124,7 +124,7 @@ public class BookMarkFile
             // Try to read files which are just a raw list of books.
             try
             {
-                var list = JsonConvert.DeserializeObject<List<BookData>>(str);
+                var list = JsonConvert.DeserializeObject<List<BookDataViewModel>>(str);
                 if (list != null)
                 {
                     bmf = new BookMarkFile()
@@ -165,9 +165,9 @@ public class BookMarkFile
             {
                 // Prepend the BookMarkSource so that the book is clearly labeled
                 // as being from a bookmark file (and therefore this is kind of a fake entry)
-                if (!external.BookSource.StartsWith(BookData.BookSourceBookMarkFile))
+                if (!external.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
                 {
-                    external.BookSource = BookData.BookSourceBookMarkFile + external.BookSource;
+                    external.BookSource = BookDataViewModel.BookSourceBookMarkFile + external.BookSource;
                 }
                 // Must set all these ids to zero so that they get re-set by EF.
                 if (external.Review != null) external.Review.Id = 0;
@@ -308,7 +308,7 @@ public class BookMarkFile
 
         // We only save some of the BookData fields in a book mark file. 
         // Don't bother with the full file list (total waste of time), or the people list.
-        var trimmedList = new List<BookData>();
+        var trimmedList = new List<BookDataViewModel>();
         foreach (var book in list)
         {
             trimmedList.Add(CreateBookMarkBookData(book));
@@ -325,9 +325,9 @@ public class BookMarkFile
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    private static BookData CreateBookMarkBookData(BookData source)
+    private static BookDataViewModel CreateBookMarkBookData(BookDataViewModel source)
     {
-        BookData retval = new BookData()
+        BookDataViewModel retval = new BookDataViewModel()
         {
             BookId = source.BookId,
             Title = source.Title,

@@ -16,8 +16,8 @@ public sealed partial class EBookReaderMark : ContentView
 {
     public ObservableCollection<HelperBookDataWithSelected> Books { get; } = new ObservableCollection<HelperBookDataWithSelected>();
 
-    BookNavigationData.UserStatus NewStatus;
-    public EBookReaderMark(BookNavigationData.UserStatus newStatus)
+    BookNavigationDataViewModel.UserStatus NewStatus;
+    public EBookReaderMark(BookNavigationDataViewModel.UserStatus newStatus)
     {
         NewStatus = newStatus;
         this.InitializeComponent();
@@ -32,9 +32,9 @@ public sealed partial class EBookReaderMark : ContentView
         await UpdateList();
     }
 
-    private IList<BookData> GetSelectedBooks()
+    private IList<BookDataViewModel> GetSelectedBooks()
     {
-        var retval = new List<BookData>();
+        var retval = new List<BookDataViewModel>();
         foreach (var book in Books)
         {
             if (book.IsSelected)
@@ -55,7 +55,7 @@ public sealed partial class EBookReaderMark : ContentView
         var sortBy = "title";
         var language = "en";
 
-        List<BookData> resultList = null;
+        List<BookDataViewModel> resultList = null;
         bool andMore = false;
 
         Books.Clear();
@@ -125,19 +125,19 @@ public sealed partial class EBookReaderMark : ContentView
                 return MarkCommandType.NoChange;
         }
     }
-    private BookNavigationData.UserStatus GetUserStatus()
+    private BookNavigationDataViewModel.UserStatus GetUserStatus()
     {
         var cmd = (uiDoWhat?.SelectedItem as FrameworkElement)?.Tag as string;
         switch (cmd)
         {
-            case "MarkAsFinishedRead": return BookNavigationData.UserStatus.Done;
-            case "MarkAsAbandoned": return BookNavigationData.UserStatus.Abandoned;
-            case "MarkAsDownloaded": return BookNavigationData.UserStatus.NoStatus;
-            case "MarkAsReading": return BookNavigationData.UserStatus.Reading;
+            case "MarkAsFinishedRead": return BookNavigationDataViewModel.UserStatus.Done;
+            case "MarkAsAbandoned": return BookNavigationDataViewModel.UserStatus.Abandoned;
+            case "MarkAsDownloaded": return BookNavigationDataViewModel.UserStatus.NoStatus;
+            case "MarkAsReading": return BookNavigationDataViewModel.UserStatus.Reading;
 
             default:
                 Logger.Log($"ERROR: unknown GetUserStatus {cmd}");
-                return BookNavigationData.UserStatus.NoStatus;
+                return BookNavigationDataViewModel.UserStatus.NoStatus;
         }
     }
 
@@ -150,7 +150,7 @@ public sealed partial class EBookReaderMark : ContentView
             ProgressFolder = await EBookFolder.PickFolderAsync();
         }
     }
-    private async Task<bool> DeleteDownloadedBookAsync(IProgressReader progress, BookData bookData)
+    private async Task<bool> DeleteDownloadedBookAsync(IProgressReader progress, BookDataViewModel bookData)
     {
 
         if (ProgressFolder == null)
@@ -267,7 +267,7 @@ public sealed partial class EBookReaderMark : ContentView
     }
 
 
-    IList<BookData> SavedSelectedBooks = null;
+    IList<BookDataViewModel> SavedSelectedBooks = null;
     bool SavedDeleteBook = false;
     /// <summary>
     /// Handles the entire problem of reviewing each of the selected books. Will pop up a little pop-up

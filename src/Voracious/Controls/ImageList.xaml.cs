@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 
+using Voracious.Core.Model;
 using Voracious.EbookReader;
 using Voracious.EpubSharp;
 using Voracious.Interface;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Voracious.Core.Enum;
+namespace Voracious.Core.Interface;
 
 public interface IGetSearchArea
 {
