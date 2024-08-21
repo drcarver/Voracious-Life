@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -9,7 +7,7 @@ namespace Voracious.Database;
 /// <summary>
 /// User reviews a single book
 /// </summary>
-public partial class UserReviewViewModel : ObservableObject
+public partial class UserReviewViewModel : ObservableObject, IUserReview
 {
     [ObservableProperty]
     private int id;

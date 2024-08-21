@@ -1,5 +1,5 @@
-﻿using Voracious.Database;
-using Voracious.Enum;
+﻿using Voracious.Core.Enum;
+using Voracious.Database;
 using Voracious.UwpClasses;
 
 using Windows.Storage;
@@ -7,7 +7,7 @@ using Windows.UI.Core;
 
 namespace Voracious.Controls;
 
-public sealed partial class GutenbergDownloadControl : UserControl, IndexReader
+public sealed partial class GutenbergDownloadControl : UserControl, IIndexReader
 {
     GutenbergDownloader gd = new GutenbergDownloader();
     public ContentDialog DialogParent = null;

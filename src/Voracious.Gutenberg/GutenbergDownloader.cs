@@ -1,63 +1,48 @@
-﻿using Voracious.Core.ViewModel;
+﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Voracious.Database;
+using Microsoft.Extensions.Logging;
 
-public class NullIndexReader : IndexReader
-{
-    public void BookEnd(BookStatusEnum status, BookDataViewModel book)
-    {
-    }
+using Voracious.Controls;
+using Voracious.Core.Enum;
+using Voracious.Core.ViewModel;
 
-    public CoreDispatcher GetDispatcher()
-    {
-        return null;
-    }
-
-    public async Task LogAsync(string str)
-    {
-        await Task.Delay(0);
-    }
-
-
-    public async Task OnStreamCompleteAsync()
-    {
-        await Task.Delay(0);
-    }
-
-    public async Task OnStreamProgressAsync(uint bytesRead)
-    {
-        await Task.Delay(0);
-    }
-
-    public async Task OnStreamTotalProgressAsync(ulong bytesRead)
-    {
-        await Task.Delay(0);
-    }
-    public async Task OnAddNewBook(BookDataViewModel bookData)
-    {
-        await Task.Delay(0);
-    }
-
-    public void SetFileSize(ulong size)
-    {
-    }
-
-    public async Task OnTotalBooks(int nbooks)
-    {
-        await Task.Delay(0);
-    }
-
-    public async Task OnReadComplete(int nBooksTotal, int nNewBooks)
-    {
-        await Task.Delay(0);
-    }
-
-}
-
+namespace Voracious.Gutenberg;
 
 public class GutenbergDownloader
 {
     HttpClient hc = new HttpClient();
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="client">The http client from the DI</param>
+    /// <param name="loggerFactory">The logger from the DI</param>
+    public GutenbergDownloader(
+        HttpClientFactory client,
+        ILoggerFactory loggerFactory)
+    {
+        if (hc != null)
+        {
+            this.hc = client;
+        }
+    }
+
+    public async Task CopyFileToAppDataDirectory(string filename)
+    {
+        // Open the source file
+        using Stream inputStream = await FileSystem.Current.OpenAppPackageFileAsync(filename);
+
+        // Create an output filename
+        string targetFile = Path.Combine(FileSystem.Current.AppDataDirectory, filename);
+
+        // Copy the file to the AppDataDirectory
+        using FileStream outputStream = File.Create(targetFile);
+        await inputStream.CopyToAsync(outputStream);
+    }
 
     /// <summary>
     /// A possibly long-running task to download a ZIP file contains a TAR file or RDF files
@@ -68,7 +53,7 @@ public class GutenbergDownloader
     /// <param name="ui"></param>
     /// <param name="uri"></param>
     /// <returns></returns>
-    public async Task<bool> DownloadFrom(IndexReader ui, Uri uri, StorageFolder folder, string filename, CancellationToken ct)
+    public async Task<bool> DownloadFrom(IIndexReader ui, Uri uri, StorageFolder folder, string filename, CancellationToken ct)
     {
         var retval = false;
         int totalRead = 0;
@@ -78,7 +63,7 @@ public class GutenbergDownloader
         Stream stream = null;
         System.Diagnostics.Debug.WriteLine($"Note: downloading catalog from {uri.OriginalString}");
         System.Diagnostics.Debug.WriteLine($"Note: output file Path={file.Path} DisplayName={file.DisplayName}");
-        using (var outstreamUwp = await file.OpenAsync(FileAccessMode.ReadWrite)) // (PCLStorage.FileAccess.ReadAndWrite))
+        using (var outstreamUwp = await file.OpenAsync(FileAccess.ReadWrite)) // (PCLStorage.FileAccess.ReadAndWrite))
         {
             var outstream = outstreamUwp.AsStreamForWrite();
             await ui.LogAsync($"Start download from {uri.OriginalString}\n");

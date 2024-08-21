@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
+using Voracious.Core.Interface;
 
 namespace Voracious.Database;
 
-public partial class FilenameAndFormatDataViewModel : ObservableObject
+public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenameAndFormatData
 {
     public FilenameAndFormatDataViewModel()
     {
@@ -26,7 +25,7 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject
         this.MimeType = source.MimeType;
     }
 
-    // Book can't be the primary key because there are duplicates. Use a synthasized Id
+    // Book can't be the primary key because there are duplicates. Use a synthesized Id
     // which will be maintained by the database.
     [ObservableProperty]
     private int id;
@@ -50,7 +49,7 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject
     private string mimeType = "";
 
     /// <summary>
-    /// The files are the variants of an ebook (plus ancilary stuff like title pages).
+    /// The files are the variants of an ebook (plus ancillary stuff like title pages).
     /// Given a list of possible files, return an ordered list of the most appropriate
     /// files for the book, filtering to remove extra ones. For examples, if there's an
     /// epub with images and an epub without images, only include the epub with images.

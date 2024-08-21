@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Voracious.Core.Interface;
 using Voracious.Core.Model;
 
 namespace Voracious.Core.ViewModel;
@@ -9,7 +10,7 @@ namespace Voracious.Core.ViewModel;
 /// <summary>
 /// A user note is also the bookmark system. 
 /// </summary>
-public partial class UserNoteViewModel : ObservableObject
+public partial class UserNoteViewModel : ObservableObject, IUserNote
 {
     [ObservableProperty]
     private int id;
@@ -74,6 +75,7 @@ public partial class UserNoteViewModel : ObservableObject
         return retval;
 
     }
+
     public bool AreEqual(UserNoteViewModel note)
     {
         var retval = BookId == note.BookId

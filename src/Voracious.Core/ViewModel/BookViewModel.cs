@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +16,7 @@ namespace Voracious.Core.ViewModel;
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public partial class BookDataViewModel : ObservableObject, IGetSearchArea
+public partial class BookViewModel : ObservableObject, IBook, IGetSearchArea
 {
     private const string BookSourceGutenberg = "gutenberg.org";
     private const int NICE_MIN_LEN = 20;
@@ -42,7 +41,6 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     }
 
     [ObservableProperty]
-    [property: Key]
     private string? bookId;
 
     [ObservableProperty]
@@ -67,7 +65,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     private string? imprint;
 
     [ObservableProperty]
-    private string issued = "";
+    private DateTime issued = DateTime.UtcNow;
 
     /// <summary>
     /// <dcterms:title>Three Little Kittens</dcterms:title>
@@ -82,7 +80,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     /// People include authors, illustrators, etc.
     /// </summary>
     [ObservableProperty]
-    private ObservableCollection<PersonViewModel> people = [];
+    private ObservableCollection<IPerson> people = [];
 
     public string BestAuthorDefaultIsNull
     {
@@ -185,7 +183,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     /// <summary>
     /// List of all of the files for this book and their formats.
     /// </summary>
-    public ObservableCollection<FilenameAndFormatDataViewModel> Files { get; set; } = [];
+    public ObservableCollection<IFilenameAndFormatData> Files { get; set; } = [];
 
     /// <summary>
     /// <dcterms:language>
@@ -195,7 +193,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     /// </dcterms:language>
     /// </summary>
     /// 
-    public bool FilesMatch(BookDataViewModel a, BookDataViewModel b)
+    public bool FilesMatch(BookViewModel a, BookViewModel b)
     {
         var retval = true;
         foreach (var afile in a.Files)
@@ -219,7 +217,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
         return retval;
     }
 
-    public bool FilesMatchEpub(BookDataViewModel a, BookDataViewModel b)
+    public bool FilesMatchEpub(BookViewModel a, BookViewModel b)
     {
         var retval = true;
         foreach (var afile in a.Files)
@@ -253,7 +251,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
         return fname.Contains(".kindle.");
     }
 
-    public bool FilesIncludesEpub(BookDataViewModel bd)
+    public bool FilesIncludesEpub(BookViewModel bd)
     {
         var retval = false;
         foreach (var afile in bd.Files)
@@ -336,16 +334,16 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     // Next is all of the user-settable things
     //
     [ObservableProperty]
-    private UserReviewViewModel review;
+    private IUserReview review;
 
     [ObservableProperty]
-    private BookNoteViewModel notes;
+    private IBookNote notes;
 
     [ObservableProperty]
-    private DownloadDataViewModel downloadData;
+    private IDownloadData downloadData;
 
     [ObservableProperty]
-    public BookNavigationDataViewModel navigationData;
+    public IBookNavigation navigationData;
     
     // Used by the search system
     public IList<string> GetSearchArea(string inputArea)
@@ -480,7 +478,7 @@ public partial class BookDataViewModel : ObservableObject, IGetSearchArea
     /// </summary>
     /// <param name="existing"></param>
     /// <param name="catalog"></param>
-    public void Merge(BookDataViewModel existing, BookDataViewModel catalog)
+    public void Merge(BookViewModel existing, BookViewModel catalog)
     {
         // book id: keep existing
         existing.BookSource = catalog.BookSource;

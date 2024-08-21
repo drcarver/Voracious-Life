@@ -5,7 +5,7 @@ using Voracious.Core.ViewModel;
 
 namespace Voracious.Core.Interface;
 
-public interface IBookNavigationData
+public interface IBookNavigation
 {
     int Id { get; set; }
 
@@ -32,13 +32,4 @@ public interface IBookNavigationData
     DateTimeOffset FirstNavigationDate { get; set; }
 
     bool IsDone { get; set; }
-
-    void Touched();
-
-    /// <summary>
-    /// Merge two BookNavigationData objects
-    /// </summary>
-    /// <param name="external">BookNavigationData tp be merged</param>
-    /// <returns>The merge count</returns>
-    bool Merge(BookNavigationDataViewModel external);
 }

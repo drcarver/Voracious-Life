@@ -1,35 +1,52 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
-using Voracious.Controls;
+using Android.OS;
 
-using Windows.Storage.Pickers;
+using Voracious.Core.Enum;
+using Voracious.Core.ViewModel;
 
 namespace Voracious.Database;
 
-static class RdfReader
+public partial class RdfReader
 {
+    public async Task<FileResult> PickAndShow(PickOptions options)
+    {
+        try
+        {
+            var result = await FilePicker.Default.PickAsync(options);
+            if (result != null)
+            {
+                if (result.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                    result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
+                {
+                    using var stream = await result.OpenReadAsync();
+                    var image = ImageSource.FromStream(() => stream);
+                }
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            // The user canceled or something went wrong
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Queries user for ZIPPED TAR'd RDF (catalog) file and stuff data into database
     /// </summary>
-    /// <param name="bookdb"></param>
     /// <returns></returns>
-    public static async Task<int> ReadZipTarRdfFile(BookDataContext bookdb)
+    public async Task<int> ReadZipTarRdfFile()
     {
-
-        var picker = new FileOpenPicker()
-        {
-            ViewMode = PickerViewMode.List,
-            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-            SettingsIdentifier = "NewGutengbergFile",
-        };
-        picker.FileTypeFilter.Add(".zip");
-        var filepick = await picker.PickSingleFileAsync();
-        if (filepick == null) return 0;
-        //var fullpath = filepick.Path;
-        //var file = await PCLStorage.FileSystem.Current.GetFileFromPathAsync(fullpath);
-        var ui = new NullIndexReader(); // don't really do anything :-)
-        int retval = 0;
         await Task.Run(async () =>
         {
             var cts = new CancellationTokenSource();
@@ -43,7 +60,7 @@ static class RdfReader
     public enum UpdateType { Full, Fast }
 
 
-    public static async Task<int> ReadZipTarRdfFileAsync(IndexReader ui, BookDataContext bookdb, Windows.Storage.StorageFile file, CancellationToken token, UpdateType updateType = UpdateType.Full)
+    public List<BookViewModel> ReadZipTarRdfFileAsync()
     {
         SaveAfterNFiles = SaveSkipCount;
         UiAfterNNodes = NodeReadCount;
@@ -57,154 +74,124 @@ static class RdfReader
         var startTime = DateTime.Now;
         int nnewfiles = 0;
         int nnodes = 0;
-        List<BookDataViewModel> newBooks = new List<BookDataViewModel>();
+        List<BookViewModel> newBooks = [];
 
+        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData)
         try
         {
-            using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
-            {
-                using (var reader = ReaderFactory.Open(stream.AsStream()))
-                {
-                    while (reader.MoveToNextEntry())
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        System.Diagnostics.Debug.WriteLine($"ZIPREAD: {reader.Entry.Key} size {reader.Entry.Size}");
+            //using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            //{
+            //}
+            //    while (reader.MoveToNextEntry())
+            //        {
+            //            if (token.IsCancellationRequested)
+            //            {
+            //                break;
+            //            }
+            //            System.Diagnostics.Debug.WriteLine($"ZIPREAD: {reader.Entry.Key} size {reader.Entry.Size}");
 
-                        // Is the rdf-files.tar file that Gutenberg uses. 
-                        // The zip file has one giant TAR file (rdf-files.tar) embedded in it.
-                        if (reader.Entry.Key.EndsWith(".tar"))
-                        {
-                            using (var tarStream = reader.OpenEntryStream())
-                            {
-                                using (var tarReader = ReaderFactory.Open(tarStream))
-                                {
-                                    while (tarReader.MoveToNextEntry())
-                                    {
-                                        MemoryStream ms = new MemoryStream((int)tarReader.Entry.Size);
-                                        tarReader.WriteEntryTo(ms);
-                                        ms.Position = 0;
-                                        var sr = new StreamReader(ms);
-                                        var text = sr.ReadToEnd();
-                                        nnodes++;
-                                        if (token.IsCancellationRequested)
-                                        {
-                                            break;
-                                        }
+            //            // Is the rdf-files.tar file that Gutenberg uses. 
+            //            // The zip file has one giant TAR file (rdf-files.tar) embedded in it.
+            //            if (reader.Entry.Key.EndsWith(".tar"))
+            //            {
+            //                using (var tarStream = reader.OpenEntryStream())
+            //                {
+            //                    using (var tarReader = ReaderFactory.Open(tarStream))
+            //                    {
+            //                        while (tarReader.MoveToNextEntry())
+            //                        {
+            //                            MemoryStream ms = new MemoryStream((int)tarReader.Entry.Size);
+            //                            tarReader.WriteEntryTo(ms);
+            //                            ms.Position = 0;
+            //                            var sr = new StreamReader(ms);
+            //                            var text = sr.ReadToEnd();
+            //                            nnodes++;
+            //                            if (token.IsCancellationRequested)
+            //                            {
+            //                                break;
+            //                            }
 
-                                        if (KnownBadFiles.Contains(tarReader.Entry.Key))
-                                        {
-                                            // Skip known bad files like entry 999999 -- has weird values for lots of stuff!
-                                        }
-                                        else
-                                        {
-                                            // Got a book; let the UI know.
-                                            newBooks.Clear();
-                                            if (tarReader.Entry.Key.Contains("69203"))
-                                            {
-                                                ; // useful hook for debugging.
-                                            }
+            //                            if (KnownBadFiles.Contains(tarReader.Entry.Key))
+            //                            {
+            //                                // Skip known bad files like entry 999999 -- has weird values for lots of stuff!
+            //                            }
+            //                            else
+            //                            {
+            //                                // Got a book; let the UI know.
+            //                                newBooks.Clear();
+            //                                if (tarReader.Entry.Key.Contains("69203"))
+            //                                {
+            //                                    ; // useful hook for debugging.
+            //                                }
 
-                                            // Reads and saves to database. And does a fancy merge if needed.
-                                            int newCount = 0;
-                                            try
-                                            {
-                                                newCount = ReadRdfFileAndInsert(bookdb, tarReader.Entry.Key, text, newBooks, updateType);
-                                            }
-                                            catch (Exception rdfex)
-                                            {
-                                                // Do what on exception?
-                                                Log($"Error: file {file.Name} name {tarReader.Entry.Key} exception {rdfex.Message}");
-                                                newCount = 0;
-                                            }
-                                            nnewfiles += newCount;
+            //                                // Reads and saves to database. And does a fancy merge if needed.
+            //                                int newCount = 0;
+            //                                try
+            //                                {
+            //                                    newCount = ReadRdfFileAndInsert(bookdb, tarReader.Entry.Key, text, newBooks, updateType);
+            //                                }
+            //                                catch (Exception rdfex)
+            //                                {
+            //                                    // Do what on exception?
+            //                                    Log($"Error: file {file.Name} name {tarReader.Entry.Key} exception {rdfex.Message}");
+            //                                    newCount = 0;
+            //                                }
+            //                                nnewfiles += newCount;
 
-                                            if (nnewfiles > 6000 && nnewfiles < 9000)
-                                            {
-                                                SaveSkipCount = 100;
-                                            }
-                                            else
-                                            {
-                                                SaveSkipCount = 100; // save very frequently. Otherwise, ka-boom!
-                                            }
+            //                                if (nnewfiles > 6000 && nnewfiles < 9000)
+            //                                {
+            //                                    SaveSkipCount = 100;
+            //                                }
+            //                                else
+            //                                {
+            //                                    SaveSkipCount = 100; // save very frequently. Otherwise, ka-boom!
+            //                                }
 
-                                            if (nnewfiles >= SaveAfterNFiles)
-                                            {
-                                                // FAIL: must save periodically. Can't accumulate a large number
-                                                // of books (e..g, 60K books in the catalog) and then save all at
-                                                // once; it will take up too much memory and will crash.
-                                                Log($"At index {CommonQueries.BookCount(bookdb)} file {file.Name} nfiles {nnewfiles}");
-                                                CommonQueries.BookSaveChanges(bookdb);
+            //                                if (nnewfiles >= SaveAfterNFiles)
+            //                                {
+            //                                    // FAIL: must save periodically. Can't accumulate a large number
+            //                                    // of books (e..g, 60K books in the catalog) and then save all at
+            //                                    // once; it will take up too much memory and will crash.
+            //                                    Log($"At index {CommonQueries.BookCount(bookdb)} file {file.Name} nfiles {nnewfiles}");
+            //                                    CommonQueries.BookSaveChanges(bookdb);
 
-                                                // Try resetting the singleton to reduce the number of crashes.
-                                                BookDataContext.ResetSingleton("InitialBookData.Db");
-                                                await Task.Delay(100); // Try a pause to reduce crashes.
+            //                                    // Try resetting the singleton to reduce the number of crashes.
+            //                                    BookDataContext.ResetSingleton("InitialBookData.Db");
+            //                                    await Task.Delay(100); // Try a pause to reduce crashes.
 
-                                                SaveAfterNFiles += SaveSkipCount;
+            //                                    SaveAfterNFiles += SaveSkipCount;
 
-                                            }
-                                            if (newCount > 0)
-                                            {
-                                                foreach (var bookData in newBooks)
-                                                {
-                                                    await ui.OnAddNewBook(bookData);
-                                                }
-                                            }
-                                            if (nnodes >= UiAfterNNodes)
-                                            {
-                                                //await ui.LogAsync($"Book: file {tarReader.Entry.Key}\nNNew: {nfiles} NProcesses {nnodes}\n");
-                                                await ui.OnTotalBooks(nnodes);
-                                                UiAfterNNodes += NodeReadCount;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //                                }
+            //                                if (newCount > 0)
+            //                                {
+            //                                    foreach (var bookData in newBooks)
+            //                                    {
+            //                                        await ui.OnAddNewBook(bookData);
+            //                                    }
+            //                                }
+            //                                if (nnodes >= UiAfterNNodes)
+            //                                {
+            //                                    //await ui.LogAsync($"Book: file {tarReader.Entry.Key}\nNNew: {nfiles} NProcesses {nnodes}\n");
+            //                                    await ui.OnTotalBooks(nnodes);
+            //                                    UiAfterNNodes += NodeReadCount;
+            //                                }
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
         }
         catch (Exception readEx)
         {
             Log($"Error: reading Gutenberg ZIP file exception {readEx.Message}");
-            ; // something bad happened.
         }
-        await ui.OnReadComplete(nnodes, nnewfiles);
-        var delta = DateTime.Now.Subtract(startTime).TotalSeconds;
-        System.Diagnostics.Debug.WriteLine($"READ: {nnewfiles} in {delta} seconds = {nnewfiles / delta} fps or {delta / nnewfiles * 1000} ms per file");
 
-        CommonQueries.BookSaveChanges(bookdb); // Woot, woot! I've got good book data!
-        return nnewfiles;
+        return newBooks;
     }
 
-#if NEVER_EVER_DEFINED
-    static int NRead = 0;
-    /// <summary>
-    /// Returns the number of books read; clears out the original books and saves.
-    /// </summary>
-    /// <returns></returns>
-    public static async Task<int> ReadDirAsync(BookDataContext bookdb)
-    {
-        var picker = new FolderPicker()
-        {
-            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-        };
-        picker.FileTypeFilter.Add(".rdf");
-        var folder = await picker.PickSingleFolderAsync();
-        if (folder == null) return -1;
-        NextIndexLogged = LogNIndex;
-
-        NRead = 0;
-        CommonQueries.BookRemoveAll(bookdb);
-        await ReadDirAsyncFolder(bookdb, folder);
-        CommonQueries.BookSaveChanges(bookdb);
-        var totlog = logsb.ToString();
-        return NRead;
-    }
-#endif
     static int SaveAfterNFiles = 0;
     static int SaveSkipCount = 100;
 
@@ -220,9 +207,9 @@ static class RdfReader
         System.Diagnostics.Debug.WriteLine(str);
     }
 
-    private static Person ExtractCreator(string logname, XmlNode parentnode)
+    private static PersonViewModel ExtractCreator(string logname, XmlNode parentnode)
     {
-        var retval = new Person();
+        var retval = new PersonViewModel();
         try
         {
             var node = parentnode["pgterms:agent"] as XmlNode;
@@ -233,8 +220,8 @@ static class RdfReader
                 return null;
             }
             string str = "";
-            var relator = Person.ToRelator(parentnode.Name); // e.g. marcrel:aui == author of introductions
-            if (relator == Person.Relator.otherError)
+            var relator = PersonViewModel.ToRelator(parentnode.Name); // e.g. marcrel:aui == author of introductions
+            if (relator == RelatorEnum.otherError)
             {
                 Log($"ERROR: ExtractCreator has unknown relator {parentnode.Name} for {logname}");
                 return null;
@@ -261,10 +248,10 @@ static class RdfReader
     /// <summary>
     /// Given a <dcterms:hasFormat> blob, extract the file format + file location data.
     /// </summary>
-    private static FilenameAndFormatData ExtractHasFormat(string logname, XmlNode node)
+    private static FilenameAndFormatDataViewModel ExtractHasFormat(string logname, XmlNode node)
     {
         bool extentIsZero = false;
-        var retval = new FilenameAndFormatData();
+        var retval = new FilenameAndFormatDataViewModel();
         int nchild = 0;
         try
         {
@@ -382,10 +369,10 @@ static class RdfReader
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    private static FilenameAndFormatData MakeEpubFromFormat(FilenameAndFormatData source)
+    private static FilenameAndFormatDataViewModel MakeEpubFromFormat(FilenameAndFormatDataViewModel source)
     {
         if (source == null) return null;
-        FilenameAndFormatData retval = new FilenameAndFormatData(source);
+        FilenameAndFormatDataViewModel retval = new FilenameAndFormatDataViewModel(source);
         retval.MimeType = "application/epub+zip";
         // extent will be hopelessly wrong, but that's life.
         var gutIndex = source.GutenbergStyleIndexNumber;
@@ -426,11 +413,9 @@ static class RdfReader
         }
         return retval;
     }
-
-    enum SubjectType { Other, LCSH, LCC, }
-    private static (SubjectType, string) ExtractSubjectValue(string logname, XmlNode node, string defaultValue = "")
+    private static (SubjectTypeEnum, string) ExtractSubjectValue(string logname, XmlNode node, string defaultValue = "")
     {
-        var subjectType = SubjectType.Other;
+        var subjectType = SubjectTypeEnum.Other;
         string retval = defaultValue;
         try
         {
@@ -439,9 +424,14 @@ static class RdfReader
             var subjectString = description["dcam:memberOf"].GetAttribute("rdf:resource");
             switch (subjectString)
             {
-                case "http://purl.org/dc/terms/LCSH": subjectType = SubjectType.LCSH; break;
-                case "http://purl.org/dc/terms/LCC": subjectType = SubjectType.LCC; break;
-                default: Log("$ERROR: unknown subject type {subjectString} for {logname}"); break;
+                case "http://purl.org/dc/terms/LCSH": 
+                    subjectType = SubjectTypeEnum.LCSH; 
+                    break;
+                case "http://purl.org/dc/terms/LCC": 
+                    subjectType = SubjectTypeEnum.LCC; 
+                    break;
+                default: 
+                    Log("$ERROR: unknown subject type {subjectString} for {logname}"); break;
             }
         }
         catch (Exception)
@@ -468,9 +458,9 @@ static class RdfReader
 
 
     private static int NUnknownMarcRecords = 0;
-    private static BookDataViewModel ExtractBook(string logname, XmlNode node)
+    private static BookViewModel ExtractBook(string logname, XmlNode node)
     {
-        var book = new BookDataViewModel();
+        var book = new BookViewModel();
         var id = node.Attributes["rdf:about"]?.Value;
         if (!string.IsNullOrEmpty(id))
         {
@@ -481,13 +471,13 @@ static class RdfReader
             Log($"ERROR: BookId: missing rdf:about with an id? for {logname}");
             return null;
         }
-        FilenameAndFormatData txtFormat = null;
+        FilenameAndFormatDataViewModel txtFormat = null;
         var haveEpub = false;
         foreach (var cn in node.ChildNodes)
         {
             var value = cn as XmlNode;
             if (value == null) continue;
-            Person person = null;
+            PersonViewModel person = null;
             switch (value.Name)
             {
                 case "dcterms:alternative": // <...>Alice in Wonderland</...>
@@ -511,12 +501,12 @@ static class RdfReader
                         var ftype = format.GetFileType();
                         switch (ftype)
                         {
-                            case FilenameAndFormatData.ProcessedFileType.TextNotUtf8:
-                            case FilenameAndFormatData.ProcessedFileType.Text:
+                            case ProcessedFileEnum.TextNotUtf8:
+                            case ProcessedFileEnum.Text:
                                 txtFormat = format; // stash this away to make the EPUB type
                                 break;
-                            case FilenameAndFormatData.ProcessedFileType.EPub:
-                            case FilenameAndFormatData.ProcessedFileType.EPubNoImages:
+                            case ProcessedFileEnum.EPub:
+                            case ProcessedFileEnum.EPubNoImages:
                                 haveEpub = true;
                                 break;
                         }
@@ -563,14 +553,14 @@ static class RdfReader
                     var bookType = ExtractType(logname, value, "???");
                     switch (bookType)
                     {
-                        case "Collection": book.BookType = BookDataViewModel.FileType.Collection; break;
-                        case "Dataset": book.BookType = BookDataViewModel.FileType.Dataset; break;
+                        case "Collection": book.BookType = BookViewModel.FileType.Collection; break;
+                        case "Dataset": book.BookType = BookViewModel.FileType.Dataset; break;
                         // Dataset from e.g. http://www.gutenberg.org/ebooks/3503
                         // These are e.g. the human genome project. They are 100% uninteresting.
-                        case "Image": book.BookType = BookDataViewModel.FileType.Image; break;
-                        case "MovingImage": book.BookType = BookDataViewModel.FileType.MovingImage; break;
-                        case "Sound": book.BookType = BookDataViewModel.FileType.Sound; break;
-                        case "StillImage": book.BookType = BookDataViewModel.FileType.StillImage; break;
+                        case "Image": book.BookType = BookViewModel.FileType.Image; break;
+                        case "MovingImage": book.BookType = BookViewModel.FileType.MovingImage; break;
+                        case "Sound": book.BookType = BookViewModel.FileType.Sound; break;
+                        case "StillImage": book.BookType = BookViewModel.FileType.StillImage; break;
                         case "Text": // OK, this is normal
                             break;
                         default:
@@ -693,7 +683,7 @@ static class RdfReader
         }
         return book;
     }
-    private static BookDataViewModel[] BookDataArray = new BookDataViewModel[10];
+    private static BookViewModel[] BookDataArray = new BookViewModel[10];
     private static int BookDataArrayIndex = -1;
 
     /// <summary>
@@ -704,7 +694,7 @@ static class RdfReader
     /// <param name="xmlData"></param>
     /// <param name="newBooks"></param>
     /// <returns></returns>
-    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logname, string xmlData, IList<BookDataViewModel> newBooks, UpdateType updateType)
+    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logname, string xmlData, IList<BookViewModel> newBooks, UpdateType updateType)
     {
         // This is a state machine, which means that some pretty important parts are just a little
         // bit buried. When a book is done, take a look at "pgterms:ebook" which has ExtractBook,

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
+using Voracious.Core.Interface;
 
 namespace Voracious.Core.ViewModel;
 
@@ -14,7 +13,7 @@ namespace Voracious.Core.ViewModel;
 /// every single book that's downloaded or is known. DownloadData is per-computer and doesn't
 /// get added to a bookmark file.
 /// </summary>
-public partial class DownloadDataViewModel : ObservableObject
+public partial class DownloadDataViewModel : ObservableObject, IDownloadData
 {
     [ObservableProperty]
     private int id;

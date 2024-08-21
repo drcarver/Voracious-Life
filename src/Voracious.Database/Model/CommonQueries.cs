@@ -3,16 +3,20 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
+using Voracious.Core.Enum;
+using Voracious.Core.Interface;
+using Voracious.Database.Model;
+
 namespace Voracious.Database;
 
 /// <summary>
 /// Contains all of the common queries in the book databases
 /// </summary>
-static partial class CommonQueries
+partial class CommonQueries
 {
-    private static int _NQueries = 0;
+    private int _NQueries = 0;
     
-    public static int NQueries
+    public int NQueries
     {
         get { return _NQueries; }
         set
@@ -34,7 +38,7 @@ static partial class CommonQueries
     /// </summary>
     /// <param name="bookData"></param>
     /// <returns>0=not added, 1=added. Technical is the count of the number added.</returns>
-    public static int BookAdd(BookDataContext bookdb, BookDataViewModel book, ExistHandling handling)
+    public int BookAdd(VoraciousDataContext bookdb, BookModel book, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -59,12 +63,12 @@ static partial class CommonQueries
                         }
                         else // have to be smart.
                         {
-                            if (dbbook.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
+                            if (dbbook.BookSource.StartsWith(BookSourceBookMarkFile))
                             {
                                 // The database was added to from a bookmark file.
                                 // For these books, the dbbook top-level data isn't correct but the user data is correct.
                                 // At the same time, the new book top-level data IS correct, but the user data is not correct.
-                                BookDataViewModel.Merge(dbbook, book);
+                                BookModel.Merge(dbbook, book);
                                 retval++;
                             }
                         }
@@ -80,40 +84,21 @@ static partial class CommonQueries
                         }
                         else // have to be smart.
                         {
-                            if (dbbook.BookSource.StartsWith(BookDataViewModel.BookSourceBookMarkFile))
+                            if (dbbook.BookSource.StartsWith(BookModel.BookSourceBookMarkFile))
                             {
                                 // The database was added to from a bookmark file.
                                 // For these books, the dbbook top-level data isn't correct but the user data is correct.
                                 // At the same time, the new book top-level data IS correct, but the user data is not correct.
-                                BookDataViewModel.Merge(dbbook, book);
+                                BookModel.Merge(dbbook, book);
                                 retval++;
                             }
                             else
                             {
                                 // Grab the full data including the number of files
                                 dbbook = BookGetFiles(bookdb, book.BookId);
-                                // Remove all the kindle books; they aren't interesting
-                                //int bookNNotKindle = 0;
-                                //foreach (var item in book.Files)
-                                //{
-                                //    if (!BookData.FileIsKindle(item.FileName)) bookNNotKindle++; // Database has kindle books, so don't scrub them from the book files
-                                //}
-                                //int dbNNotKindle = 0;
-                                //foreach (var item in dbbook.Files)
-                                //{
-                                //    if (!BookData.FileIsKindle(item.FileName)) dbNNotKindle++; // Database has kindle books, so don't scrub them from the book files
-                                //}
-                                //var mustReplace = bookNNotKindle != dbNNotKindle;
 
-                                // In case the files don't match exactly....
-                                //if (!mustReplace)
-                                //{
-                                //    //TODO: make faster? Or keep because it's needed functionality?
-                                //    //Update: 2022-10-09: Really only care about epub books
-                                //    mustReplace = !BookData.FilesMatchEpub(book, dbbook);
-                                //}
                                 // Ignore everything we just did :-)
-                                var mustReplace = !BookDataViewModel.FilesMatchEpub(book, dbbook);
+                                var mustReplace = !BookModel.FilesMatchEpub(book, dbbook);
                                 if (mustReplace)
                                 {
                                     //FAIL: project gutenberg LOVES changing their URLs. If the old list doesn't match the 
@@ -142,7 +127,7 @@ static partial class CommonQueries
         }
     }
 
-    public static int BookCount(BookDataContext bookdb)
+    public int BookCount(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -152,7 +137,7 @@ static partial class CommonQueries
         }
     }
 
-    public static BookDataViewModel BookGet(BookDataContext bookdb, string bookId)
+    public BookModel BookGet(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         lock (bookdb)
@@ -186,16 +171,17 @@ static partial class CommonQueries
     /// <param name="bookdb"></param>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    public static BookDataViewModel BookGetFiles(BookDataContext bookdb, string bookId)
+    public BookModel BookGetFiles(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         lock (bookdb)
         {
-            var booklist = bookdb.Books
-            .Where(b => b.BookId == bookId)
-            .Include(b => b.Files)
-            .AsQueryable();
-            ;
+                IQueryable<BookModel> booklist = 
+                    bookdb.Books
+                        .Where(b => b.BookId == bookId)
+                        .Include(b => b.Files)
+                        .AsQueryable();
+
             var book = booklist.Where(b => b.BookId == bookId).FirstOrDefault();
             if (book != null && book.BookId.Contains("62548"))
             {
@@ -205,7 +191,7 @@ static partial class CommonQueries
         }
     }
 
-    public static List<BookDataViewModel> BookGetAllWhichHaveUserData(BookDataContext bookdb)
+    public List<BookModel> BookGetAllWhichHaveUserData(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -223,14 +209,14 @@ static partial class CommonQueries
         }
     }
 
-    public static TimeSpan LengthForRecentChanges()
+    public TimeSpan LengthForRecentChanges()
     {
         var recentTimeSpan = new TimeSpan(45, 0, 0, 0); // 45 days
         //var recentTimeSpan = new TimeSpan(0, 1, 0, 0); // For debugging: a paltry 1 hour -- used for debugging
         return recentTimeSpan;
     }
 
-    public static List<BookDataViewModel> BookGetRecentWhichHaveUserData(BookDataContext bookdb)
+    public List<BookModel> BookGetRecentWhichHaveUserData(VoraciousDataContext bookdb)
     {
         NQueries++;
         var now = DateTimeOffset.Now;
@@ -252,38 +238,22 @@ static partial class CommonQueries
         }
     }
 
-    public static Task FirstSearchToWarmUpDatabase()
+    public Task FirstSearchToWarmUpDatabase()
     {
         Task mytask = Task.Run(() =>
         {
             NQueries++;
-            //var bookdb = BookDataContext.Get();
-            //lock (bookdb)
-            {
-                DoCreateIndexFile();
-#if NEVER_EVER_DEFINED
-                var booklist = bookdb.Books
-                    //.Include(b => b.Review)
-                    //.Include(b => b.Notes)
-                    //.Include(b => b.Notes.Notes)
-                    //.Include(b => b.DownloadData)
-                    //.Include(b => b.NavigationData)
-                    .ToList();
-                ;
-                return booklist;
-#endif
-            }
+            DoCreateIndexFile();
         });
         return mytask;
     }
 
-    public static void BookDoMigrate(BookDataContext bookdb)
+    public void BookDoMigrate(VoraciousDataContext bookdb)
     {
         NQueries++;
-        bookdb.DoMigration();
     }
 
-    public static void BookRemoveAll(BookDataContext bookdb)
+    public void BookRemoveAll(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -295,7 +265,7 @@ static partial class CommonQueries
         }
     }
 
-    public static void BookSaveChanges(BookDataContext bookdb)
+    public void BookSaveChanges(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -304,7 +274,7 @@ static partial class CommonQueries
         }
     }
 
-    public static int BookNavigationDataAdd(BookDataContext bookdb, BookNavigationDataViewModel bn, ExistHandling handling)
+    public int BookNavigationDataAdd(VoraciousDataContext bookdb, BookNavigationViewModel bn, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -323,12 +293,12 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static BookNavigationDataViewModel BookNavigationDataEnsure(BookDataContext bookdb, BookDataViewModel bookData)
+    public BookNavigationModel BookNavigationDataEnsure(VoraciousDataContext bookdb, BookModel bookData)
     {
         var nd = BookNavigationDataFind(bookdb, bookData.BookId);
         if (nd == null)
         {
-            nd = new BookNavigationDataViewModel()
+            nd = new BookNavigationModel()
             {
                 BookId = bookData.BookId,
             };
@@ -343,7 +313,7 @@ static partial class CommonQueries
         return nd;
     }
 
-    public static BookNavigationDataViewModel BookNavigationDataFind(BookDataContext bookdb, string bookId)
+    public BookNavigationModel BookNavigationDataFind(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -356,7 +326,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static int BookNotesAdd(BookDataContext bookdb, BookNotes bn, ExistHandling handling)
+    public int BookNotesAdd(VoraciousDataContext bookdb, BookNotes bn, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -375,7 +345,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static BookNotes BookNotesFind(BookDataContext bookdb, string bookId)
+    public BookNoteModel BookNotesFind(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -383,12 +353,12 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static void BookNoteSave(BookDataContext bookdb, UserNote note)
+    public void BookNoteSave(VoraciousDataContext bookdb, UserNoteViewModel note)
     {
         var bn = BookNotesFind(bookdb, note.BookId);
         if (bn == null)
         {
-            bn = new BookNotes();
+            bn = new BookNoteViewModel();
             bn.BookId = note.BookId;
             BookNotesAdd(bookdb, bn, ExistHandling.IfNotExists);
             bn = BookNotesFind(bookdb, note.BookId);
@@ -400,7 +370,7 @@ static partial class CommonQueries
         BookSaveChanges(bookdb);
     }
 
-    public static IList<BookNotes> BookNotesGetAll()
+    public IList<BookNoteModel> BookNotesGetAll()
     {
         NQueries++;
         var bookdb = BookDataContext.Get();
@@ -414,7 +384,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static int DownloadedBookAdd(BookDataContext bookdb, DownloadData dd, ExistHandling handling)
+    public int DownloadedBookAdd(VoraciousDataContext bookdb, IDownloadData dd, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -433,7 +403,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static void DownloadedBookEnsureFileMarkedAsDownloaded(BookDataContext bookdb, string bookId, string folderPath, string filename)
+    public void DownloadedBookEnsureFileMarkedAsDownloaded(VoraciousDataContext bookdb, string bookId, string folderPath, string filename)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -445,27 +415,27 @@ static partial class CommonQueries
         var dd = book.DownloadData;
         if (dd == null)
         {
-            dd = new DownloadData()
+            dd = new DownloadDataModel()
             {
                 BookId = bookId,
                 FilePath = folderPath,
                 FileName = filename,
-                CurrFileStatus = DownloadData.FileStatus.Downloaded,
+                CurrFileStatus = FileStatusEnum.Downloaded,
                 DownloadDate = DateTimeOffset.Now,
             };
             book.DenormDownloadDate = dd.DownloadDate.ToUnixTimeSeconds();
-            CommonQueries.DownloadedBookAdd(bookdb, dd, ExistHandling.IfNotExists);
+            DownloadedBookAdd(bookdb, dd, ExistHandling.IfNotExists);
             BookSaveChanges(bookdb);
         }
-        else if (dd.CurrFileStatus != DownloadData.FileStatus.Downloaded)
+        else if (dd.CurrFileStatus != FileStatusEnum.Downloaded)
         {
             dd.FilePath = folderPath;
-            dd.CurrFileStatus = DownloadData.FileStatus.Downloaded;
-            BookSaveChanges(bookdb);
+                dd.CurrFileStatus = FileStatusEnum.Downloaded;
+                BookSaveChanges(bookdb);
         }
     }
 
-    public static DownloadData DownloadedBookFind(BookDataContext bookdb, string bookId)
+    public DownloadDataModel DownloadedBookFind(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -478,7 +448,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static List<DownloadData> DownloadedBooksGetAll(BookDataContext bookdb)
+    public List<DownloadDataModel> DownloadedBooksGetAll(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -489,7 +459,7 @@ static partial class CommonQueries
         }
     }
 
-    public static int UserReviewAdd(BookDataContext bookdb, UserReviewViewModel review, ExistHandling handling)
+    public int UserReviewAdd(VoraciousDataContext bookdb, UserReviewModel review, ExistHandling handling)
     {
         int retval = 0;
         NQueries++;
@@ -508,7 +478,7 @@ static partial class CommonQueries
         return retval;
     }
 
-    public static UserReviewViewModel UserReviewFind(BookDataContext bookdb, string bookId)
+    public IUserReview UserReviewFind(VoraciousDataContext bookdb, string bookId)
     {
         NQueries++;
         var book = BookGet(bookdb, bookId);
@@ -517,11 +487,10 @@ static partial class CommonQueries
             App.Error($"ERROR: attempting to get user review for {bookId} that isn't in the database");
             return null;
         }
-        var retval = book.Review;
-        return retval;
+        return book.Review;
     }
 
-    public static List<UserReviewViewModel> UserReviewsGetAll(BookDataContext bookdb)
+    public List<UserReviewViewModel> UserReviewsGetAll(VoraciousDataContext bookdb)
     {
         NQueries++;
         lock (bookdb)
@@ -532,16 +501,16 @@ static partial class CommonQueries
         }
     }
 
-    public static Dictionary<string, BookIndex> BookIndexes = null;
+    public Dictionary<string, BookIndex> BookIndexes = null;
 
-    public static void DoCreateIndexFile()
+    public void DoCreateIndexFile()
     {
         if (BookIndexes != null) return;
         BookIndexes = new Dictionary<string, BookIndex>();
 
         var folder = Windows.Storage.ApplicationData.Current.LocalFolder;
         var path = folder.Path;
-        string dbpath = Path.Combine(path, BookDataContext.BookDataDatabaseFilename);
+        string dbpath = Path.Combine(path, VoraciousDataContext.BookDataDatabaseFilename);
 
         var startTime = DateTime.UtcNow;
         using (var connection = new SqliteConnection($"Data Source={dbpath}"))
@@ -557,7 +526,7 @@ static partial class CommonQueries
         ;
     }
 
-    private static void AddFromTable(SqliteConnection connection, bool create, string commandText)
+    private void AddFromTable(SqliteConnection connection, bool create, string commandText)
     {
         var command = connection.CreateCommand();
         command.CommandText = commandText;
@@ -596,7 +565,7 @@ static partial class CommonQueries
         }
     }
 
-    public static void DoCreateIndexFileEF()
+    public void DoCreateIndexFileEF()
     {
         if (BookIndexes != null) return;
         BookIndexes = new Dictionary<string, BookIndex>();
@@ -620,7 +589,7 @@ static partial class CommonQueries
         ;
     }
  
-    public static HashSet<string> BookSearchs(ISearch searchOperations)
+    public HashSet<string> BookSearchs(ISearch searchOperations)
     {
         DoCreateIndexFile(); // create the index as needed.
         var retval = new HashSet<string>();

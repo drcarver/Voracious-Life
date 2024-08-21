@@ -7,7 +7,7 @@ using Voracious.Core.Interface;
 
 namespace Voracious.Core.ViewModel;
 
-public partial class BookNavigationDataViewModel : ObservableObject, IBookNavigationData
+public partial class BookNavigationViewModel : ObservableObject, IBookNavigation
 {
     [ObservableProperty]
     private int id;
@@ -79,7 +79,7 @@ public partial class BookNavigationDataViewModel : ObservableObject, IBookNaviga
     /// </summary>
     /// <param name="external">BookNavigationData tp be merged</param>
     /// <returns>The merge count</returns>
-    public bool Merge(BookNavigationDataViewModel external)
+    public bool Merge(BookNavigationViewModel external)
     {
         int retval = 0;
         if (external != null && external.MostRecentNavigationDate > MostRecentNavigationDate)

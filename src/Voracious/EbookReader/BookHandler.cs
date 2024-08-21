@@ -10,10 +10,10 @@ public interface BookHandler
     EpubFile GetImageByName(string imageName);
     string GetChapterContainingId(string id, int preferredHtmlIndex);
     Task<string> GetChapterBeforePercentAsync(BookLocation location);
-    Task DisplayBook(BookDataViewModel book, BookLocation location = null);
+    Task DisplayBook(BookViewModel book, BookLocation location = null);
     Task SetFontAndSizeAsync(string font, string size); // sie is e.g. "12pt"
 }
 public interface SimpleBookHandler
 {
-    Task DisplayBook(BookDataViewModel book, BookLocation location);
+    Task DisplayBook(BookViewModel book, BookLocation location);
 }

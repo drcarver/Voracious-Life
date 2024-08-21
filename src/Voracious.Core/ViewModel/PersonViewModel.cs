@@ -3,13 +3,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
+using Voracious.Core.Interface;
 
 namespace Voracious.Core.ViewModel;
 
 /// <summary>
 /// Person can be used for Author, Illustrator, Editor, Translator, etc.
 /// </summary>
-public partial class PersonViewModel : ObservableObject
+public partial class PersonViewModel : ObservableObject, IPerson
 {
     [ObservableProperty]
     private int id;
@@ -48,49 +49,6 @@ public partial class PersonViewModel : ObservableObject
     {
         Name = name;
         PersonType = personType;
-    }
-
-    // unknown is e.g. book http://www.gutenberg.org/ebooks/2822 where Daniel Defoe is somehow part of this book, we just don't know how.
-    // In the text, the book is attributed to Defoe.
-    public RelatorEnum ToRelator(string value)
-    {
-        switch (value)
-        {
-            // https://www.loc.gov/marc/relators/relaterm.html
-            case "dcterms:creator": return RelatorEnum.author; // little bit of magic :-)
-            case "marcrel:adp": return RelatorEnum.adapter;
-            case "marcrel:art": return RelatorEnum.artist;
-            case "marcrel:aft": return RelatorEnum.authorOfAfterward;
-            case "marcrel:ann": return RelatorEnum.annotator;
-            case "marcrel:arr": return RelatorEnum.arranger;
-            case "marcrel:aui": return RelatorEnum.authorOfIntroduction;
-            case "marcrel:aut": return RelatorEnum.author;
-            case "marcrel:clb": return RelatorEnum.collaborator;
-            case "marcrel:cmm": return RelatorEnum.commentator;
-            case "marcrel:cmp": return RelatorEnum.composer;
-            case "marcrel:cnd": return RelatorEnum.conductor;
-            case "marcrel:com": return RelatorEnum.compiler;
-            case "marcrel:ctb": return RelatorEnum.contributor;
-            case "marcrel:dub": return RelatorEnum.dubiousAuthor;
-            case "marcrel:edc": return RelatorEnum.editorOfCompilation;
-            case "marcrel:edt": return RelatorEnum.editor;
-            case "marcrel:egr": return RelatorEnum.engraver;
-            case "marcrel:ill": return RelatorEnum.illustrator;
-            case "marcrel:lbt": return RelatorEnum.librettist;
-            case "marcrel:oth": return RelatorEnum.other;
-            case "marcrel:pbl": return RelatorEnum.publisher;
-            case "marcrel:pht": return RelatorEnum.photographer;
-            case "marcrel:prf": return RelatorEnum.performer;
-            case "marcrel:prt": return RelatorEnum.printer;
-            case "marcrel:res": return RelatorEnum.researcher;
-            case "marcrel:trc": return RelatorEnum.transcriber;
-            case "marcrel:trl": return RelatorEnum.translator;
-            case "marcrel:unk": return RelatorEnum.unknown;
-
-
-            default:
-                return RelatorEnum.otherError; // Distinguish codes that aren't in this list from the actual "other" category
-        }
     }
 
     public void AddAlias(string value)

@@ -1,18 +1,20 @@
 ﻿using System.Text;
 
+using Voracious.Core.ViewModel;
+
 namespace Voracious.Database;
 
 public class BookIndex
 {
-    public string BookId { get; set; }
-    public string Text { get; set; }
+    public string? BookId { get; set; }
+    public string? Text { get; set; }
 
     public override string ToString()
     {
         return $"{BookId}\t{Text}"; // assumes bookId will never include a tab.
     }
 
-    public static BookIndex FromBookData(BookDataViewModel bookData)
+    public static BookIndex FromBookData(BookViewModel bookData)
     {
         var sb = new StringBuilder();
         Append(sb, bookData.Title);
