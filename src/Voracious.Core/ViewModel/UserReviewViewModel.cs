@@ -2,6 +2,8 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Voracious.Core.Interface;
+
 namespace Voracious.Database;
 
 /// <summary>

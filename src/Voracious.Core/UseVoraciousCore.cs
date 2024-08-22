@@ -23,7 +23,7 @@ public static class ServiceCollectionExtension
             .AddTransient<IPerson, PersonViewModel>()
             .AddTransient<IUserNote, UserNoteViewModel>()
             .AddTransient<IUserReview, UserReviewViewModel>()
-            ;
+             ;
         return collection;
     }
 }

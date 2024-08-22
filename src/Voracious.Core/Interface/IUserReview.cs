@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Voracious.Database;
+namespace Voracious.Core.Interface;
 
 /// <summary>
 /// User reviews a single book
@@ -9,15 +9,15 @@ public interface IUserReview
 {
     int Id { get; set; }
 
-    string BookId {  get; set; }
+    string BookId { get; set; }
 
-    DateTimeOffset CreateDate {  get; set; }
+    DateTimeOffset CreateDate { get; set; }
 
-    DateTimeOffset MostRecentModificationDate {  get; set; }
+    DateTimeOffset MostRecentModificationDate { get; set; }
 
     double NStars { get; set; }
 
-    string Review {  get; set; }
+    string Review { get; set; }
 
     string Tags { get; set; }
 }

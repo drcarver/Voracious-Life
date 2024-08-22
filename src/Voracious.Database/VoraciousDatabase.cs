@@ -6,14 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Voracious.Core.Interface;
 using Voracious.Core.ViewModel;
-using Voracious.Database;
 
-namespace Voracious.Gutenberg;
+namespace Voracious.Database;
 
 public static class ServiceCollectionExtension
 {
-    public static IServiceCollection UseVoraciousGutenberg(this IServiceCollection collection)
+    public static IServiceCollection VoraciousDatabase(this IServiceCollection collection)
     {
+        collection
+            .AddEntityFrameworkSqlite()
+            .AddDbContext<VoraciousDataContext>()
+            ;
         return collection;
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Voracious.Database.Model;
+﻿using Voracious.Core.Interface;
+
+namespace Voracious.Database.Model;
 
 public class UserReviewModel : IUserReview
 {

@@ -9,7 +9,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Voracious.Core.Enum;
 using Voracious.Core.Extension;
 using Voracious.Core.Interface;
-using Voracious.Database;
 
 namespace Voracious.Core.ViewModel;
 
@@ -30,11 +29,17 @@ public partial class BookViewModel : ObservableObject, IBook, IGetSearchArea
     public string Validate()
     {
         var retval = "";
-        if (string.IsNullOrWhiteSpace(BookId)) retval += "ERROR: BookId is not set\n";
+        if (string.IsNullOrWhiteSpace(BookId))
+        {
+            retval += "ERROR: BookId is not set\n";
+        }
         if (string.IsNullOrWhiteSpace(Title)) retval += "ERROR: Title is not set\n";
         if (!string.IsNullOrWhiteSpace(TitleAlternative) && string.IsNullOrWhiteSpace(Title)) retval += "ERROR: TitleAlternative is set but Title is not\n";
 
-        if (Issued == "None") retval += "ERROR: Book was not issued\n";
+        if (Issued == null)
+        {
+            retval += "ERROR: Book was not issued\n";
+        }
         if (Title == "No title" && Files.Count == 0) retval += "ERROR: Gutenberg made a book with no title or files";
         if (retval != "" && Files.Count == 0) retval += "ERROR: Book has no files";
         return retval;

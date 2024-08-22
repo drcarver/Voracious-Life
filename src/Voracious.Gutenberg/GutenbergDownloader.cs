@@ -1,14 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Voracious.Controls;
-using Voracious.Core.Enum;
-using Voracious.Core.ViewModel;
 
 namespace Voracious.Gutenberg;
 
