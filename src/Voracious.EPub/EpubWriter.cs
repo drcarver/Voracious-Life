@@ -75,7 +75,7 @@ public class EpubWriter
         }
     }
 
-    public static void Write(EpubBook book, string filename)
+    public void Write(EpubBook book, string filename)
     {
         if (book == null) throw new ArgumentNullException(nameof(book));
         if (string.IsNullOrWhiteSpace(filename)) throw new ArgumentNullException(nameof(filename));
@@ -84,7 +84,7 @@ public class EpubWriter
         writer.Write(filename);
     }
 
-    public static void Write(EpubBook book, Stream stream)
+    public void Write(EpubBook book, Stream stream)
     {
         if (book == null) throw new ArgumentNullException(nameof(book));
         if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -98,13 +98,13 @@ public class EpubWriter
     /// </summary>
     /// <param name="book"></param>
     /// <returns></returns>
-    public static EpubBook MakeCopy(EpubBook book)
+    public EpubBook MakeCopy(EpubBook book)
     {
         var stream = new MemoryStream();
         var writer = new EpubWriter(book);
         writer.Write(stream);
         stream.Seek(0, SeekOrigin.Begin);
-        var epub = EpubReader.Read(stream, false);
+        var epub = new EpubReader().Read(stream, false);
         return epub;
     }
 

@@ -1,5 +1,8 @@
-﻿using CommunityToolkit.Maui;
+﻿using System.Reflection;
 
+using CommunityToolkit.Maui;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Voracious;
@@ -19,8 +22,17 @@ public static class MauiProgram
         builder.Services
             .AddMauiBlazorWebView();
 
+        var a = Assembly.GetExecutingAssembly();
+        using var stream = a.GetManifestResourceStream("appsettings.json");
+
+        var config = new ConfigurationBuilder()
+            .AddJsonStream(stream)
+            .Build();
+
+        builder.Configuration.AddConfiguration(config);
+
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
 

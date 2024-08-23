@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-using Voracious.Controls;
+using Voracious.Core.Interface;
 
 namespace Voracious.Gutenberg;
 
@@ -14,7 +14,7 @@ public class GutenbergDownloader
     /// <param name="client">The http client from the DI</param>
     /// <param name="loggerFactory">The logger from the DI</param>
     public GutenbergDownloader(
-        HttpClientFactory client,
+        HttpClient client,
         ILoggerFactory loggerFactory)
     {
         if (hc != null)
@@ -49,8 +49,6 @@ public class GutenbergDownloader
     {
         var retval = false;
         int totalRead = 0;
-        //var fullpath = folder + @"\" + filename;
-        //var file = await PCLStorage.FileSystem.Current.GetFileFromPathAsync(fullpath);
         var file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
         Stream stream = null;
         System.Diagnostics.Debug.WriteLine($"Note: downloading catalog from {uri.OriginalString}");

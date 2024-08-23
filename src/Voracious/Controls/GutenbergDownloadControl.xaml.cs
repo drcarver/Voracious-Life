@@ -1,4 +1,5 @@
 ﻿using Voracious.Core.Enum;
+using Voracious.Core.Interface;
 using Voracious.Database;
 using Voracious.UwpClasses;
 

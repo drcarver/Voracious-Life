@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
 
-namespace Voracious.Database;
+namespace Voracious.Core.ViewModel;
 
 public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenameAndFormatData
 {
@@ -28,6 +29,7 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenam
     // Book can't be the primary key because there are duplicates. Use a synthesized Id
     // which will be maintained by the database.
     [ObservableProperty]
+    [property: Key]
     private int id;
 
     [ObservableProperty]

@@ -17,9 +17,9 @@ using Voracious.EpubSharp.Format.Readers;
 
 namespace Voracious.EPub;
 
-public static class EpubReader
+public class EpubReader
 {
-    public static EpubBook Read(string filePath, Encoding encoding = null)
+    public EpubBook Read(string filePath, Encoding encoding = null)
     {
         if (filePath == null) throw new ArgumentNullException(nameof(filePath));
         if (encoding == null) encoding = Constants.DefaultEncoding;
@@ -32,13 +32,13 @@ public static class EpubReader
         return Read(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false, encoding);
     }
 
-    public static EpubBook Read(byte[] epubData, Encoding encoding = null)
+    public EpubBook Read(byte[] epubData, Encoding encoding = null)
     {
         if (encoding == null) encoding = Constants.DefaultEncoding;
         return Read(new MemoryStream(epubData), false, encoding);
     }
 
-    public static EpubBook Read(Stream stream, bool leaveOpen, Encoding encoding = null)
+    public EpubBook Read(Stream stream, bool leaveOpen, Encoding encoding = null)
     {
         if (stream == null) throw new ArgumentNullException(nameof(stream));
         if (encoding == null) encoding = Constants.DefaultEncoding;
@@ -80,7 +80,7 @@ public static class EpubReader
         }
     }
 
-    private static byte[] LoadCoverImage(EpubBook book)
+    private byte[] LoadCoverImage(EpubBook book)
     {
         if (book == null) throw new ArgumentNullException(nameof(book));
         if (book.Format == null) throw new ArgumentNullException(nameof(book.Format));
@@ -95,7 +95,7 @@ public static class EpubReader
         return coverImageFile?.Content;
     }
 
-    private static List<EpubChapter> LoadChapters(EpubBook book)
+    private List<EpubChapter> LoadChapters(EpubBook book)
     {
         if (book.Format.Nav != null)
         {
@@ -114,7 +114,7 @@ public static class EpubReader
         return new List<EpubChapter>();
     }
 
-    private static List<EpubChapter> LoadChaptersFromNav(string navAbsolutePath, XElement element, EpubChapter parentChapter = null)
+    private List<EpubChapter> LoadChaptersFromNav(string navAbsolutePath, XElement element, EpubChapter parentChapter = null)
     {
         if (element == null) throw new ArgumentNullException(nameof(element));
         var ns = element.Name.Namespace;
@@ -174,7 +174,7 @@ public static class EpubReader
         return result;
     }
 
-    private static List<EpubChapter> LoadChaptersFromNcx(string ncxAbsolutePath, IEnumerable<NcxNavPoint> navigationPoints, EpubChapter parentChapter = null)
+    private List<EpubChapter> LoadChaptersFromNcx(string ncxAbsolutePath, IEnumerable<NcxNavPoint> navigationPoints, EpubChapter parentChapter = null)
     {
         var result = new List<EpubChapter>();
         var previous = parentChapter;
@@ -203,7 +203,7 @@ public static class EpubReader
         return result;
     }
 
-    private static EpubResources LoadResources(ZipArchive epubArchive, EpubBook book)
+    private EpubResources LoadResources(ZipArchive epubArchive, EpubBook book)
     {
         var resources = new EpubResources();
 
@@ -318,7 +318,7 @@ public static class EpubReader
         return resources;
     }
 
-    private static EpubSpecialResources LoadSpecialResources(ZipArchive epubArchive, EpubBook book)
+    private EpubSpecialResources LoadSpecialResources(ZipArchive epubArchive, EpubBook book)
     {
         var result = new EpubSpecialResources
         {

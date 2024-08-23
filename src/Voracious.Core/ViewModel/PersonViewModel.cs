@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -13,6 +14,7 @@ namespace Voracious.Core.ViewModel;
 public partial class PersonViewModel : ObservableObject, IPerson
 {
     [ObservableProperty]
+    [property: Key]
     private int id;
 
     [ObservableProperty]
@@ -34,6 +36,9 @@ public partial class PersonViewModel : ObservableObject, IPerson
 
     [ObservableProperty]
     private string webpage;
+
+    [ObservableProperty]
+    private string fileAs;
 
     /// <summary>
     /// e.g. aut=author ill=illustator from id.loc.gov/vocabulary/relators.html

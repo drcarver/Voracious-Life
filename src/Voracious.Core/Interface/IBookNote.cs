@@ -10,5 +10,5 @@ public interface IBookNote
 
     string BookId { get; set; }
 
-    ObservableCollection<IUserNote> Notes { get; set; }
+    ObservableCollection<UserNoteViewModel>? Notes { get; set; }
 }

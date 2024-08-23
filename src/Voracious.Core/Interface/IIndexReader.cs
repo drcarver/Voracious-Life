@@ -2,9 +2,8 @@
 
 using Voracious.Core.Enum;
 using Voracious.Core.ViewModel;
-using Voracious.Database;
 
-namespace Voracious.Controls;
+namespace Voracious.Core.Interface;
 
 public interface IIndexReader
 {

@@ -18,6 +18,8 @@ public interface IPerson
     /// </summary>
     string? Aliases { get; set; }
 
+    string FileAs { get; set; }
+
     int BirthDate { get; set; }
 
     int DeathDate { get; set; }

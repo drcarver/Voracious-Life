@@ -1,6 +1,7 @@
-﻿using Voracious.EpubSharp;
+﻿using Voracious.EPub;
+using Voracious.EpubSharp;
 
-namespace Voracious.EbookReader;
+namespace Voracious.EPub.Extensions;
 
 public class EpubBookExt
 {

@@ -11,7 +11,7 @@ namespace Voracious.Core.Interface;
 /// </summary>
 public interface IBook
 {
-    string? BookId { get;set; }
+    string? BookId { get; set; }
 
     string? BookSource { get; set; }
 
@@ -42,17 +42,17 @@ public interface IBook
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    ObservableCollection<IPerson> People { get; set; }
+    ObservableCollection<PersonViewModel> People { get; set; }
 
     /// <summary>
     /// List of all of the files for this book and their formats.
     /// </summary>
-    ObservableCollection<IFilenameAndFormatData> Files { get; set; }
+    ObservableCollection<FilenameAndFormatDataViewModel> Files { get; set; }
 
     /// <summary>
     /// e.g. en. A press raw data can be capitalized as En, which IMHO is wrong.
     /// </summary>
-    string Language {  get; set; }
+    string Language { get; set; }
 
     /// <summary>
     /// <dcterms:subject>
@@ -78,7 +78,7 @@ public interface IBook
     /// <summary>
     /// Marc508 e.g. Produced by Biblioteca Nacional Digital (http://bnd.bn.pt),
     /// </summary>
-    string PGNotes{ get; set; }
+    string PGNotes { get; set; }
 
     /// <summary>
     /// Marc546 e.g. This ebook uses a 19th century spelling for pg11299.rdf
@@ -108,11 +108,11 @@ public interface IBook
     //
     // Next is all of the user-settable things
     //
-    IUserReview Review { get; set; }
+    UserReviewViewModel Review { get; set; }
 
-    IBookNote Notes { get; set; }
+    BookNoteViewModel Notes { get; set; }
 
-    IDownloadData DownloadData { get; set; }
+    DownloadDataViewModel DownloadData { get; set; }
 
-    IBookNavigation NavigationData { get; set; }
+    BookNavigationViewModel NavigationData { get; set; }
 }

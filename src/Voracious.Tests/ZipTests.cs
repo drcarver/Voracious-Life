@@ -9,16 +9,43 @@ namespace Voracious.Tests;
 public class ZipTests
 {
     [TestMethod]
-    public void OpenZipFile()
+    public void SetCurrentDirectoryTest()
     {
         string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData);
-        string fpath= $@"{folder}\Voracious\";
+        string fpath = $@"{folder}\Voracious\";
         Directory.CreateDirectory(fpath);
-        string fullpath = $@"{fpath}\rdf-files.tar.zip";
+        Directory.SetCurrentDirectory(fpath);
+
+        Assert.IsTrue(File.Exists("rdf-files.tar.zip"));
+    }
+
+    [TestMethod]
+    public void OpenZipFileTest()
+    {
+        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData);
+        string fpath = $@"{folder}\Voracious\";
+        Directory.CreateDirectory(fpath);
+        Directory.SetCurrentDirectory(fpath);
+
+        string fname = $"rdf-files.tar.zip";
+        var zipArchive = ZipFile.OpenRead(fname);
+        Assert.AreEqual(zipArchive.Entries[0].Name, "rdf-files.tar");
+        zipArchive.Dispose();
+    }
+
+    [TestMethod]
+    public void CountEntriesInTarFileTest()
+    {
+        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData);
+        string fpath = $@"{folder}\Voracious\";
+        Directory.CreateDirectory(fpath);
+        Directory.SetCurrentDirectory(fpath);
+
+        string fname = $"rdf-files.tar.zip";
         int epubCount = 0;
-        using (var zipArchive = ZipFile.OpenRead(fullpath))
+        using (var zipArchive = ZipFile.OpenRead(fname))
         {
-            string tarpath = $@"{fpath}\rdf-files.tar";
+            string tarpath = $@"rdf-files.tar";
             zipArchive.ExtractToDirectory(fpath, true);
             using (StreamReader sr = new StreamReader(File.OpenRead($@"{fpath}\rdf-files.tar")))
             {

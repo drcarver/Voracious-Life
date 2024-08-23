@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Interface;
 
-namespace Voracious.Database;
+namespace Voracious.Core.ViewModel;
 
 /// <summary>
 /// User reviews a single book
@@ -12,6 +13,7 @@ namespace Voracious.Database;
 public partial class UserReviewViewModel : ObservableObject, IUserReview
 {
     [ObservableProperty]
+    [property: Key]
     private int id;
 
     [ObservableProperty]

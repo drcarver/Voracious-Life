@@ -7,8 +7,8 @@ namespace Voracious.Core.Interface;
 /// <summary>
 /// Info for every book that's been downloaded. This includes information on
 /// how much of the book has been read, and its state. This gets adds for 
-/// every single book that's downloaded or is known. DownloadData is per-computer and doesn't
-/// get added to a bookmark file.
+/// every single book that's downloaded or is known. DownloadData is per-computer 
+/// and doesn't get added to a bookmark file.
 /// </summary>
 public interface IDownloadData
 {

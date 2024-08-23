@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -10,6 +11,7 @@ namespace Voracious.Core.ViewModel;
 public partial class BookNavigationViewModel : ObservableObject, IBookNavigation
 {
     [ObservableProperty]
+    [property: Key]
     private int id;
 
     [ObservableProperty]

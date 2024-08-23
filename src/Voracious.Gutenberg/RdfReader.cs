@@ -1,48 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 
-using Android.OS;
+using Microsoft.Extensions.Logging;
 
 using Voracious.Core.Enum;
 using Voracious.Core.ViewModel;
+using Voracious.Database;
 
-namespace Voracious.Database;
+namespace Voracious.Gutenberg;
 
 public partial class RdfReader
 {
-    public async Task<FileResult> PickAndShow(PickOptions options)
+    private ILogger<RdfReader> logger;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="loggerFactory">The logger factory</param>
+    /// <param name="bookdb">The database context for the application</param>
+    public RdfReader(
+        ILoggerFactory loggerFactory,
+        VoraciousDataContext bookdb)
     {
-        try
-        {
-            var result = await FilePicker.Default.PickAsync(options);
-            if (result != null)
-            {
-                if (result.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
-                    result.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
-                {
-                    using var stream = await result.OpenReadAsync();
-                    var image = ImageSource.FromStream(() => stream);
-                }
-            }
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            // The user canceled or something went wrong
-        }
-
-        return null;
+        logger = loggerFactory.CreateLogger<RdfReader>();
+        Bookdb = bookdb;
     }
 
     /// <summary>
-    /// Queries user for ZIPPED TAR'd RDF (catalog) file and stuff data into database
+    /// Gets the zipped tar (catalog) 
+    /// file and stuff data into database
     /// </summary>
     /// <returns></returns>
     public async Task<int> ReadZipTarRdfFile()
@@ -76,7 +61,7 @@ public partial class RdfReader
         int nnodes = 0;
         List<BookViewModel> newBooks = [];
 
-        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData)
+        string folder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
         try
         {
             //using (ZipArchive archive = ZipFile.OpenRead(zipPath))
@@ -133,7 +118,7 @@ public partial class RdfReader
             //                                catch (Exception rdfex)
             //                                {
             //                                    // Do what on exception?
-            //                                    Log($"Error: file {file.Name} name {tarReader.Entry.Key} exception {rdfex.Message}");
+            //                                    logger.LogError($"Error: file {file.Name} name {tarReader.Entry.Key} exception {rdfex.Message}");
             //                                    newCount = 0;
             //                                }
             //                                nnewfiles += newCount;
@@ -150,9 +135,9 @@ public partial class RdfReader
             //                                if (nnewfiles >= SaveAfterNFiles)
             //                                {
             //                                    // FAIL: must save periodically. Can't accumulate a large number
-            //                                    // of books (e..g, 60K books in the catalog) and then save all at
+            //                                    // of books (e..g, 60K books in the catalogger.LogError) and then save all at
             //                                    // once; it will take up too much memory and will crash.
-            //                                    Log($"At index {CommonQueries.BookCount(bookdb)} file {file.Name} nfiles {nnewfiles}");
+            //                                    logger.LogError($"At index {CommonQueries.BookCount(bookdb)} file {file.Name} nfiles {nnewfiles}");
             //                                    CommonQueries.BookSaveChanges(bookdb);
 
             //                                    // Try resetting the singleton to reduce the number of crashes.
@@ -171,7 +156,7 @@ public partial class RdfReader
             //                                }
             //                                if (nnodes >= UiAfterNNodes)
             //                                {
-            //                                    //await ui.LogAsync($"Book: file {tarReader.Entry.Key}\nNNew: {nfiles} NProcesses {nnodes}\n");
+            //                                    //await ui.logger.LogErrorAsync($"Book: file {tarReader.Entry.Key}\nNNew: {nfiles} NProcesses {nnodes}\n");
             //                                    await ui.OnTotalBooks(nnodes);
             //                                    UiAfterNNodes += NodeReadCount;
             //                                }
@@ -186,7 +171,7 @@ public partial class RdfReader
         }
         catch (Exception readEx)
         {
-            Log($"Error: reading Gutenberg ZIP file exception {readEx.Message}");
+            logger.LogError($"Error: reading Gutenberg ZIP file exception {readEx.Message}");
         }
 
         return newBooks;
@@ -199,15 +184,7 @@ public partial class RdfReader
     static int NodeReadCount = 100;
 
     const int MaxFilesChecked = 9999999;
-
-    static StringBuilder logsb = new StringBuilder();
-    private static void Log(string str)
-    {
-        logsb.Append(str + "\n");
-        System.Diagnostics.Debug.WriteLine(str);
-    }
-
-    private static PersonViewModel ExtractCreator(string logname, XmlNode parentnode)
+    private static PersonViewModel ExtractCreator(string logger.LogErrorname, XmlNode parentnode)
     {
         var retval = new PersonViewModel();
         try
@@ -216,14 +193,14 @@ public partial class RdfReader
             if (node == null)
             {
                 // Some books (like 1813) just don't have all this set up.
-                //Log($"Error: ExtractCreator doesn't have a pgterms:agent for {parentnode.InnerText} for {logname}");
+                //logger.LogError($"Error: ExtractCreator doesn't have a pgterms:agent for {parentnode.InnerText} for {logger.LogErrorname}");
                 return null;
             }
             string str = "";
             var relator = PersonViewModel.ToRelator(parentnode.Name); // e.g. marcrel:aui == author of introductions
             if (relator == RelatorEnum.otherError)
             {
-                Log($"ERROR: ExtractCreator has unknown relator {parentnode.Name} for {logname}");
+                logger.LogError($"ERROR: ExtractCreator has unknown relator {parentnode.Name} for {logger.LogErrorname}");
                 return null;
             }
             retval.PersonType = relator;
@@ -240,7 +217,7 @@ public partial class RdfReader
         }
         catch (Exception)
         {
-            Log($"ERROR: unable to extract person from {parentnode.Value} for {logname}");
+            logger.LogError($"ERROR: unable to extract person from {parentnode.Value} for {logger.LogErrorname}");
             return null;
         }
         return retval;
@@ -248,7 +225,7 @@ public partial class RdfReader
     /// <summary>
     /// Given a <dcterms:hasFormat> blob, extract the file format + file location data.
     /// </summary>
-    private static FilenameAndFormatDataViewModel ExtractHasFormat(string logname, XmlNode node)
+    private static FilenameAndFormatDataViewModel ExtractHasFormat(string logger.LogErrorname, XmlNode node)
     {
         bool extentIsZero = false;
         var retval = new FilenameAndFormatDataViewModel();
@@ -260,13 +237,13 @@ public partial class RdfReader
                 var childFile = childFileObj as XmlNode;
                 if (childFile == null)
                 {
-                    Log($"ERROR: hasFormat child isn't an XmlNode with {node.InnerText} for {logname}");
+                    logger.LogError($"ERROR: hasFormat child isn't an XmlNode with {node.InnerText} for {logger.LogErrorname}");
                     continue;
                 }
                 nchild++;
                 if (nchild > 1)
                 {
-                    Log($"ERROR: hasFormat has too many child with {node.InnerText} for {logname}");
+                    logger.LogError($"ERROR: hasFormat has too many child with {node.InnerText} for {logger.LogErrorname}");
                     continue;
                 }
                 retval.FileName = childFile.Attributes["rdf:about"].Value; // The super critical part!
@@ -275,7 +252,7 @@ public partial class RdfReader
                     var value = valueObj as XmlNode;
                     if (value == null)
                     {
-                        Log($"ERROR: hasFormat grandchild isn't an XmlNode with {childFile.InnerText} for {logname}");
+                        logger.LogError($"ERROR: hasFormat grandchild isn't an XmlNode with {childFile.InnerText} for {logger.LogErrorname}");
                         continue;
                     }
                     switch (value.Name)
@@ -286,7 +263,7 @@ public partial class RdfReader
                                 var description = descriptionObj as XmlNode;
                                 if (description == null)
                                 {
-                                    Log($"ERROR: hasFormat description grandchild isn't an XmlNode with {value.InnerText} for {logname}");
+                                    logger.LogError($"ERROR: hasFormat description grandchild isn't an XmlNode with {value.InnerText} for {logger.LogErrorname}");
                                     continue;
                                 }
                                 foreach (var dvalueObj in description.ChildNodes)
@@ -294,7 +271,7 @@ public partial class RdfReader
                                     var dvalue = dvalueObj as XmlNode;
                                     if (dvalue == null)
                                     {
-                                        Log($"ERROR: hasFormat description grandchild isn't an XmlNode with {description.InnerText} for {logname}");
+                                        logger.LogError($"ERROR: hasFormat description grandchild isn't an XmlNode with {description.InnerText} for {logger.LogErrorname}");
                                         continue;
                                     }
                                     switch (dvalue.Name)
@@ -305,7 +282,7 @@ public partial class RdfReader
                                         case "dcam:memberOf":
                                             break;
                                         default:
-                                            Log($"ERROR: Unknown member {dvalue.Name} for {logname}");
+                                            logger.LogError($"ERROR: Unknown member {dvalue.Name} for {logger.LogErrorname}");
                                             break;
                                     }
                                 }
@@ -316,7 +293,7 @@ public partial class RdfReader
                             {
                                 // 2024-05-05: extent and modified commonly have multiple values. As of 2024-05-05, the most recent is always 
                                 // the first value, so that's the one to keep.
-                                // Log($"ERROR: hasFormat has multiple {value.Name} for {logname}");
+                                // logger.LogError($"ERROR: hasFormat has multiple {value.Name} for {logger.LogErrorname}");
                             }
                             else
                             {
@@ -328,7 +305,7 @@ public partial class RdfReader
                             {
                                 // 2024-05-05: extent and modified commonly have multiple values. As of 2024-05-05, the most recent is always 
                                 // the first value, so that's the one to keep.
-                                //Log($"ERROR: hasFormat has multiple {value.Name} for {logname}");
+                                //logger.LogError($"ERROR: hasFormat has multiple {value.Name} for {logger.LogErrorname}");
                             }
                             else
                             {
@@ -339,12 +316,12 @@ public partial class RdfReader
                         case "dcterms:isFormatOf":
                             if (retval.BookId != "")
                             {
-                                Log($"ERROR: hasFormat has multiple {value.Name} for {logname}");
+                                logger.LogError($"ERROR: hasFormat has multiple {value.Name} for {logger.LogErrorname}");
                             }
                             retval.BookId = value.Attributes["rdf:resource"].Value;
                             break;
                         default:
-                            Log($"ERROR: hasFormat unknown child {value.Name} for {logname}");
+                            logger.LogError($"ERROR: hasFormat unknown child {value.Name} for {logger.LogErrorname}");
                             break;
                     }
                 }
@@ -352,14 +329,14 @@ public partial class RdfReader
         }
         catch (Exception)
         {
-            Log($"ERROR: unable to extract hasFormat from {node.Value} for {logname}");
+            logger.LogError($"ERROR: unable to extract hasFormat from {node.Value} for {logger.LogErrorname}");
         }
 
-        if (retval.FileName == "") Log($"ERROR: hasFormat: doesn't include filename for {logname}");
-        if (retval.Extent < 1 && !extentIsZero) Log($"ERROR: hasFormat: doesn't include extent for {logname} for {retval.FileName}");
-        if (retval.LastModified == "") Log($"ERROR: hasFormat: doesn't include modified for {logname}");
-        if (retval.BookId == "") Log($"ERROR: hasFormat: doesn't include bookId for {logname}");
-        if (!retval.IsKnownMimeType) Log($"ERROR: hasFormat: Unknown mime type {retval.MimeType} for {logname}");
+        if (retval.FileName == "") logger.LogError($"ERROR: hasFormat: doesn't include filename for {logger.LogErrorname}");
+        if (retval.Extent < 1 && !extentIsZero) logger.LogError($"ERROR: hasFormat: doesn't include extent for {logger.LogErrorname} for {retval.FileName}");
+        if (retval.LastModified == "") logger.LogError($"ERROR: hasFormat: doesn't include modified for {logger.LogErrorname}");
+        if (retval.BookId == "") logger.LogError($"ERROR: hasFormat: doesn't include bookId for {logger.LogErrorname}");
+        if (!retval.IsKnownMimeType) logger.LogError($"ERROR: hasFormat: Unknown mime type {retval.MimeType} for {logger.LogErrorname}");
         return retval;
     }
     /// <summary>
@@ -383,7 +360,7 @@ public partial class RdfReader
         return retval;
     }
 
-    private static string ExtractLanguageValue(string logname, XmlNode node, string defaultValue = "")
+    private static string ExtractLanguageValue(string logger.LogErrorname, XmlNode node, string defaultValue = "")
     {
         string retval = defaultValue;
         try
@@ -403,17 +380,17 @@ public partial class RdfReader
                 }
                 else
                 {
-                    Log($"ERROR: unrecognized inner-text language {inner} from {node.Value} for {logname}");
+                    logger.LogError($"ERROR: unrecognized inner-text language {inner} from {node.Value} for {logger.LogErrorname}");
                 }
             }
         }
         catch (Exception)
         {
-            Log($"ERROR: unable to extract language from {node.Value} for {logname}");
+            logger.LogError($"ERROR: unable to extract language from {node.Value} for {logger.LogErrorname}");
         }
         return retval;
     }
-    private static (SubjectTypeEnum, string) ExtractSubjectValue(string logname, XmlNode node, string defaultValue = "")
+    private static (SubjectTypeEnum, string) ExtractSubjectValue(string logger.LogErrorname, XmlNode node, string defaultValue = "")
     {
         var subjectType = SubjectTypeEnum.Other;
         string retval = defaultValue;
@@ -424,24 +401,24 @@ public partial class RdfReader
             var subjectString = description["dcam:memberOf"].GetAttribute("rdf:resource");
             switch (subjectString)
             {
-                case "http://purl.org/dc/terms/LCSH": 
-                    subjectType = SubjectTypeEnum.LCSH; 
+                case "http://purl.org/dc/terms/LCSH":
+                    subjectType = SubjectTypeEnum.LCSH;
                     break;
-                case "http://purl.org/dc/terms/LCC": 
-                    subjectType = SubjectTypeEnum.LCC; 
+                case "http://purl.org/dc/terms/LCC":
+                    subjectType = SubjectTypeEnum.LCC;
                     break;
-                default: 
-                    Log("$ERROR: unknown subject type {subjectString} for {logname}"); break;
+                default:
+                    logger.LogError("$ERROR: unknown subject type {subjectString} for {logger.LogErrorname}"); break;
             }
         }
         catch (Exception)
         {
-            Log($"ERROR: unable to extract subject from {node.Value} for {logname}");
+            logger.LogError($"ERROR: unable to extract subject from {node.Value} for {logger.LogErrorname}");
         }
         return (subjectType, retval);
     }
 
-    private static string ExtractType(string logname, XmlNode node, string defaultValue = "")
+    private static string ExtractType(string logger.LogErrorname, XmlNode node, string defaultValue = "")
     {
         string retval = defaultValue;
         try
@@ -451,14 +428,14 @@ public partial class RdfReader
         }
         catch (Exception)
         {
-            Log($"ERROR: unable to extract type from {node.Value} for {logname}");
+            logger.LogError($"ERROR: unable to extract type from {node.Value} for {logger.LogErrorname}");
         }
         return retval;
     }
 
 
     private static int NUnknownMarcRecords = 0;
-    private static BookViewModel ExtractBook(string logname, XmlNode node)
+    private static BookViewModel ExtractBook(string logger.LogErrorname, XmlNode node)
     {
         var book = new BookViewModel();
         var id = node.Attributes["rdf:about"]?.Value;
@@ -468,7 +445,7 @@ public partial class RdfReader
         }
         else
         {
-            Log($"ERROR: BookId: missing rdf:about with an id? for {logname}");
+            logger.LogError($"ERROR: BookId: missing rdf:about with an id? for {logger.LogErrorname}");
             return null;
         }
         FilenameAndFormatDataViewModel txtFormat = null;
@@ -484,19 +461,19 @@ public partial class RdfReader
                     book.TitleAlternative = value.InnerText;
                     break;
                 case "dcterms:creator":
-                    person = ExtractCreator(logname, value);
+                    person = ExtractCreator(logger.LogErrorname, value);
                     if (person != null) book.People.Add(person);
                     break;
                 case "dcterms:description": // <...>Illustrated by the author.</...>
                     book.Description = value.InnerText;
                     break;
                 case "dcterms:hasFormat": //  direct info about how to download a book
-                    var format = ExtractHasFormat(logname, value);
+                    var format = ExtractHasFormat(logger.LogErrorname, value);
                     if (format.Extent > 0)
                     {
                         // Gutenberg has a bunch of badly-made files which end up as zero size.
                         // In all cases where the extent is zero, the actual file on project gutenberg in fact
-                        // exists but has no bytes. There's no point in adding a catalog entry for something that
+                        // exists but has no bytes. There's no point in adding a catalogger.LogError entry for something that
                         // can't actually show up.
                         var ftype = format.GetFileType();
                         switch (ftype)
@@ -517,7 +494,7 @@ public partial class RdfReader
                     book.Issued = value.InnerText; // e.g. 1997-12-01 or None
                     break;
                 case "dcterms:language":
-                    book.Language = ExtractLanguageValue(logname, value);
+                    book.Language = ExtractLanguageValue(logger.LogErrorname, value);
                     break;
                 case "dcterms:license": // <dcterms:license rdf:resource="license"/>
                     break;
@@ -526,7 +503,7 @@ public partial class RdfReader
                 case "dcterms:rights": // <dcterms:rights>Public domain in the USA.</dcterms:rights>
                     break;
                 case "dcterms:subject": // <dcterms:rights>Public domain in the USA.</dcterms:rights>
-                    var (subjectType, subject) = ExtractSubjectValue(logname, value);
+                    var (subjectType, subject) = ExtractSubjectValue(logger.LogErrorname, value);
                     switch (subjectType)
                     {
                         case SubjectType.LCC:
@@ -538,7 +515,7 @@ public partial class RdfReader
                             book.LCSH += subject;
                             break;
                         default:
-                            Log($"ERROR: unable to understand dcterms:subject {value.InnerText} for {logname}");
+                            logger.LogError($"ERROR: unable to understand dcterms:subject {value.InnerText} for {logger.LogErrorname}");
                             break;
                     }
                     break;
@@ -550,7 +527,7 @@ public partial class RdfReader
                     book.Title = value.InnerText;
                     break;
                 case "dcterms:type":
-                    var bookType = ExtractType(logname, value, "???");
+                    var bookType = ExtractType(logger.LogErrorname, value, "???");
                     switch (bookType)
                     {
                         case "Collection": book.BookType = BookViewModel.FileType.Collection; break;
@@ -564,7 +541,7 @@ public partial class RdfReader
                         case "Text": // OK, this is normal
                             break;
                         default:
-                            Log($"ERROR: Unknown book type {bookType} for {logname}");
+                            logger.LogError($"ERROR: Unknown book type {bookType} for {logger.LogErrorname}");
                             break;
                     }
                     break;
@@ -597,7 +574,7 @@ public partial class RdfReader
                 case "marcrel:trc": // 
                 case "marcrel:trl": // translator
                 case "marcrel:unk": // 
-                    person = ExtractCreator(logname, value);
+                    person = ExtractCreator(logger.LogErrorname, value);
                     if (person != null) book.People.Add(person);
                     break;
                 case "pgterms:bookshelf":
@@ -631,11 +608,11 @@ public partial class RdfReader
                 case "pgterms:marc905": // uniqueified author? e.g. 20210306045855reynolds
                 case "pgterms:marc906": // original year? e.g. 1923
                 case "pgterms:marc907": // Country? e.g. US us UK GB FR NY es United States
-                    // Not really unknown, just uninteresting to me: Log($"Unknown marc: {value.Name} == {value.InnerText} for {logname}");
+                    // Not really unknown, just uninteresting to me: logger.LogError($"Unknown marc: {value.Name} == {value.InnerText} for {logger.LogErrorname}");
                     break;
 
                 case "pgterms:marc020": // Mystery number: 0-397-00033-2
-                    // Don't care: Log($"Unknown marc: {value.Name} == {value.InnerText} for {logname}");
+                    // Don't care: logger.LogError($"Unknown marc: {value.Name} == {value.InnerText} for {logger.LogErrorname}");
                     break;
 
 
@@ -646,18 +623,18 @@ public partial class RdfReader
                 default:
                     if (NUnknownMarcRecords == 0)
                     {
-                        Log($"XML: unknown XML item. Individual RDF files are at e.g. https://www.gutenberg.org/cache/epub/35426/pg35426.rdf");
-                        Log($"XML: Gutenberg offline catalog information at https://www.gutenberg.org/ebooks/offline_catalogs.html#xmlrdf");
+                        logger.LogError($"XML: unknown XML item. Individual RDF files are at e.g. https://www.gutenberg.org/cache/epub/35426/pg35426.rdf");
+                        logger.LogError($"XML: Gutenberg offline catalogger.LogError information at https://www.gutenberg.org/ebooks/offline_catalogger.LogErrors.html#xmlrdf");
                     }
-                    var logvalue = value.InnerText;
-                    if (logvalue.Length > 40) logvalue = logvalue.Substring(0, 40);
-                    Log($"XML: {value.Name} but expected e.g. dcterms:hasFormat or dcterms:language etc. for {logname}; value={logvalue}");
+                    var logger.LogErrorvalue = value.InnerText;
+                    if (logger.LogErrorvalue.Length > 40) logger.LogErrorvalue = logger.LogErrorvalue.Substring(0, 40);
+                    logger.LogError($"XML: {value.Name} but expected e.g. dcterms:hasFormat or dcterms:language etc. for {logger.LogErrorname}; value={logger.LogErrorvalue}");
                     NUnknownMarcRecords++;
                     break;
             }
         }
         // Create an EPUB for all books > Id 50000.
-        // FAIL: Gutenberg creates incorrect catalogs. They don't include the EPUB until 
+        // FAIL: Gutenberg creates incorrect catalogger.LogErrors. They don't include the EPUB until 
         //  month after the initial creation thanks to an incorrect RDF creation script. And the 
         // links are just wrong; the links like https://www.gutenberg.org/ebooks/39198.epub.images
         // are really just redirects(!)
@@ -672,13 +649,13 @@ public partial class RdfReader
         }
 
         // Do a little validation
-        // Correction: don't do this validation. Too many Gutenberg "books" in the catalog are just plain
+        // Correction: don't do this validation. Too many Gutenberg "books" in the catalogger.LogError are just plain
         // errors. OTOH, they are o
         if (book.Issued != "None")
         {
             if (book.Files.Count == 0)
             {
-                Log($"XML: book has no files for {logname}");
+                logger.LogError($"XML: book has no files for {logger.LogErrorname}");
             }
         }
         return book;
@@ -686,15 +663,17 @@ public partial class RdfReader
     private static BookViewModel[] BookDataArray = new BookViewModel[10];
     private static int BookDataArrayIndex = -1;
 
+    public VoraciousDataContext Bookdb { get; }
+
     /// <summary>
     /// Reads in data form the xml file and potentially adds it to the database via a fancy merge.
     /// </summary>
     /// <param name="bookdb"></param>
-    /// <param name="logname"></param>
+    /// <param name="logger.LogErrorname"></param>
     /// <param name="xmlData"></param>
     /// <param name="newBooks"></param>
     /// <returns></returns>
-    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logname, string xmlData, IList<BookViewModel> newBooks, UpdateType updateType)
+    private static int ReadRdfFileAndInsert(BookDataContext bookdb, string logger.LogErrorname, string xmlData, IList<BookViewModel> newBooks, UpdateType updateType)
     {
         // This is a state machine, which means that some pretty important parts are just a little
         // bit buried. When a book is done, take a look at "pgterms:ebook" which has ExtractBook,
@@ -715,7 +694,7 @@ public partial class RdfReader
                         switch (bookNode.Name)
                         {
                             case "pgterms:ebook":
-                                var book = ExtractBook(logname, bookNode);
+                                var book = ExtractBook(logger.LogErrorname, bookNode);
 
                                 //
                                 // Set the denorm data
@@ -727,7 +706,7 @@ public partial class RdfReader
                                 book.DenormDownloadDate = dto.ToUnixTimeSeconds();
 
                                 // A book might be invalid. For example, Gutenberg includes
-                                // ebooks/0 in the RDF catalog even though it doesn't exist.
+                                // ebooks/0 in the RDF catalogger.LogError even though it doesn't exist.
                                 // Books with no downloads aren't considered real books.
                                 if (book != null && book.Validate() == "") //"" is OK (yes, it's weird)
                                 {
@@ -755,8 +734,8 @@ public partial class RdfReader
                                     // Actually save the book! (possibly with a fancy merge)
                                     // A fast update just adds new books; a full update will merge in data as needed.
                                     var existHandling = updateType == UpdateType.Full
-                                        ? CommonQueries.ExistHandling.SmartCatalogOverride
-                                        : CommonQueries.ExistHandling.CatalogOverrideFast;
+                                        ? CommonQueries.ExistHandling.SmartCatalogger.LogErrorOverride
+                                        : CommonQueries.ExistHandling.Catalogger.LogErrorOverrideFast;
 
                                     var nAdded = CommonQueries.BookAdd(bookdb, book, existHandling);
                                     if (nAdded > 0 && newBooks != null)
@@ -773,7 +752,7 @@ public partial class RdfReader
                                 // <<... rdf:about="http://en.wikipedia.org/wiki/Katharine_Pyle">
                                 break;
                             default:
-                                Log($"XML: ebook: {bookNode.Name} but just expected pgterms:ebook for {logname}");
+                                logger.LogError($"XML: ebook: {bookNode.Name} but just expected pgterms:ebook for {logger.LogErrorname}");
                                 break;
                         }
                     }
@@ -782,7 +761,7 @@ public partial class RdfReader
                     break;
 
                 default:
-                    Log($"XML: rdf:rdf: {node.Name} but just expected rdf:RDF for {logname}");
+                    logger.LogError($"XML: rdf:rdf: {node.Name} but just expected rdf:RDF for {logger.LogErrorname}");
                     break;
             }
         }

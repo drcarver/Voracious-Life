@@ -9,13 +9,13 @@ public interface IBookNavigation
 {
     int Id { get; set; }
 
-    string BookId { get;set; }
+    string BookId { get; set; }
 
     DateTimeOffset MostRecentNavigationDate { get; set; }
 
     int NCatalogViews { get; set; }
 
-    int NSwipeRight {  get; set; }
+    int NSwipeRight { get; set; }
 
     int NSwipeLeft { get; set; }
 
@@ -27,7 +27,7 @@ public interface IBookNavigation
 
     UserStatusEnum CurrStatus { get; set; }
 
-    DateTimeOffset TimeMarkedDone {  get; set; }
+    DateTimeOffset TimeMarkedDone { get; set; }
 
     DateTimeOffset FirstNavigationDate { get; set; }
 
