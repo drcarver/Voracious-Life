@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -48,7 +48,7 @@ public partial class BookViewModel : ObservableObject, IBook, IGetSearchArea
     private string? imprint;
 
     [ObservableProperty]
-    private DateTime issued = DateTime.UtcNow;
+    private DateTime? issued = DateTime.UtcNow;
 
     /// <summary>
     /// <dcterms:title>Three Little Kittens</dcterms:title>

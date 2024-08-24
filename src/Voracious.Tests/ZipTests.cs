@@ -49,7 +49,7 @@ public class ZipTests
             zipArchive.ExtractToDirectory(fpath, true);
             using (StreamReader sr = new StreamReader(File.OpenRead($@"{fpath}\rdf-files.tar")))
             {
-                TarReader tarReader = new TarReader(sr.BaseStream);
+                TarReader tarReader = new(sr.BaseStream);
                 TarEntry entry = null;
                 while ((entry = tarReader.GetNextEntry()) != null)
                 {

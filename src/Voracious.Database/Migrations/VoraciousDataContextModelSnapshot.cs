@@ -9,7 +9,7 @@ using Voracious.Database;
 
 namespace Voracious.Database.Migrations
 {
-    [DbContext(typeof(VoraciousDataContext))]
+    [DbContext(typeof(MyLibraryDataContext))]
     partial class VoraciousDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

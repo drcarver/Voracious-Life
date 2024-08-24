@@ -10,7 +10,7 @@ public class DatabaseTests
     [TestMethod]
     public void CreateDataBaseTest()
     {
-        var db = new VoraciousDataContext();
+        var db = new MyLibraryDataContext();
         db.Database.EnsureCreated();
         Assert.AreEqual(0, db.Books.Count());
 
@@ -24,7 +24,7 @@ public class DatabaseTests
     [TestMethod]
     public void DatabaseMigrationTest()
     {
-        var db = new VoraciousDataContext();
+        var db = new MyLibraryDataContext();
         db.Database.Migrate();
         Assert.AreEqual(0, db.Books.Count());
 
@@ -38,7 +38,7 @@ public class DatabaseTests
     [TestMethod]
     public void DatabaseDeleteTest()
     {
-        var db = new VoraciousDataContext();
+        var db = new MyLibraryDataContext();
 
         // Now delete the database
         db.Database.EnsureDeleted();

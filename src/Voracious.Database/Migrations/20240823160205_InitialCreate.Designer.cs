@@ -10,7 +10,7 @@ using Voracious.Database;
 
 namespace Voracious.Database.Migrations
 {
-    [DbContext(typeof(VoraciousDataContext))]
+    [DbContext(typeof(MyLibraryDataContext))]
     [Migration("20240823160205_InitialCreate")]
     partial class InitialCreate
     {

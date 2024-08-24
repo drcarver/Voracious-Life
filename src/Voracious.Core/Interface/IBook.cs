@@ -30,7 +30,7 @@ public interface IBook
     /// </summary>
     string? Imprint { get; set; }
 
-    DateTime Issued { get; set; }
+    DateTime? Issued { get; set; }
 
     /// <summary>
     /// <dcterms:title>Three Little Kittens</dcterms:title>

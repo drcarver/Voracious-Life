@@ -13,7 +13,7 @@ namespace Voracious.Core.Extension;
 /// </summary>
 public static class Utility
 {
-    public static int GetImportance(IPerson person)
+    public static int GetImportance(PersonViewModel person)
     {
         switch (person.PersonType)
         {
@@ -54,7 +54,7 @@ public static class Utility
     // unknown is e.g. book http://www.gutenberg.org/ebooks/2822
     // where Daniel Defoe is somehow part of this book, we just
     // don't know how.  In the text, the book is attributed to Defoe.
-    public static RelatorEnum ToRelator(IPerson person, string value)
+    public static RelatorEnum ToRelator(string value)
     {
         switch (value)
         {

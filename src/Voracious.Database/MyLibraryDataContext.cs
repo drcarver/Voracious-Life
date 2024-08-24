@@ -6,7 +6,7 @@ using Voracious.Core.ViewModel;
 
 namespace Voracious.Database;
 
-public class VoraciousDataContext : DbContext
+public class MyLibraryDataContext : DbContext
 {
     //private ILogger logger;
     //protected readonly IConfiguration Configuration;
@@ -14,15 +14,8 @@ public class VoraciousDataContext : DbContext
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="loggerFactory">The logger factory</param>
-    /// <param name="configuration">The configuration</param>
-    //public VoraciousDataContext(
-    //    ILoggerFactory loggerFactory,
-    //    IConfiguration configuration)
-    public VoraciousDataContext()
+    public MyLibraryDataContext()
     {
-        //Configuration = configuration;
-        //logger = loggerFactory.CreateLogger<VoraciousDataContext>();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,24 +25,14 @@ public class VoraciousDataContext : DbContext
         Directory.CreateDirectory(fpath);
         Directory.SetCurrentDirectory(fpath);
 
-        optionsBuilder.UseSqlite($@"Filename={fpath}\ebook.db", options =>
+        optionsBuilder.UseSqlite($@"Filename={fpath}\MyLibrary.db", options =>
         {
             options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
         });
         base.OnConfiguring(optionsBuilder);
-
-        //logger.LogInformation($"Creating database at {fpath}");
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Map table names
-        //modelBuilder.Entity<Blog>().ToTable("Blogs", "test");
-        //modelBuilder.Entity<Blog>(entity =>
-        //{
-        //    entity.HasKey(e => e.BlogId);
-        //    entity.HasIndex(e => e.Title).IsUnique();
-        //    entity.Property(e => e.DateTimeAdd).HasDefaultValueSql("CURRENT_TIMESTAMP");
-        //});
         base.OnModelCreating(modelBuilder);
     }
 
