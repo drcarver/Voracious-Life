@@ -14,26 +14,16 @@ public class BookIndex
         return $"{BookId}\t{Text}"; // assumes bookId will never include a tab.
     }
 
-    public static BookIndex FromBookData(BookViewModel bookData)
+    public static BookIndex FromBookData(ResourceViewModel bookData)
     {
         var sb = new StringBuilder();
         Append(sb, bookData.Title);
         Append(sb, bookData.TitleAlternative);
-        Append(sb, bookData.Review?.Tags);
-        Append(sb, bookData.Review?.Review);
         Append(sb, bookData.BookSeries);
         Append(sb, bookData.Imprint);
         Append(sb, bookData.LCC);
         Append(sb, bookData.LCCN);
         Append(sb, bookData.LCSH);
-        if (bookData.Notes != null)
-        {
-            foreach (var note in bookData.Notes.Notes)
-            {
-                Append(sb, note.Tags);
-                Append(sb, note.Text);
-            }
-        }
         foreach (var people in bookData.People)
         {
             Append(sb, people.Aliases);
@@ -42,7 +32,7 @@ public class BookIndex
 
         var retval = new BookIndex()
         {
-            BookId = bookData.BookId,
+            BookId = bookData.About,
             Text = sb.ToString(),
         };
         return retval;

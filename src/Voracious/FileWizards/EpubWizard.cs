@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using Voracious.EbookReader;
+using Voracious.EPub.Extensions;
 using Voracious.EpubSharp;
 
 namespace Voracious.FileWizards

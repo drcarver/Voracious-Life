@@ -1,8 +1,7 @@
 ﻿using Microsoft.Maui.Controls.PlatformConfiguration;
 
-using Voracious.Controls;
 using Voracious.Core.Model;
-using Voracious.Database;
+using Voracious.Core.ViewModel;
 using Voracious.EbookReader;
 using Voracious.FileWizards;
 using Voracious.Searching;
@@ -37,7 +36,7 @@ public partial class App : Application
     }
 
 
-    protected override async void OnFileActivated(FileActivatedEventArgs args)
+    protected override async void OnFileActivated()
     {
         Application.Current.Resources["UserCustomization"] = Customization;
         var mustCopy = InitializeFilesToGet.GetMustCopyInitialDatabase();
@@ -108,7 +107,7 @@ public partial class App : Application
         Logger.Log($"App:OnActivated:done");
     }
 
-    public static BookDataViewModel SavedActivatedBookData = null;
+    public static ResourceViewModel SavedActivatedBookData = null;
     public static BookLocation SavedActivatedBookLocation = null;
 
     /// <summary>

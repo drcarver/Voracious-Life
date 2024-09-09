@@ -11,9 +11,7 @@ public static class ServiceCollectionExtension
     {
         collection
             .AddTransient<IBookNavigation, BookNavigationViewModel>()
-            .AddTransient<IBookNote, BookNoteViewModel>()
-            .AddTransient<IBook, BookViewModel>()
-            .AddTransient<IDownloadData, DownloadDataViewModel>()
+            .AddTransient<IResource, ResourceViewModel>()
             .AddTransient<IFilenameAndFormatData, FilenameAndFormatDataViewModel>()
             .AddTransient<IPerson, PersonViewModel>()
             .AddTransient<IUserNote, UserNoteViewModel>()

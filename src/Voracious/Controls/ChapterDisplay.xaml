@@ -1,13 +1,14 @@
 ﻿<ContentView
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="using:Voracious.Controls"
+    xmlns:local="using:Voracious.Reader.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Class="Voracious.Controls.ChapterDisplay"
+    x:Class="Voracious.Reader.Controls.ChapterDisplay"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
+    
     <ContentView.Resources>
         <DataTemplate x:Key="Toc1" x:DataType="local:EpubChapterData">
             <!-- Need to set at least a little background color for tapped to work -->

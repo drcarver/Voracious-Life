@@ -7,9 +7,9 @@ namespace Voracious.Core.Interface;
 /// </summary>
 public interface IPerson
 {
-    int Id { get; set; }
+    string About { get; set; }
 
-    string Name { get; set; }
+    string? Name { get; set; }
 
     /// <summary>
     /// Aliases is stored as a series of + separated names
@@ -18,17 +18,17 @@ public interface IPerson
     /// </summary>
     string? Aliases { get; set; }
 
-    string FileAs { get; set; }
+    string? FileAs { get; set; }
 
-    int BirthDate { get; set; }
+    int? BirthDate { get; set; }
 
-    int DeathDate { get; set; }
+    int? DeathDate { get; set; }
 
-    string Webpage { get; set; }
+    string? Webpage { get; set; }
 
     /// <summary>
     /// e.g. aut=author ill=illustator 
     /// from www.loc.gov/vocabulary/relators.html
     /// </summary>
-    RelatorEnum PersonType { get; set; }
+    RelatorEnum? Relator { get; set; }
 }

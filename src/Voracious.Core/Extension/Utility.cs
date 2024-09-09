@@ -15,7 +15,7 @@ public static class Utility
 {
     public static int GetImportance(PersonViewModel person)
     {
-        switch (person.PersonType)
+        switch (person.Relator)
         {
             case RelatorEnum.author: return 10;
             case RelatorEnum.artist: return 20;

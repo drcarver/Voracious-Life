@@ -9,7 +9,7 @@ public interface IBookNavigation
 {
     int Id { get; set; }
 
-    string BookId { get; set; }
+    ResourceViewModel? Book { get; set; }
 
     DateTimeOffset MostRecentNavigationDate { get; set; }
 

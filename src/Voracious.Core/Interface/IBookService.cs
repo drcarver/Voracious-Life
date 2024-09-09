@@ -14,7 +14,7 @@ public interface IBookService
 
     int BookCount();
 
-    BookViewModel? GetBook(string bookId);
+    ResourceViewModel? GetBook(string bookId);
 
     /// <summary>
     /// List of books in the Gutenberg Top 100
@@ -39,19 +39,15 @@ public interface IBookService
     /// <param name="bookdb"></param>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    BookViewModel? GetBookFiles(string bookId);
+    ResourceViewModel? GetBookFiles(string bookId);
 
-    ObservableCollection<BookViewModel> GetAllBookWhichHaveUserData();
+    ObservableCollection<ResourceViewModel> GetAllBookWhichHaveUserData();
 
-    ObservableCollection<BookViewModel> GetBookRecentWhichHaveUserData();
+    ObservableCollection<ResourceViewModel> GetBookRecentWhichHaveUserData();
 
-    BookNoteViewModel? FindBookNote(string bookId);
+    UserNoteViewModel? FindBookNote(string bookId);
 
-    ObservableCollection<BookNoteViewModel> GetAllBookNotes();
-
-    DownloadDataViewModel? FindDownloaded(string bookId);
-
-    ObservableCollection<DownloadDataViewModel> GetAllDownloadedBooks();
+    ObservableCollection<UserNoteViewModel> GetAllBookNotes();
 
     UserReviewViewModel FindUserReview(string bookId);
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.ObjectModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -11,25 +11,7 @@ namespace Voracious.Core.ViewModel;
 
 public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenameAndFormatData
 {
-    public FilenameAndFormatDataViewModel()
-    {
-    }
-
-    public FilenameAndFormatDataViewModel(FilenameAndFormatDataViewModel source)
-    {
-        this.Id = source.Id;
-        this.BookId = source.BookId;
-        this.Extent = source.Extent;
-        this.FileName = source.FileName;
-        this.FileType = source.FileType;
-        this.LastModified = source.LastModified;
-        this.MimeType = source.MimeType;
-    }
-
-    // Book can't be the primary key because there are duplicates. Use a synthesized Id
-    // which will be maintained by the database.
     [ObservableProperty]
-    [property: Key]
     private int id;
 
     [ObservableProperty]
@@ -42,7 +24,13 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenam
     private string lastModified = "";
 
     [ObservableProperty]
-    private string bookId = "";
+    private FileStatusEnum currentFileStatus = FileStatusEnum.Unknown;
+
+    [ObservableProperty]
+    private DateTimeOffset downloadDate = DateTimeOffset.Now;
+
+    [ObservableProperty]
+    private ResourceViewModel resource;
 
     [ObservableProperty]
     private int extent = -1;
@@ -146,20 +134,6 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenam
         }
 
         return retval;
-    }
-
-    public int GutenbergStyleIndexNumber
-    {
-        get
-        {
-            var id = BookId;
-            var idx = id.IndexOf('/');
-            if (idx < 0) return 0;
-            var nstr = id.Substring(idx + 1);
-            int gutIndex = 0;
-            Int32.TryParse(nstr, out gutIndex);
-            return gutIndex;
-        }
     }
 
     public string FileTypeAsString()
@@ -306,10 +280,5 @@ public partial class FilenameAndFormatDataViewModel : ObservableObject, IFilenam
                     return false;
             }
         }
-    }
-
-    public override string ToString()
-    {
-        return this.FileName;
     }
 }

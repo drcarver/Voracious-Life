@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using Voracious.EPub;
 using Voracious.EpubSharp;
 
 namespace Voracious.FileWizards;

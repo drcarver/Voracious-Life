@@ -1,18 +1,25 @@
-﻿namespace Voracious.Core.Interface;
+﻿using System;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using Voracious.Core.Enum;
+using Voracious.Core.ViewModel;
+
+namespace Voracious.Core.Interface;
 
 public interface IFilenameAndFormatData
 {
-    // Book can't be the primary key because there are duplicates. Use a synthasized Id
-    // which will be maintained by the database.
     int Id { get; set; }
 
     string FileName { get; set; }
 
     string FileType { get; set; }
 
-    string LastModified { get; set; }
+    FileStatusEnum CurrentFileStatus { get; set; }
 
-    string BookId { get; set; }
+    DateTimeOffset DownloadDate { get; set; }
+
+    string LastModified { get; set; }
 
     int Extent { get; set; }
 

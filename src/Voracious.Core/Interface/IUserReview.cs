@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Voracious.Core.ViewModel;
+
 namespace Voracious.Core.Interface;
 
 /// <summary>
@@ -9,15 +11,13 @@ public interface IUserReview
 {
     int Id { get; set; }
 
-    string BookId { get; set; }
+    ResourceViewModel Book { get; set; }
 
     DateTimeOffset CreateDate { get; set; }
 
     DateTimeOffset MostRecentModificationDate { get; set; }
 
     double NStars { get; set; }
-
-    string Review { get; set; }
 
     string Tags { get; set; }
 }

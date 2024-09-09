@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Voracious.Core.ViewModel;
+
 namespace Voracious.Core.Interface;
 
 /// <summary>
@@ -9,7 +11,7 @@ public interface IUserNote
 {
     int Id { get; set; }
 
-    string BookId { get; set; }
+    ResourceViewModel Book { get; set; }
 
     DateTimeOffset CreateDate { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -14,11 +13,10 @@ namespace Voracious.Core.ViewModel;
 public partial class UserNoteViewModel : ObservableObject, IUserNote
 {
     [ObservableProperty]
-    [property: Key]
     private int id;
 
     [ObservableProperty]
-    private string bookId = "";
+    private ResourceViewModel book;
 
     [ObservableProperty]
     private DateTimeOffset createDate = DateTimeOffset.Now;
@@ -55,8 +53,7 @@ public partial class UserNoteViewModel : ObservableObject, IUserNote
         get
         {
             var location = LocationToBookLocation();
-            var retval = location?.HtmlPercent ?? -1.0; // not a percent.
-            return retval;
+            return location?.HtmlPercent ?? -1.0; // not a percent.
         }
     }
 
@@ -70,18 +67,13 @@ public partial class UserNoteViewModel : ObservableObject, IUserNote
     /// <returns></returns>
     public bool AreSameSpot(UserNoteViewModel external)
     {
-        var retval = BookId == external.BookId
-            && CreateDate == external.CreateDate
-            && Location == external.Location
-            ;
-        return retval;
-
+        return CreateDate == external.CreateDate
+            && Location == external.Location;
     }
 
     public bool AreEqual(UserNoteViewModel note)
     {
-        var retval = BookId == note.BookId
-            && CreateDate == note.CreateDate
+        return CreateDate == note.CreateDate
             && MostRecentModificationDate == note.MostRecentModificationDate
             && Location == note.Location
             && Text == note.Text
@@ -89,9 +81,7 @@ public partial class UserNoteViewModel : ObservableObject, IUserNote
             && Icon == note.Icon
             && BackgroundColor == note.BackgroundColor
             && ForegroundColor == note.ForegroundColor
-            && SelectedText == note.SelectedText
-            ;
-        return retval;
+            && SelectedText == note.SelectedText;
     }
 
     public BookLocation LocationToBookLocation()
