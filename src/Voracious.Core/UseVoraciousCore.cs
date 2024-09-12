@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using Voracious.Core.Interface;
+using Voracious.Core.Model;
 using Voracious.Core.ViewModel;
 
 namespace Voracious.Core;

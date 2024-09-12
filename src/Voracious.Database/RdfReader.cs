@@ -8,18 +8,18 @@ using Microsoft.Extensions.Logging;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Extension;
-using Voracious.Core.ViewModel;
+using Voracious.Core.Model;
+using Voracious.Database.Interface;
 
 namespace Voracious.Database;
 
-public partial class RdfReader
+public partial class RdfReader : IRdfReader
 {
     private ILogger<RdfReader> logger;
 
-    public ILoggerFactory loggerFactory { get; }
     private CatalogDataContext Catalogdb { get; }
 
-    private ResourceViewModel book;
+    private ResourceModel book;
 
     private int SaveAfterNFiles = 0;
     private int SaveSkipCount = 100;
@@ -29,12 +29,12 @@ public partial class RdfReader
 
     const int MaxFilesChecked = 9999999;
 
-    private List<ResourceViewModel> Books = [];
-    private List<ResourceViewModel> ExistingBooks;
+    private List<ResourceModel> Books = [];
+    private List<ResourceModel> ExistingBooks;
 
-    private ObservableCollection<PersonViewModel> Creators = [];
+    private ObservableCollection<PersonModel> Creators = [];
 
-    private ObservableCollection<FilenameAndFormatDataViewModel> Files = [];
+    private ObservableCollection<FilenameAndFormatDataModel> Files = [];
 
     public static DateOnly LastUpdateDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-31);
 
@@ -48,14 +48,19 @@ public partial class RdfReader
         CatalogDataContext bookdb)
     {
         logger = factory.CreateLogger<RdfReader>();
-        loggerFactory = factory;
         Catalogdb = bookdb;
         Catalogdb.SaveChangesFailed += Bookdb_SaveChangesFailed;
     }
 
+    /// <summary>
+    /// Raised when a commit fails
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void Bookdb_SaveChangesFailed(object? sender, Microsoft.EntityFrameworkCore.SaveChangesFailedEventArgs e)
     {
         var ex = e.Exception;
+        throw ex;
     }
 
     /// <summary>
@@ -198,9 +203,9 @@ public partial class RdfReader
     /// </summary>
     /// <param name="parentnode">The creator rdf node</param>
     /// <returns>The Person model for the creator</returns>
-    private PersonViewModel ExtractCreator(XmlNode parentnode)
+    private PersonModel ExtractCreator(XmlNode parentnode)
     {
-        PersonViewModel retval = new(loggerFactory);
+        PersonModel retval = new();
         try
         {
             string? str = string.Empty;
@@ -227,7 +232,7 @@ public partial class RdfReader
             }
 
             // e.g. marcrel:aui == author of introductions
-            RelatorEnum relator = Utility.ToRelator(parentnode.Name);
+            RelatorEnum relator = retval.ToRelator(parentnode.Name);
             if (relator == RelatorEnum.otherError)
             {
                 logger.LogError($"ExtractCreator has unknown realtor {parentnode.Name}");
@@ -284,10 +289,10 @@ public partial class RdfReader
     /// Given a dcterms:hasFormat blob, extract the file 
     /// format + file location data.
     /// </summary>
-    private FilenameAndFormatDataViewModel ExtractHasFormat(XmlNode node)
+    private FilenameAndFormatDataModel ExtractHasFormat(XmlNode node)
     {
         bool extentIsZero = false;
-        var retval = new FilenameAndFormatDataViewModel();
+        var retval = new FilenameAndFormatDataModel();
         int nchild = 0;
         try
         {
@@ -354,9 +359,9 @@ public partial class RdfReader
                             }
                             break;
                         case "dcterms:modified":
-                            if (!string.IsNullOrEmpty(retval.LastModified))
+                            if (retval.LastModified != null)
                             {
-                                retval.LastModified = value.InnerText;
+                                retval.LastModified = Convert.ToDateTime(value.InnerText.Trim());
                             }
                             break;
                         case "dcterms:extent":
@@ -388,7 +393,7 @@ public partial class RdfReader
             logger.LogError($"HasFormat: doesn't include extent for {retval.FileName}");
         }
 
-        if (retval.LastModified == "")
+        if (retval.LastModified == null)
         {
             logger.LogError($"HasFormat: doesn't include modified");
         }
@@ -499,9 +504,9 @@ public partial class RdfReader
     /// </summary>
     /// <param name="node">The main xml node for the catalog</param>
     /// <returns>The resource view model</returns>
-    private ResourceViewModel ExtractBook(XmlNode node)
+    private ResourceModel ExtractBook(XmlNode node)
     {
-        var book = new ResourceViewModel();
+        var book = new ResourceModel();
         var id = node.Attributes["rdf:about"]?.Value;
         if (!string.IsNullOrEmpty(id))
         {
@@ -512,13 +517,13 @@ public partial class RdfReader
             logger.LogError($"BookId: missing rdf:about with an id?");
             return null;
         }
-        FilenameAndFormatDataViewModel txtFormat = null;
+        FilenameAndFormatDataModel txtFormat = null;
         var haveEpub = false;
         foreach (var cn in node.ChildNodes)
         {
             var value = cn as XmlNode;
             if (value == null) continue;
-            PersonViewModel person = null;
+            PersonModel person = null;
             switch (value.Name)
             {
                 case "dcterms:alternative": // <...>Alice in Wonderland</...>
@@ -770,7 +775,7 @@ public partial class RdfReader
                                 // A book might be invalid. For example, Gutenberg includes
                                 // ebooks/0 in the RDF catalogger.LogError even though it doesn't exist.
                                 // Books with no downloads aren't considered real books.
-                                if (book != null && book.Validate() == "") //"" is OK (yes, it's weird)
+                                if (book != null) //"" is OK (yes, it's weird)
                                 {
                                     // Actually save the book! (possibly with a fancy merge)
                                     // A fast update just adds new books; a full update will

@@ -4,7 +4,6 @@ using System.Xml.Linq;
 
 using Voracious.EPub.Enum;
 using Voracious.EPub.OPF;
-using Voracious.EpubSharp;
 
 namespace Voracious.EPub.Format.Writers;
 

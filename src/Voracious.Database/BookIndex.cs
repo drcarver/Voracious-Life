@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
-using Voracious.Core.ViewModel;
+using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
 namespace Voracious.Database;
 
@@ -14,17 +15,17 @@ public class BookIndex
         return $"{BookId}\t{Text}"; // assumes bookId will never include a tab.
     }
 
-    public static BookIndex FromBookData(ResourceViewModel bookData)
+    public static BookIndex FromBookData(ResourceModel resource)
     {
         var sb = new StringBuilder();
-        Append(sb, bookData.Title);
-        Append(sb, bookData.TitleAlternative);
-        Append(sb, bookData.BookSeries);
-        Append(sb, bookData.Imprint);
-        Append(sb, bookData.LCC);
-        Append(sb, bookData.LCCN);
-        Append(sb, bookData.LCSH);
-        foreach (var people in bookData.People)
+        Append(sb, resource.Title);
+        Append(sb, resource.TitleAlternative);
+        Append(sb, resource.BookSeries);
+        Append(sb, resource.Imprint);
+        Append(sb, resource.LCC);
+        Append(sb, resource.LCCN);
+        Append(sb, resource.LCSH);
+        foreach (var people in resource.People)
         {
             Append(sb, people.Aliases);
             Append(sb, people.Name);
@@ -32,7 +33,7 @@ public class BookIndex
 
         var retval = new BookIndex()
         {
-            BookId = bookData.About,
+            BookId = resource.About,
             Text = sb.ToString(),
         };
         return retval;

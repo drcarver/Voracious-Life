@@ -13,37 +13,37 @@ public partial class BookNavigationViewModel : ObservableObject, IBookNavigation
     private int id;
 
     [ObservableProperty] 
-    private ResourceViewModel book;
+    private IResource resource;
 
     [ObservableProperty]
-    private DateTimeOffset mostRecentNavigationDate = DateTimeOffset.Now;
+    private DateTime mostRecentNavigationDate = DateTime.Now;
 
     [ObservableProperty]
-    private int nCatalogViews;
+    private int numberOfCatalogViews;
 
     [ObservableProperty]
-    private int nSwipeRight;
+    private int numberOfSwipeRight;
 
     [ObservableProperty]
-    private int nSwipeLeft;
+    private int numberOfSwipeLeft;
 
     [ObservableProperty]
-    private int nReading;
+    private int numberReading;
 
     [ObservableProperty]
-    private int nSpecificSelection;
+    private int numberSpecificSelection;
 
     [ObservableProperty]
-    private string currSpot = "";
+    private string currentSpot = "";
 
     [ObservableProperty]
-    private UserStatusEnum currStatus = UserStatusEnum.NoStatus;
+    private UserStatusEnum currentStatus = UserStatusEnum.NoStatus;
 
     [ObservableProperty]
-    private DateTimeOffset timeMarkedDone = DateTimeOffset.MinValue;
+    private DateTime timeMarkedDone = DateTime.MinValue;
 
     [ObservableProperty]
-    private DateTimeOffset firstNavigationDate = DateTimeOffset.Now;
+    private DateTime firstNavigationDate = DateTime.Now;
 
     [ObservableProperty]
     private bool isDone = false;

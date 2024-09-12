@@ -1,10 +1,12 @@
-﻿using System.Reflection;
-
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using Syncfusion.Maui.Core.Hosting;
+
+using Voracious.Core;
+using Voracious.Database;
 using Voracious.Reader.Extensions;
 
 namespace Voracious.Reader;
@@ -42,12 +44,18 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .ConfigureSyncfusionCore()
 
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+        builder.Services
+            .UseVoraciousCore()
+            .UseVoraciousDatabase()
+            .UseVoraciousReader();
 
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) //load base settings

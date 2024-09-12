@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Voracious.Core.ViewModel;
+using Voracious.Core.Model;
+
 namespace Voracious.Database.Configuration;
 
-public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<PersonViewModel>
+public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<PersonModel>
 {
-    public void Configure(EntityTypeBuilder<PersonViewModel> builder)
+    public void Configure(EntityTypeBuilder<PersonModel> builder)
     {
         builder
             .HasKey(p => p.About);

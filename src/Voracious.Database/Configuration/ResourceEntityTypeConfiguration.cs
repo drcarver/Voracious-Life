@@ -1,15 +1,13 @@
-﻿using System.Collections.ObjectModel;
-using System.Reflection.Emit;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Voracious.Core.ViewModel;
+using Voracious.Core.Model;
+
 namespace Voracious.Database.Configuration;
 
-public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<ResourceViewModel>
+public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<ResourceModel>
 {
-    public void Configure(EntityTypeBuilder<ResourceViewModel> builder)
+    public void Configure(EntityTypeBuilder<ResourceModel> builder)
     {
         builder
             .HasKey(b => b.About);

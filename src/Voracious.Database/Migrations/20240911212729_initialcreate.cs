@@ -62,19 +62,20 @@ namespace Voracious.Database.Migrations
                 name: "FilenameAndFormatData",
                 columns: table => new
                 {
-                    FileName = table.Column<string>(type: "TEXT", nullable: false, comment: "The name of the file."),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false, comment: "The key of the file.")
+                        .Annotation("Sqlite:Autoincrement", true),
+                    FileName = table.Column<string>(type: "TEXT", nullable: false),
                     FileType = table.Column<string>(type: "TEXT", nullable: false, comment: "The type of the file with this format."),
-                    LastModified = table.Column<string>(type: "TEXT", nullable: false, comment: "The date and time the file was created."),
+                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: false, comment: "The date and time the file was created."),
                     CurrentFileStatus = table.Column<int>(type: "INTEGER", nullable: false, comment: "Current file status."),
-                    DownloadDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false, comment: "The download date"),
+                    DownloadDate = table.Column<DateTime>(type: "TEXT", nullable: false, comment: "The download date"),
                     ResourceAbout = table.Column<string>(type: "TEXT", nullable: false),
                     Extent = table.Column<int>(type: "INTEGER", nullable: false, comment: "The file extent."),
                     MimeType = table.Column<string>(type: "TEXT", nullable: false, comment: "The file Mime Type.")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FilenameAndFormatData", x => x.FileName);
+                    table.PrimaryKey("PK_FilenameAndFormatData", x => x.Id);
                     table.ForeignKey(
                         name: "FK_FilenameAndFormatData_Resources_ResourceAbout",
                         column: x => x.ResourceAbout,
@@ -84,24 +85,24 @@ namespace Voracious.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersonViewModelResourceViewModel",
+                name: "PersonModelResourceModel",
                 columns: table => new
                 {
-                    BooksAbout = table.Column<string>(type: "TEXT", nullable: false),
-                    PeopleAbout = table.Column<string>(type: "TEXT", nullable: false)
+                    PeopleAbout = table.Column<string>(type: "TEXT", nullable: false),
+                    ResourcesAbout = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PersonViewModelResourceViewModel", x => new { x.BooksAbout, x.PeopleAbout });
+                    table.PrimaryKey("PK_PersonModelResourceModel", x => new { x.PeopleAbout, x.ResourcesAbout });
                     table.ForeignKey(
-                        name: "FK_PersonViewModelResourceViewModel_Person_PeopleAbout",
+                        name: "FK_PersonModelResourceModel_Person_PeopleAbout",
                         column: x => x.PeopleAbout,
                         principalTable: "Person",
                         principalColumn: "About",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PersonViewModelResourceViewModel_Resources_BooksAbout",
-                        column: x => x.BooksAbout,
+                        name: "FK_PersonModelResourceModel_Resources_ResourcesAbout",
+                        column: x => x.ResourcesAbout,
                         principalTable: "Resources",
                         principalColumn: "About",
                         onDelete: ReferentialAction.Cascade);
@@ -113,9 +114,9 @@ namespace Voracious.Database.Migrations
                 column: "ResourceAbout");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonViewModelResourceViewModel_PeopleAbout",
-                table: "PersonViewModelResourceViewModel",
-                column: "PeopleAbout");
+                name: "IX_PersonModelResourceModel_ResourcesAbout",
+                table: "PersonModelResourceModel",
+                column: "ResourcesAbout");
         }
 
         /// <inheritdoc />
@@ -125,7 +126,7 @@ namespace Voracious.Database.Migrations
                 name: "FilenameAndFormatData");
 
             migrationBuilder.DropTable(
-                name: "PersonViewModelResourceViewModel");
+                name: "PersonModelResourceModel");
 
             migrationBuilder.DropTable(
                 name: "Person");

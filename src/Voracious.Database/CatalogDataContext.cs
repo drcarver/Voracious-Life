@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using Voracious.Core.Model;
 using Voracious.Core.ViewModel;
 using Voracious.Database.Configuration;
 
@@ -41,9 +42,9 @@ public class CatalogDataContext : DbContext
     }
 
     //public DbSet<BookNavigation> BookNavigations { get; set; }
-    public DbSet<FilenameAndFormatDataViewModel> Files { get; set; }
-    public DbSet<PersonViewModel> People { get; set; }
-    public DbSet<ResourceViewModel> Resources { get; set; }
+    public DbSet<FilenameAndFormatDataModel> Files { get; set; }
+    public DbSet<PersonModel> People { get; set; }
+    public DbSet<ResourceModel> Resources { get; set; }
     //public DbSet<UserNote> UserNotes { get; set; }
     //public DbSet<UserReview> UserReviews { get; set; }
 }

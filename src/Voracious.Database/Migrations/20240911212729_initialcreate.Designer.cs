@@ -11,7 +11,7 @@ using Voracious.Database;
 namespace Voracious.Database.Migrations
 {
     [DbContext(typeof(CatalogDataContext))]
-    [Migration("20240907022611_initialcreate")]
+    [Migration("20240911212729_initialcreate")]
     partial class initialcreate
     {
         /// <inheritdoc />
@@ -20,32 +20,33 @@ namespace Voracious.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("PersonViewModelResourceViewModel", b =>
+            modelBuilder.Entity("PersonModelResourceModel", b =>
                 {
-                    b.Property<string>("BooksAbout")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("PeopleAbout")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("BooksAbout", "PeopleAbout");
+                    b.Property<string>("ResourcesAbout")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("PeopleAbout");
+                    b.HasKey("PeopleAbout", "ResourcesAbout");
 
-                    b.ToTable("PersonViewModelResourceViewModel");
+                    b.HasIndex("ResourcesAbout");
+
+                    b.ToTable("PersonModelResourceModel");
                 });
 
-            modelBuilder.Entity("Voracious.Core.ViewModel.FilenameAndFormatDataViewModel", b =>
+            modelBuilder.Entity("Voracious.Core.Model.FilenameAndFormatDataModel", b =>
                 {
-                    b.Property<string>("FileName")
-                        .HasColumnType("TEXT")
-                        .HasComment("The name of the file.");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasComment("The key of the file.");
 
                     b.Property<int>("CurrentFileStatus")
                         .HasColumnType("INTEGER")
                         .HasComment("Current file status.");
 
-                    b.Property<DateTimeOffset>("DownloadDate")
+                    b.Property<DateTime>("DownloadDate")
                         .HasColumnType("TEXT")
                         .HasComment("The download date");
 
@@ -53,15 +54,16 @@ namespace Voracious.Database.Migrations
                         .HasColumnType("INTEGER")
                         .HasComment("The file extent.");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FileType")
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasComment("The type of the file with this format.");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasComment("The date and time the file was created.");
@@ -75,14 +77,14 @@ namespace Voracious.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("FileName");
+                    b.HasKey("Id");
 
                     b.HasIndex("ResourceAbout");
 
                     b.ToTable("FilenameAndFormatData", (string)null);
                 });
 
-            modelBuilder.Entity("Voracious.Core.ViewModel.PersonViewModel", b =>
+            modelBuilder.Entity("Voracious.Core.Model.PersonModel", b =>
                 {
                     b.Property<string>("About")
                         .HasColumnType("TEXT")
@@ -121,7 +123,7 @@ namespace Voracious.Database.Migrations
                     b.ToTable("Person", (string)null);
                 });
 
-            modelBuilder.Entity("Voracious.Core.ViewModel.ResourceViewModel", b =>
+            modelBuilder.Entity("Voracious.Core.Model.ResourceModel", b =>
                 {
                     b.Property<string>("About")
                         .HasColumnType("TEXT")
@@ -203,24 +205,24 @@ namespace Voracious.Database.Migrations
                     b.ToTable("Resources", (string)null);
                 });
 
-            modelBuilder.Entity("PersonViewModelResourceViewModel", b =>
+            modelBuilder.Entity("PersonModelResourceModel", b =>
                 {
-                    b.HasOne("Voracious.Core.ViewModel.ResourceViewModel", null)
-                        .WithMany()
-                        .HasForeignKey("BooksAbout")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Voracious.Core.ViewModel.PersonViewModel", null)
+                    b.HasOne("Voracious.Core.Model.PersonModel", null)
                         .WithMany()
                         .HasForeignKey("PeopleAbout")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Voracious.Core.Model.ResourceModel", null)
+                        .WithMany()
+                        .HasForeignKey("ResourcesAbout")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Voracious.Core.ViewModel.FilenameAndFormatDataViewModel", b =>
+            modelBuilder.Entity("Voracious.Core.Model.FilenameAndFormatDataModel", b =>
                 {
-                    b.HasOne("Voracious.Core.ViewModel.ResourceViewModel", "Resource")
+                    b.HasOne("Voracious.Core.Model.ResourceModel", "Resource")
                         .WithMany("Files")
                         .HasForeignKey("ResourceAbout")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -229,7 +231,7 @@ namespace Voracious.Database.Migrations
                     b.Navigation("Resource");
                 });
 
-            modelBuilder.Entity("Voracious.Core.ViewModel.ResourceViewModel", b =>
+            modelBuilder.Entity("Voracious.Core.Model.ResourceModel", b =>
                 {
                     b.Navigation("Files");
                 });

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-
-using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
-using Voracious.Core.ViewModel;
+using Voracious.Core.Model;
 
 namespace Voracious.Core.Interface;
 
@@ -75,16 +72,6 @@ public interface IResource
     int? Downloads { get; set; }
 
     /// <summary>
-    /// An entity primarily responsible for making the resource
-    /// </summary>
-    /// <remarks>
-    /// A second property with the same name as this property has been declared in 
-    /// the dcterms: namespace. See the Introduction to the document DCMI Metadata 
-    /// Terms for an explanation.
-    /// </remarks>
-    List<PersonViewModel> People { get; set; }
-
-    /// <summary>
     /// A name given to the resource.
     /// </summary>
     /// <remarks>
@@ -120,8 +107,6 @@ public interface IResource
 
     string? TitleAlternative { get; set; }
 
-    //List<FilenameAndFormatDataViewModel> Files { get; set; }
-
     string LCSH { get; set; }
 
     string LCCN { get; set; }
@@ -137,8 +122,6 @@ public interface IResource
     //UserReviewViewModel? Review { get; set; }
 
     //List<UserNoteViewModel>? Notes { get; set; }
-
-    //DownloadDataViewModel DownloadData { get; set; }
 
     //BookNavigationViewModel NavigationData { get; set; }
 }

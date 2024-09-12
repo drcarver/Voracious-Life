@@ -12,7 +12,6 @@ using Voracious.EPub.Misc;
 using Voracious.EPub.NAV;
 using Voracious.EPub.NCX;
 using Voracious.EPub.OPF;
-using Voracious.EpubSharp;
 
 namespace Voracious.EPub;
 

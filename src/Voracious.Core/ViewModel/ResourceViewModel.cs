@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
 namespace Voracious.Core.ViewModel;
 
@@ -198,7 +199,7 @@ public partial class ResourceViewModel : ObservableObject, IResource, IGetSearch
     /// Terms for an explanation.
     /// </remarks>
     [ObservableProperty]
-    private List<PersonViewModel> people = [];
+    private List<IPerson> people = [];
 
     /// <summary>
     /// List of all of the files for this book and their formats.
@@ -324,6 +325,7 @@ public partial class ResourceViewModel : ObservableObject, IResource, IGetSearch
     //}
 
     // Used by the search system
+
     public IList<string> GetSearchArea(string inputArea)
     {
         var retval = new List<string>();
@@ -448,7 +450,7 @@ public partial class ResourceViewModel : ObservableObject, IResource, IGetSearch
         if (!string.IsNullOrEmpty(BookSeries)) retval.Add(BookSeries);
     }
 
-    public string? BestAuthorDefaultIsNull => People.OrderBy(p => p.GetImportance()).FirstOrDefault()?.Name;
+    public string? BestAuthorDefaultIsNull => People.Cast<PersonModel>().OrderBy(p => p.GetImportance()).FirstOrDefault()?.Name;
 
     /// <summary>
     /// Get a shortened title with author name suitable for being a filename.

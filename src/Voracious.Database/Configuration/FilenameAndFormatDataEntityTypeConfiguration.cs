@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using Voracious.Core.Enum;
-using Voracious.Core.ViewModel;
+using Voracious.Core.Model;
+
 namespace Voracious.Database.Configuration;
 
-public class FilenameAndFormatDataEntityTypeConfiguration : IEntityTypeConfiguration<FilenameAndFormatDataViewModel>
+public class FilenameAndFormatDataEntityTypeConfiguration : IEntityTypeConfiguration<FilenameAndFormatDataModel>
 {
-    public void Configure(EntityTypeBuilder<FilenameAndFormatDataViewModel> builder)
+    public void Configure(EntityTypeBuilder<FilenameAndFormatDataModel> builder)
     {
         builder
-            .HasKey(x => x.FileName);
+            .HasKey(e => e.Id);
 
         builder
-            .Property(f => f.FileName)
+            .Property(f => f.Id)
             .IsRequired()
-            .HasComment("The name of the file.");
+            .HasComment("The key of the file.");
 
         builder
             .ToTable("FilenameAndFormatData");
