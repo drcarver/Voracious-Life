@@ -28,7 +28,7 @@ public class EpubBookExt
         set { _ResourcesExt = value; }
     }
 
-    public IList<EpubTextFile> ResourcesHtmlOrdered
+    public List<EpubTextFile> ResourcesHtmlOrdered
     {
         get
         {
@@ -58,7 +58,7 @@ public class EpubBookExt
     // only counts in horseshoes and hand grenades. I have to skip
     // through the spine and for each item, find it in the Resources.Html
     // value.
-    private IList<EpubTextFile> _ResourcesHtmlOrdered = null;
+    private List<EpubTextFile> _ResourcesHtmlOrdered = null;
 
     /// <summary>
     /// Creates an ordered set of HTML files for the chapters in the book. 
@@ -158,8 +158,8 @@ public class EpubBookExt
         return null;
     }
 
-    IList<EpubChapter> _TableOfContentsExt = null;
-    public IList<EpubChapter> TableOfContents
+    List<EpubChapter> _TableOfContentsExt = null;
+    public List<EpubChapter> TableOfContents
     {
         get { return _TableOfContentsExt ?? inner?.TableOfContents; }
         set { _TableOfContentsExt = value; }

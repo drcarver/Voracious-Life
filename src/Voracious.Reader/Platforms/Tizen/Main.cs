@@ -5,7 +5,7 @@ using Microsoft.Maui.Hosting;
 
 namespace Voracious.Reader;
 
-internal class Program : MauiApplication
+class Program : MauiApplication
 {
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 

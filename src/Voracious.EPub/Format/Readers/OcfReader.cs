@@ -6,7 +6,7 @@ using Voracious.EPub.OCF;
 
 namespace Voracious.EPub.Format.Readers;
 
-internal static class OcfReader
+static class OcfReader
 {
     public static OcfDocument Read(XDocument xml)
     {

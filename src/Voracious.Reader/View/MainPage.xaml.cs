@@ -1,10 +1,14 @@
-﻿namespace Voracious.Reader.View;
+﻿using Voracious.Reader.Interface;
+
+namespace Voracious.Reader.View;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    public MainPage(IMainPage vm)
     {
         InitializeComponent();
+
+        BindingContext = vm;
     }
 }
 

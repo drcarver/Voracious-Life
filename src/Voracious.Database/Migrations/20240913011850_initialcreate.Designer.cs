@@ -11,7 +11,7 @@ using Voracious.Database;
 namespace Voracious.Database.Migrations
 {
     [DbContext(typeof(CatalogDataContext))]
-    [Migration("20240911212729_initialcreate")]
+    [Migration("20240913011850_initialcreate")]
     partial class initialcreate
     {
         /// <inheritdoc />

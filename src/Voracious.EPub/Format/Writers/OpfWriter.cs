@@ -7,7 +7,7 @@ using Voracious.EPub.OPF;
 
 namespace Voracious.EPub.Format.Writers;
 
-internal class OpfWriter
+class OpfWriter
 {
     public static string Format(OpfDocument opf)
     {

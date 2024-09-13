@@ -326,7 +326,7 @@ public partial class ResourceViewModel : ObservableObject, IResource, IGetSearch
 
     // Used by the search system
 
-    public IList<string> GetSearchArea(string inputArea)
+    public List<string> GetSearchArea(string inputArea)
     {
         var retval = new List<string>();
         var area = (inputArea + "...").Substring(0, 3).ToLower(); // e.g. title --> ti

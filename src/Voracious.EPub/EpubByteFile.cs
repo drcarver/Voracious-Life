@@ -2,7 +2,7 @@
 
 public class EpubByteFile : EpubFile
 {
-    internal EpubTextFile ToTextFile()
+    public EpubTextFile ToTextFile()
     {
         return new EpubTextFile
         {

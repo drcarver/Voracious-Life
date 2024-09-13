@@ -4,5 +4,5 @@ namespace Voracious.Core.Interface;
 
 public interface IGetSearchArea
 {
-    IList<string> GetSearchArea(string inputArea);
+    List<string> GetSearchArea(string inputArea);
 }

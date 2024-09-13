@@ -7,7 +7,7 @@ using Voracious.EPub.NCX;
 
 namespace Voracious.EPub.Format.Readers
 {
-    internal static class NcxReader
+    static class NcxReader
     {
         public static NcxDocument Read(XDocument xml)
         {

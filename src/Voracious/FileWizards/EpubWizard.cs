@@ -305,7 +305,7 @@ namespace Voracious.FileWizards
         /// </summary>
         /// <param name="chapters"></param>
         /// <returns></returns>
-        public static EpubChapter GetFirstChapter(IList<EpubChapter> chapters)
+        public static EpubChapter GetFirstChapter(List<EpubChapter> chapters)
         {
             if (chapters == null) return null;
             foreach (var chapter in chapters)
@@ -399,7 +399,7 @@ namespace Voracious.FileWizards
             return closest;
         }
 
-        public static string FindClosestAnchorHelper(string foundHtml, int maxPosition, IList<EpubChapter> chapterList, int currDepth, int maxDepth, ref string closest)
+        public static string FindClosestAnchorHelper(string foundHtml, int maxPosition, List<EpubChapter> chapterList, int currDepth, int maxDepth, ref string closest)
         {
             foreach (var chapter in chapterList)
             {

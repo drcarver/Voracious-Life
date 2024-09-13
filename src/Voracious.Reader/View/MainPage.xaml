@@ -8,7 +8,10 @@
              x:DataType="viewmodel:MainPageViewModel">
 
     <HorizontalStackLayout>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" />
         <Button Text="LoadCatalog" 
-                Command="{Binding UpdateCatalogCommand}" />
+                HorizontalOptions="CenterAndExpand"
+                Command="{Binding UpdateCatalogCommand}" 
+                 />
     </HorizontalStackLayout>
 </ContentPage>

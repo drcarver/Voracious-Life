@@ -164,7 +164,7 @@ public partial class RdfReader : IRdfReader
             {
                 return true;
             }
-            catalog.Delete();
+            //catalog.Delete();
         }
 
         using (var hc = new HttpClient())

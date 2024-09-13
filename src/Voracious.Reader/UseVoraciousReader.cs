@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Voracious.Reader.Interface;
 using Voracious.Reader.View;
 using Voracious.Reader.ViewModel;
 
@@ -12,7 +13,8 @@ public static class ServiceCollectionExtension
     public static IServiceCollection UseVoraciousReader(this IServiceCollection collection)
     {
         collection
-            .AddTransientWithShellRoute<MainPage, MainPageViewModel>(nameof(MainPageViewModel))
+            .AddTransient<IMainPage, MainPageViewModel>()
+            .AddTransientWithShellRoute<MainPage, MainPageViewModel>(nameof(MainPage))
             .AddTransientWithShellRoute<PDFViewerPage, PdfViewerViewModel>(nameof(PDFViewerPage))
             ;
 

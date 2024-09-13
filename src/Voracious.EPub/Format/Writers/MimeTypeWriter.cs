@@ -1,6 +1,6 @@
 ﻿namespace Voracious.EPub.Format.Writers;
 
-internal class MimeTypeWriter
+class MimeTypeWriter
 {
     public static string Format()
     {

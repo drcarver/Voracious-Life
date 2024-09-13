@@ -3,7 +3,6 @@
 using Microsoft.EntityFrameworkCore;
 
 using Voracious.Core.Model;
-using Voracious.Core.ViewModel;
 using Voracious.Database.Configuration;
 
 namespace Voracious.Database;
@@ -34,7 +33,7 @@ public class CatalogDataContext : DbContext
         Directory.CreateDirectory(folder);
         Directory.SetCurrentDirectory(folder);
 
-        optionsBuilder.UseSqlite($@"Filename={folder}\GutenbergCatalog.db", options =>
+        optionsBuilder.UseSqlite("DataSource=GutenbergCatalog.db;Cache=Shared", options =>
         {
             options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
         });

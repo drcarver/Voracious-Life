@@ -6,5 +6,5 @@ namespace Voracious.EPub.Interface;
 
 public interface ISetChapters
 {
-    void SetChapters(EpubBookExt book, IList<EpubChapter> chapters);
+    void SetChapters(EpubBookExt book, List<EpubChapter> chapters);
 }
