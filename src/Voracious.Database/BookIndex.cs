@@ -25,11 +25,11 @@ public class BookIndex
         Append(sb, resource.LCC);
         Append(sb, resource.LCCN);
         Append(sb, resource.LCSH);
-        foreach (var people in resource.People)
-        {
-            Append(sb, people.Aliases);
-            Append(sb, people.Name);
-        }
+        //foreach (var people in resource.People)
+        //{
+        //    Append(sb, people.Aliases);
+        //    Append(sb, people.Name);
+        //}
 
         var retval = new BookIndex()
         {

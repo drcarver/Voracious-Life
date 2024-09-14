@@ -32,7 +32,7 @@ public partial class RdfReader : IRdfReader
     private List<ResourceModel> Books = [];
     private List<ResourceModel> ExistingBooks;
 
-    private ObservableCollection<PersonModel> Creators = [];
+    private List<PersonModel> Creators = [];
 
     private ObservableCollection<FilenameAndFormatDataModel> Files = [];
 
@@ -88,52 +88,52 @@ public partial class RdfReader : IRdfReader
         string zipPath = "rdf-files.tar.zip";
         try
         {
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            //using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            //{
+            //    archive.Entries[0].ExtractToFile("rdf-files.tar", true);
+            using (StreamReader sr = new StreamReader(File.OpenRead("rdf-files.tar")))
             {
-                archive.Entries[0].ExtractToFile("rdf-files.tar", true);
-                using (StreamReader sr = new StreamReader(File.OpenRead("rdf-files.tar")))
+                TarReader tarReader = new(sr.BaseStream);
+                TarEntry entry = null;
+                if (Catalogdb.Database.HasPendingModelChanges())
                 {
-                    TarReader tarReader = new(sr.BaseStream);
-                    TarEntry entry = null;
-                    if (Catalogdb.Database.HasPendingModelChanges())
-                    {
-                        await Catalogdb.Database.MigrateAsync();
-                    }
-                    Catalogdb.Database.EnsureCreated();
-                    startTime = DateTime.Now;
-                    ExistingBooks = Catalogdb.Resources.ToList();
-                    Books = ExistingBooks;
-                    var catalogLoadTime = startTime - DateTime.Now;
+                    await Catalogdb.Database.MigrateAsync();
+                }
+                Catalogdb.Database.EnsureCreated();
+                startTime = DateTime.Now;
+                ExistingBooks = Catalogdb.Resources.ToList();
+                Books = ExistingBooks;
+                var catalogLoadTime = startTime - DateTime.Now;
 
-                    int TotalBooks = Books.Count;
-                    while ((entry = tarReader.GetNextEntry()) != null)
+                int TotalBooks = Books.Count;
+                while ((entry = tarReader.GetNextEntry()) != null)
+                {
+                    if (!KnownBadFiles.Contains(entry.Name))
                     {
-                        if (!KnownBadFiles.Contains(entry.Name))
+                        if (entry.Name.ToLower().Contains("epub"))
                         {
-                            if (entry.Name.ToLower().Contains("epub"))
+                            // Reads and saves to database. And does a fancy merge if needed.
+                            int newCount = Books.Count;
+                            if (newCount % 1000 == 0)
                             {
-                                // Reads and saves to database. And does a fancy merge if needed.
-                                int newCount = Books.Count;
-                                if (newCount % 1000 == 0)
-                                {
-                                    Catalogdb.SaveChanges();
-                                }
-                                try
-                                {
-                                    newCount = ReadRdfFileAndInsert(entry.DataStream.ReadAllText());
-                                }
-                                catch (Exception rdfex)
-                                {
-                                    // Do what on exception?
-                                    logger.LogError($"Name: {entry.Name} exception {rdfex.Message}");
-                                    newCount = 0;
-                                }
+                                Catalogdb.SaveChanges();
+                            }
+                            try
+                            {
+                                newCount = ReadRdfFileAndInsert(entry.DataStream.ReadAllText());
+                            }
+                            catch (Exception rdfex)
+                            {
+                                // Do what on exception?
+                                logger.LogError($"Name: {entry.Name} exception {rdfex.Message}");
+                                newCount = 0;
                             }
                         }
                     }
-                    Catalogdb.SaveChanges();
                 }
+                Catalogdb.SaveChanges();
             }
+            //}
         }
         catch (Exception readEx)
         {
@@ -312,11 +312,11 @@ public partial class RdfReader : IRdfReader
                 }
 
                 retval.FileName = childFile.Attributes["rdf:about"].Value; // The super critical part!
-                var formatData = Catalogdb.Files.FirstOrDefault(f => f.FileName == retval.FileName);
-                if (formatData != null)
-                {
-                    return formatData;
-                }
+                //var formatData = Catalogdb.Files.FirstOrDefault(f => f.FileName == retval.FileName);
+                //if (formatData != null)
+                //{
+                //    return formatData;
+                //}
                 foreach (var valueObj in childFile.ChildNodes)
                 {
                     var value = valueObj as XmlNode;
@@ -531,7 +531,10 @@ public partial class RdfReader : IRdfReader
                     break;
                 case "dcterms:creator":
                     person = ExtractCreator(value);
-                    if (person != null) book.People.Add(person);
+                    if (person != null)
+                    {
+                        book.People.Add(person);
+                    }
                     break;
                 case "dcterms:description": // <...>Illustrated by the author.</...>
                     book.Description = value.InnerText;
@@ -556,7 +559,7 @@ public partial class RdfReader : IRdfReader
                                 haveEpub = true;
                                 break;
                         }
-                        book.Files.Add(format);
+                        //book.Files.Add(format);
                     }
                     break;
                 case "dcterms:issued": // <... rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2015-03-06</...>
@@ -661,7 +664,9 @@ public partial class RdfReader : IRdfReader
                 case "marcrel:unk": // 
                     person = ExtractCreator(value);
                     if (person != null)
+                    {
                         book.People.Add(person);
+                    }
                     break;
                 case "pgterms:bookshelf":
                     break;
@@ -733,10 +738,10 @@ public partial class RdfReader : IRdfReader
         // Correction: don't do this validation. Too many Gutenberg
         // "books" in the catalog are just plain
         // errors. OTOH, they are o
-        if (book.Files.Count == 0)
-        {
-            logger.LogError($"XML: book has no files");
-        }
+        //if (book.Files.Count == 0)
+        //{
+        //    logger.LogError($"XML: book has no files");
+        //}
         return book;
     }
 

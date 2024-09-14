@@ -19,9 +19,9 @@ public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<Resource
             .Navigation(r => r.People)
             .AutoInclude();
 
-        builder
-            .Navigation(r => r.Files)
-            .AutoInclude();
+        //builder
+        //    .Navigation(r => r.Files)
+        //    .AutoInclude();
 
         builder
             .Property(b => b.About)

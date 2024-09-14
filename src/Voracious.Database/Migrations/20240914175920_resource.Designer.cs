@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Voracious.Database;
 
@@ -10,66 +11,14 @@ using Voracious.Database;
 namespace Voracious.Database.Migrations
 {
     [DbContext(typeof(CatalogDataContext))]
-    partial class CatalogDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240914175920_resource")]
+    partial class resource
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
-
-            modelBuilder.Entity("PersonModelResourceModel", b =>
-                {
-                    b.Property<string>("PeopleAbout")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ResourcesAbout")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("PeopleAbout", "ResourcesAbout");
-
-                    b.HasIndex("ResourcesAbout");
-
-                    b.ToTable("PersonModelResourceModel");
-                });
-
-            modelBuilder.Entity("Voracious.Core.Model.PersonModel", b =>
-                {
-                    b.Property<string>("About")
-                        .HasColumnType("TEXT")
-                        .HasComment("An unambiguous reference to the resource within a given context. Recommended practice is to identify the resource by means of a string conforming to an identification system");
-
-                    b.Property<string>("Aliases")
-                        .HasColumnType("TEXT")
-                        .HasComment("Alias for the contributor");
-
-                    b.Property<int?>("BirthDate")
-                        .HasColumnType("INTEGER")
-                        .HasComment("The year of birth of the contributor");
-
-                    b.Property<int?>("DeathDate")
-                        .HasColumnType("INTEGER")
-                        .HasComment("The year of death of the contributor");
-
-                    b.Property<string>("FileAs")
-                        .HasColumnType("TEXT")
-                        .HasComment("The name the contributor should be filed nder");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasComment("The name of the contributor");
-
-                    b.Property<int?>("Relator")
-                        .HasColumnType("INTEGER")
-                        .HasComment("The nature or genre of the content of the resource. Type includes terms describing general categories, functions, genres, or aggregation levels for content.");
-
-                    b.Property<string>("Webpage")
-                        .HasColumnType("TEXT")
-                        .HasComment("The web page for the contributor");
-
-                    b.HasKey("About");
-
-                    b.ToTable("Person", (string)null);
-                });
 
             modelBuilder.Entity("Voracious.Core.Model.ResourceModel", b =>
                 {
@@ -151,21 +100,6 @@ namespace Voracious.Database.Migrations
                     b.HasKey("About");
 
                     b.ToTable("Resources", (string)null);
-                });
-
-            modelBuilder.Entity("PersonModelResourceModel", b =>
-                {
-                    b.HasOne("Voracious.Core.Model.PersonModel", null)
-                        .WithMany()
-                        .HasForeignKey("PeopleAbout")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Voracious.Core.Model.ResourceModel", null)
-                        .WithMany()
-                        .HasForeignKey("ResourcesAbout")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

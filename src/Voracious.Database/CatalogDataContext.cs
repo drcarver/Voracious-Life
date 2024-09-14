@@ -41,8 +41,8 @@ public class CatalogDataContext : DbContext
     }
 
     //public DbSet<BookNavigation> BookNavigations { get; set; }
-    public DbSet<FilenameAndFormatDataModel> Files { get; set; }
-    public DbSet<PersonModel> People { get; set; }
+    //public DbSet<FilenameAndFormatDataModel> Files { get; set; }
+    //public DbSet<PersonModel> People { get; set; }
     public DbSet<ResourceModel> Resources { get; set; }
     //public DbSet<UserNote> UserNotes { get; set; }
     //public DbSet<UserReview> UserReviews { get; set; }

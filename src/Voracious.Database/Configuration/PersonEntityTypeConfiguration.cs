@@ -11,7 +11,7 @@ public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<PersonMode
     {
         builder
             .HasKey(p => p.About);
-            
+
         builder
             .ToTable("Person");
 

@@ -11,8 +11,8 @@ using Voracious.Database;
 namespace Voracious.Database.Migrations
 {
     [DbContext(typeof(CatalogDataContext))]
-    [Migration("20240913011850_initialcreate")]
-    partial class initialcreate
+    [Migration("20240914181443_person")]
+    partial class person
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,55 +33,6 @@ namespace Voracious.Database.Migrations
                     b.HasIndex("ResourcesAbout");
 
                     b.ToTable("PersonModelResourceModel");
-                });
-
-            modelBuilder.Entity("Voracious.Core.Model.FilenameAndFormatDataModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasComment("The key of the file.");
-
-                    b.Property<int>("CurrentFileStatus")
-                        .HasColumnType("INTEGER")
-                        .HasComment("Current file status.");
-
-                    b.Property<DateTime>("DownloadDate")
-                        .HasColumnType("TEXT")
-                        .HasComment("The download date");
-
-                    b.Property<int>("Extent")
-                        .HasColumnType("INTEGER")
-                        .HasComment("The file extent.");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasComment("The type of the file with this format.");
-
-                    b.Property<DateTime?>("LastModified")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasComment("The date and time the file was created.");
-
-                    b.Property<string>("MimeType")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasComment("The file Mime Type.");
-
-                    b.Property<string>("ResourceAbout")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResourceAbout");
-
-                    b.ToTable("FilenameAndFormatData", (string)null);
                 });
 
             modelBuilder.Entity("Voracious.Core.Model.PersonModel", b =>
@@ -218,22 +169,6 @@ namespace Voracious.Database.Migrations
                         .HasForeignKey("ResourcesAbout")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Voracious.Core.Model.FilenameAndFormatDataModel", b =>
-                {
-                    b.HasOne("Voracious.Core.Model.ResourceModel", "Resource")
-                        .WithMany("Files")
-                        .HasForeignKey("ResourceAbout")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Resource");
-                });
-
-            modelBuilder.Entity("Voracious.Core.Model.ResourceModel", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

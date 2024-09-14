@@ -179,7 +179,7 @@ public partial class ResourceModel : IResource
     /// <summary>
     /// List of all of the files for this book and their formats.
     /// </summary>
-    public List<FilenameAndFormatDataModel> Files { get; set; } = [];
+    //public List<FilenameAndFormatDataModel> Files { get; set; } = [];
 
     ////
     //// Next is all of the user-settable things

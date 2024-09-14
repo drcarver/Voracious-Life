@@ -53,7 +53,7 @@ public partial class PersonModel : IPerson
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    public IEnumerable<ResourceModel> Resources { get; set; } = [];
+    public List<ResourceModel> Resources { get; set; } = [];
 
     /// <summary>
     /// Add the alias for the person
