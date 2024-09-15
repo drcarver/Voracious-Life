@@ -84,6 +84,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Control\MessageBox.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Control\PasswordDialogBox.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\PDFViewerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

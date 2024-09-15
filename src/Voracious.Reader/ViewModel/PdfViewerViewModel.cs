@@ -1,4 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using Microsoft.Extensions.Logging;
+
 using Voracious.Reader.Interface;
 
 namespace Voracious.Reader.ViewModel;
@@ -12,9 +15,16 @@ public partial class PdfViewerViewModel : ObservableObject, IPdfViewer
     private Stream pdfDocumentStream;
 
     /// <summary>
+    /// The logger property
+    /// </summary>
+    private ILogger logger { get; }
+
+    /// <summary>
     /// Constructor of the view model class
     /// </summary>
-    public PdfViewerViewModel()
+    /// <param name="loggerFactory">The logger factory from the DI</param>
+    public PdfViewerViewModel(ILoggerFactory loggerFactory)
     {
+        logger = loggerFactory.CreateLogger<PdfViewerViewModel>();
     }
 }
