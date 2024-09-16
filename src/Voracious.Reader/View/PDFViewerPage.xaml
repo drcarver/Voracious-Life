@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.PdfViewer;assembly=Syncfusion.Maui.PdfViewer"
              xmlns:viewmodel="clr-namespace:Voracious.Reader.ViewModel"
-             xmlns:control="clr-namespace:Voracious.Reader.Control"
+             xmlns:control="clr-namespace:Voracious.Control.Component;assembly=Voracious.Control"
              x:Class="Voracious.Reader.View.PDFViewerPage"
              x:DataType="viewmodel:PdfViewerViewModel">
 

@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace Voracious.Reader.Interface;
+﻿namespace Voracious.Reader.Interface;
 
 public interface IPdfViewer
 {

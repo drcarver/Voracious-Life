@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using Voracious.Reader.Interface;
 using Voracious.Reader.View;
 using Voracious.Reader.ViewModel;
@@ -15,7 +13,6 @@ public static class ServiceCollectionExtension
         collection
             .AddTransient<IMainPage, MainPageViewModel>()
             .AddTransientWithShellRoute<MainPage, MainPageViewModel>(nameof(MainPage))
-            .AddTransientWithShellRoute<PDFViewerPage, PdfViewerViewModel>(nameof(PDFViewerPage))
             ;
 
         return collection;

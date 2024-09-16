@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{BAE0E2
 		rdffiles\pg147.rdf = rdffiles\pg147.rdf
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voracious.Reader", "Voracious.Reader\Voracious.Reader.csproj", "{AB441696-2B66-4764-A98F-DFAD3CACC7EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Voracious.Reader", "Voracious.Reader\Voracious.Reader.csproj", "{AB441696-2B66-4764-A98F-DFAD3CACC7EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voracious.Control", "Voracious.Control\Voracious.Control.csproj", "{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,6 +176,26 @@ Global
 		{AB441696-2B66-4764-A98F-DFAD3CACC7EF}.Release|x86.ActiveCfg = Release|Any CPU
 		{AB441696-2B66-4764-A98F-DFAD3CACC7EF}.Release|x86.Build.0 = Release|Any CPU
 		{AB441696-2B66-4764-A98F-DFAD3CACC7EF}.Release|x86.Deploy.0 = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|ARM.Build.0 = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|x64.Build.0 = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Debug|x86.Build.0 = Debug|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|ARM.ActiveCfg = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|ARM.Build.0 = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|ARM64.Build.0 = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|x64.ActiveCfg = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|x64.Build.0 = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|x86.ActiveCfg = Release|Any CPU
+		{56CFAA54-0E6E-442A-B99B-C56ECB20CA36}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

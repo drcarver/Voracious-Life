@@ -1,4 +1,4 @@
-namespace Voracious.Reader.Control;
+namespace Voracious.Control.Component;
 
 public partial class PasswordDialogBox : ContentView
 {
