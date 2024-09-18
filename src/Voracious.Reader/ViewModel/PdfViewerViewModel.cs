@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Threading;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +15,12 @@ public partial class PdfViewerViewModel : ObservableObject, IPdfViewer
     /// </summary>
     [ObservableProperty]
     private Stream pdfDocumentStream;
+
+    /// <summary>
+    /// Are the flatten options visible
+    /// </summary>
+    [ObservableProperty]
+    private bool flattenOptionsVisible;
 
     /// <summary>
     /// The logger property

@@ -7,11 +7,12 @@
              x:Class="Voracious.Reader.View.MainPage"
              x:DataType="viewmodel:MainPageViewModel">
 
-    <HorizontalStackLayout>
+    <VerticalStackLayout>
         <ActivityIndicator IsRunning="{Binding IsBusy}" />
+        <CollectionView ItemsSource="{Binding Monkeys}" />
         <Button Text="LoadCatalog" 
                 HorizontalOptions="CenterAndExpand"
                 Command="{Binding UpdateCatalogCommand}" 
                  />
-    </HorizontalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>

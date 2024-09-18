@@ -9,14 +9,24 @@
 
     <Grid>
         <syncfusion:SfPdfViewer x:Name="PdfViewer"
-            DocumentSource="{Binding PdfDocumentStream}"
-            PasswordRequested="PdfViewer_PasswordRequested"
-            DocumentLoadFailed="PdfViewer_DocumentLoadFailed" /> 
-        <control:PasswordDialogBox x:Name="PasswordDialog"
-            IsVisible="false" 
-            PasswordEntered="PasswordDialog_PasswordEntered"/>
-        <control:MessageBox x:Name="MessageBox"
-            IsVisible="False"
-            OkClicked="MessageBox_OkClicked" />
+                DocumentSource="{Binding PdfDocumentStream}"
+                PasswordRequested="PdfViewer_PasswordRequested"
+                DocumentLoadFailed="PdfViewer_DocumentLoadFailed">
+            <control:PasswordDialogBox x:Name="PasswordDialog"
+                IsVisible="false" 
+                PasswordEntered="PasswordDialog_PasswordEntered"/>
+            <control:MessageBox x:Name="MessageBox"
+                IsVisible="False"
+                OkClicked="MessageBox_OkClicked" />
+            <HorizontalStackLayout HorizontalOptions="Start">
+                <Button Text="&#xe75f;" 
+                FontFamily="Maui Material Assets"
+                Clicked="Save_Clicked"
+                HorizontalOptions="Start"></Button>
+            </HorizontalStackLayout>
+            <control:FlattenOptions x:Name="flattenOptions" 
+                IsVisible="false">
+            </control:FlattenOptions>
+        </syncfusion:SfPdfViewer>
     </Grid>
 </ContentPage>

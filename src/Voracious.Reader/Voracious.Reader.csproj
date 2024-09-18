@@ -74,7 +74,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.90" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Syncfusion.Maui.PdfViewer" Version="26.2.14" />
+		<PackageReference Include="Syncfusion.Maui.PdfViewer" Version="27.1.48" />
 	</ItemGroup>
 
 	<ItemGroup>

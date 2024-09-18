@@ -98,24 +98,19 @@ public partial class FlattenOptions : ContentView
     {
         // Create a memory stream.
         Stream stream = new MemoryStream();
+        
         // Save the document to the stream.
         PdfViewer.SaveDocument(stream);
+        
         // Define the file name.
         string fileName = "SavedPDF.pdf"; 
-#if WINDOWS
-   string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName); // Define the file path for Windows.
-   using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-   {
-       stream.CopyTo(fileStream); // Copy the stream to the file stream.
-   }
-#else
+
         string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName); // Define the file path for Android, iOS, and Mac Catalyst.
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+        using (FileStream fileStream = new(filePath, FileMode.Create))
         {
             // Copy the stream to the file stream.
             stream.CopyTo(fileStream);
         }
-#endif
         Application.Current!.MainPage!.DisplayAlert("Information", "Successfully saved", "OK"); // Display a success message.
     }
 
