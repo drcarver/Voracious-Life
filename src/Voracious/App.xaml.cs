@@ -1,9 +1,9 @@
 ﻿using Microsoft.Maui.Controls.PlatformConfiguration;
 
-using Voracious.Core.Model;
 using Voracious.Core.ViewModel;
 using Voracious.EbookReader;
 using Voracious.FileWizards;
+using Voracious.RDF.Model;
 using Voracious.Searching;
 
 namespace Voracious;

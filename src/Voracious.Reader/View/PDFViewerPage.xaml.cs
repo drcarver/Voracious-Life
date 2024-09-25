@@ -48,17 +48,17 @@ public partial class PDFViewerPage : ContentPage
         //Show the incorrect password message to the user, when document failed to load if the password is invalid.
         if (e.Message == "Can't open an encrypted document. The password is invalid.")
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                MessageBox.Show("Incorrect Password", "The password you entered is incorrect. Please try again.");
-            });
+            //MainThread.BeginInvokeOnMainThread(() =>
+            //{
+            //    MessageBox.Show("Incorrect Password", "The password you entered is incorrect. Please try again.");
+            //});
         }
     }
 
     /// <summary>
     /// Handles when the password is entered.
     /// </summary>
-    private void PasswordDialogBox_PasswordEntered(object sender, EventArgs e)
+    private void PasswordEntered(object sender, EventArgs e)
     {
         //Hide the password dialog.
         PasswordDialog.IsVisible = false;

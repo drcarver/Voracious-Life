@@ -14,10 +14,10 @@
                 DocumentLoadFailed="PdfViewer_DocumentLoadFailed">
             <control:PasswordDialogBox x:Name="PasswordDialog"
                 IsVisible="false" 
-                PasswordEntered="PasswordDialog_PasswordEntered"/>
-            <control:MessageBox x:Name="MessageBox"
+                PasswordEntered="PasswordEntered"/>
+            <!--<control:MessageBox x:Name="MessageBox"
                 IsVisible="False"
-                OkClicked="MessageBox_OkClicked" />
+                OkClicked="MessageBox_OkClicked" />-->
             <HorizontalStackLayout HorizontalOptions="Start">
                 <Button Text="&#xe75f;" 
                 FontFamily="Maui Material Assets"

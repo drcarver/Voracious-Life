@@ -1,7 +1,5 @@
 ﻿using System.Text;
-
-using Voracious.Core.Interface;
-using Voracious.Core.Model;
+using Voracious.RDF.Model;
 
 namespace Voracious.Database;
 
@@ -15,7 +13,7 @@ public class BookIndex
         return $"{BookId}\t{Text}"; // assumes bookId will never include a tab.
     }
 
-    public static BookIndex FromBookData(ResourceModel resource)
+    public static BookIndex FromBookData(Resource resource)
     {
         var sb = new StringBuilder();
         Append(sb, resource.Title);

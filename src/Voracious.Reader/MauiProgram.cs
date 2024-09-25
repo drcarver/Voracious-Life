@@ -53,7 +53,7 @@ public static class MauiProgram
             });
 
         builder.Services
-            .UseVoraciousCore()
+            .UseVoraciousRDF()
             .UseVoraciousDatabase()
             .UseVoraciousReader();
 

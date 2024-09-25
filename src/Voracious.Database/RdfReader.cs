@@ -1,15 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Formats.Tar;
-using System.IO.Compression;
 using System.Xml;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-using Voracious.Core.Enum;
-using Voracious.Core.Extension;
-using Voracious.Core.Model;
 using Voracious.Database.Interface;
+using Voracious.RDF.Enum;
+using Voracious.RDF.Model;
+using Voracious.RDF.Extension;
 
 namespace Voracious.Database;
 
@@ -19,7 +18,7 @@ public partial class RdfReader : IRdfReader
 
     private CatalogDataContext Catalogdb { get; }
 
-    private ResourceModel book;
+    private Resource book;
 
     private int SaveAfterNFiles = 0;
     private int SaveSkipCount = 100;
@@ -29,12 +28,12 @@ public partial class RdfReader : IRdfReader
 
     const int MaxFilesChecked = 9999999;
 
-    private List<ResourceModel> Books = [];
-    private List<ResourceModel> ExistingBooks;
+    private List<Resource> Books = [];
+    private List<Resource> ExistingBooks;
 
-    private List<PersonModel> Creators = [];
+    private List<Creator> Creators = [];
 
-    private ObservableCollection<FilenameAndFormatDataModel> Files = [];
+    private ObservableCollection<FileFormat> Files = [];
 
     public static DateOnly LastUpdateDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-31);
 
@@ -203,9 +202,9 @@ public partial class RdfReader : IRdfReader
     /// </summary>
     /// <param name="parentnode">The creator rdf node</param>
     /// <returns>The Person model for the creator</returns>
-    private PersonModel ExtractCreator(XmlNode parentnode)
+    private Creator ExtractCreator(XmlNode parentnode)
     {
-        PersonModel retval = new();
+        Creator retval = new();
         try
         {
             string? str = string.Empty;
@@ -238,7 +237,7 @@ public partial class RdfReader : IRdfReader
                 logger.LogError($"ExtractCreator has unknown realtor {parentnode.Name}");
                 return null;
             }
-            retval.Relator = relator;
+            retval.Role = relator;
 
             // Get the death date
             str = (node["pgterms:deathdate"] as XmlNode)?.InnerText;
@@ -289,10 +288,10 @@ public partial class RdfReader : IRdfReader
     /// Given a dcterms:hasFormat blob, extract the file 
     /// format + file location data.
     /// </summary>
-    private FilenameAndFormatDataModel ExtractHasFormat(XmlNode node)
+    private FileFormat ExtractHasFormat(XmlNode node)
     {
         bool extentIsZero = false;
-        var retval = new FilenameAndFormatDataModel();
+        var retval = new FileFormat();
         int nchild = 0;
         try
         {
@@ -504,9 +503,9 @@ public partial class RdfReader : IRdfReader
     /// </summary>
     /// <param name="node">The main xml node for the catalog</param>
     /// <returns>The resource view model</returns>
-    private ResourceModel ExtractBook(XmlNode node)
+    private Resource ExtractBook(XmlNode node)
     {
-        var book = new ResourceModel();
+        var book = new Resource();
         var id = node.Attributes["rdf:about"]?.Value;
         if (!string.IsNullOrEmpty(id))
         {
@@ -517,13 +516,13 @@ public partial class RdfReader : IRdfReader
             logger.LogError($"BookId: missing rdf:about with an id?");
             return null;
         }
-        FilenameAndFormatDataModel txtFormat = null;
+        FileFormat txtFormat = null;
         var haveEpub = false;
         foreach (var cn in node.ChildNodes)
         {
             var value = cn as XmlNode;
             if (value == null) continue;
-            PersonModel person = null;
+            Creator person = null;
             switch (value.Name)
             {
                 case "dcterms:alternative": // <...>Alice in Wonderland</...>
@@ -533,7 +532,7 @@ public partial class RdfReader : IRdfReader
                     person = ExtractCreator(value);
                     if (person != null)
                     {
-                        book.People.Add(person);
+                        book.Creators.Add(person);
                     }
                     break;
                 case "dcterms:description": // <...>Illustrated by the author.</...>
@@ -665,7 +664,7 @@ public partial class RdfReader : IRdfReader
                     person = ExtractCreator(value);
                     if (person != null)
                     {
-                        book.People.Add(person);
+                        book.Creators.Add(person);
                     }
                     break;
                 case "pgterms:bookshelf":

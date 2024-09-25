@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using Voracious.Core.Model;
+using Voracious.RDF.Model;
 
 namespace Voracious.Database.Configuration;
 
-public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<ResourceModel>
+public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<Resource>
 {
-    public void Configure(EntityTypeBuilder<ResourceModel> builder)
+    public void Configure(EntityTypeBuilder<Resource> builder)
     {
         builder
             .HasKey(b => b.About);
             
         builder
-        .ToTable("Resources");
+        .ToTable("Resource");
 
         builder
-            .Navigation(r => r.People)
+            .Navigation(r => r.Creators)
             .AutoInclude();
 
         //builder

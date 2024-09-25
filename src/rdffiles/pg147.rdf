@@ -11,7 +11,7 @@
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <dcterms:license rdf:resource="license"/>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1994-07-01</dcterms:issued>
-    <dcterms:rights>Public domain in the USA.</dcterms:rights>
+    <dcterms:rights>domain in the USA.</dcterms:rights>
     <pgterms:downloads rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4641</pgterms:downloads>
     <dcterms:creator>
       <pgterms:agent rdf:about="2009/agents/91">

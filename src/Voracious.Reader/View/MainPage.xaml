@@ -9,7 +9,7 @@
 
     <VerticalStackLayout>
         <ActivityIndicator IsRunning="{Binding IsBusy}" />
-        <CollectionView ItemsSource="{Binding Monkeys}" />
+        <!--<CollectionView ItemsSource="{Binding Monkeys}" />-->
         <Button Text="LoadCatalog" 
                 HorizontalOptions="CenterAndExpand"
                 Command="{Binding UpdateCatalogCommand}" 

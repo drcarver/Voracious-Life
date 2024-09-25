@@ -1,5 +1,5 @@
-﻿using Voracious.Core.Model;
-using Voracious.Database;
+﻿using Voracious.Database;
+using Voracious.RDF.Model;
 
 namespace Voracious.EbookReader;
 
