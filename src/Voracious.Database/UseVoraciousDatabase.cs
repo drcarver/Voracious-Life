@@ -10,7 +10,7 @@ public static class ServiceCollectionExtension
     {
         collection
             .AddDbContext<CatalogDataContext>()
-            .AddTransient<IRdfReader, RdfReader>()
+            .AddTransient<ICardCatalog, CardCatalog>()
             ;
 
         return collection;

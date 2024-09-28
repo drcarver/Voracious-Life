@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-using Voracious.RDF.ViewModel;
-
 namespace Voracious.RDF.Interface;
 
 /// <summary>
@@ -14,7 +12,7 @@ public interface IBookService
 
     int BookCount();
 
-    ResourceViewModel? GetBook(string bookId);
+    IResource? GetBook(string bookId);
 
     /// <summary>
     /// List of books in the Gutenberg Top 100
@@ -39,17 +37,17 @@ public interface IBookService
     /// <param name="bookdb"></param>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    ResourceViewModel? GetBookFiles(string bookId);
+    IResource? GetBookFiles(string bookId);
 
-    ObservableCollection<ResourceViewModel> GetAllBookWhichHaveUserData();
+    ObservableCollection<IResource> GetAllBookWhichHaveUserData();
 
-    ObservableCollection<ResourceViewModel> GetBookRecentWhichHaveUserData();
+    ObservableCollection<IResource> GetBookRecentWhichHaveUserData();
 
-    UserNoteViewModel? FindBookNote(string bookId);
+    IUserNote? FindBookNote(string bookId);
 
-    ObservableCollection<UserNoteViewModel> GetAllBookNotes();
+    ObservableCollection<IUserNote> GetAllBookNotes();
 
-    UserReviewViewModel FindUserReview(string bookId);
+    IUserReview FindUserReview(string bookId);
 
-    ObservableCollection<UserReviewViewModel> GetAllUserReviews();
+    ObservableCollection<IUserReview> GetAllUserReviews();
 }

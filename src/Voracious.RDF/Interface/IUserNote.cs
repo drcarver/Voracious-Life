@@ -1,8 +1,5 @@
 ﻿using System;
 
-using Voracious.Core.ViewModel;
-using Voracious.RDF.ViewModel;
-
 namespace Voracious.RDF.Interface;
 
 /// <summary>
@@ -12,7 +9,7 @@ public interface IUserNote
 {
     int Id { get; set; }
 
-    ResourceViewModel Book { get; set; }
+    IResource Book { get; set; }
 
     DateTimeOffset CreateDate { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Formats.Tar;
+using System.IO.Compression;
 using System.Xml;
 
 using Microsoft.EntityFrameworkCore;
@@ -7,14 +8,14 @@ using Microsoft.Extensions.Logging;
 
 using Voracious.Database.Interface;
 using Voracious.RDF.Enum;
-using Voracious.RDF.Model;
 using Voracious.RDF.Extension;
+using Voracious.RDF.Model;
 
 namespace Voracious.Database;
 
-public partial class RdfReader : IRdfReader
+public partial class CardCatalog : ICardCatalog
 {
-    private ILogger<RdfReader> logger;
+    private ILogger<CardCatalog> logger;
 
     private CatalogDataContext Catalogdb { get; }
 
@@ -42,11 +43,11 @@ public partial class RdfReader : IRdfReader
     /// </summary>
     /// <param name="loggerFactory">The logger factory</param>
     /// <param name="bookdb">The database context for the application</param>
-    public RdfReader(
+    public CardCatalog(
         ILoggerFactory factory,
         CatalogDataContext bookdb)
     {
-        logger = factory.CreateLogger<RdfReader>();
+        logger = factory.CreateLogger<CardCatalog>();
         Catalogdb = bookdb;
         Catalogdb.SaveChangesFailed += Bookdb_SaveChangesFailed;
     }
@@ -87,52 +88,52 @@ public partial class RdfReader : IRdfReader
         string zipPath = "rdf-files.tar.zip";
         try
         {
-            //using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-            //{
-            //    archive.Entries[0].ExtractToFile("rdf-files.tar", true);
-            using (StreamReader sr = new StreamReader(File.OpenRead("rdf-files.tar")))
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
-                TarReader tarReader = new(sr.BaseStream);
-                TarEntry entry = null;
-                if (Catalogdb.Database.HasPendingModelChanges())
+                archive.Entries[0].ExtractToFile("rdf-files.tar", true);
+                using (StreamReader sr = new StreamReader(File.OpenRead("rdf-files.tar")))
                 {
-                    await Catalogdb.Database.MigrateAsync();
-                }
-                Catalogdb.Database.EnsureCreated();
-                startTime = DateTime.Now;
-                ExistingBooks = Catalogdb.Resources.ToList();
-                Books = ExistingBooks;
-                var catalogLoadTime = startTime - DateTime.Now;
-
-                int TotalBooks = Books.Count;
-                while ((entry = tarReader.GetNextEntry()) != null)
-                {
-                    if (!KnownBadFiles.Contains(entry.Name))
+                    TarReader tarReader = new(sr.BaseStream);
+                    TarEntry entry = null;
+                    if (Catalogdb.Database.HasPendingModelChanges())
                     {
-                        if (entry.Name.ToLower().Contains("epub"))
+                        await Catalogdb.Database.MigrateAsync();
+                    }
+                    Catalogdb.Database.EnsureCreated();
+                    startTime = DateTime.Now;
+                    ExistingBooks = Catalogdb.Resources.ToList();
+                    Books = ExistingBooks;
+                    var catalogLoadTime = startTime - DateTime.Now;
+
+                    int TotalBooks = Books.Count;
+                    while ((entry = tarReader.GetNextEntry()) != null)
+                    {
+                        if (!KnownBadFiles.Contains(entry.Name))
                         {
-                            // Reads and saves to database. And does a fancy merge if needed.
-                            int newCount = Books.Count;
-                            if (newCount % 1000 == 0)
+                            if (entry.Name.ToLower().Contains("epub"))
                             {
-                                Catalogdb.SaveChanges();
-                            }
-                            try
-                            {
-                                newCount = ReadRdfFileAndInsert(entry.DataStream.ReadAllText());
-                            }
-                            catch (Exception rdfex)
-                            {
-                                // Do what on exception?
-                                logger.LogError($"Name: {entry.Name} exception {rdfex.Message}");
-                                newCount = 0;
+                                // Reads and saves to database. And does a fancy merge if needed.
+                                int newCount = Books.Count;
+                                if (newCount % 1000 == 0)
+                                {
+                                    Catalogdb.SaveChanges();
+                                }
+                                try
+                                {
+                                    newCount = ReadRdfFileAndInsert(entry.DataStream.ReadAllText());
+                                }
+                                catch (Exception rdfex)
+                                {
+                                    // Do what on exception?
+                                    logger.LogError($"Name: {entry.Name} exception {rdfex.Message}");
+                                    newCount = 0;
+                                }
                             }
                         }
                     }
+                    Catalogdb.SaveChanges();
                 }
-                Catalogdb.SaveChanges();
             }
-            //}
         }
         catch (Exception readEx)
         {

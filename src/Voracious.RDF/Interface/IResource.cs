@@ -37,24 +37,7 @@ public interface IResource
     /// such as the DCMI Type Vocabulary[DCMITYPE]. To describe the 
     /// file format, physical medium, or dimensions of the resource, 
     /// </remarks>
-    FileTypeEnum BookType { get; set; }
-
-    /// <summary>
-    /// An entity responsible for making contributions to the resource.
-    /// <para>
-    /// dc:contributor
-    /// </para>
-    /// <para>
-    /// An unordered array of ProperName
-    /// </para>
-    /// </summary>
-    /// <remarks>
-    /// Examples of a contributor include a person, an organization, or
-    /// a service.Typically, the name of a contributor should be used to 
-    /// indicate the entity. XMP addition: XMP usage is a list of contributors. 
-    /// These contributors should not include those listed in dc:creator.
-    /// </remarks>
-    List<ICreator> Contributors { get; set; }
+    FileTypeEnum? BookType { get; set; }
 
     /// <summary>
     /// The spatial or temporal topic of the resource, the spatial 
@@ -70,7 +53,7 @@ public interface IResource
     /// <remarks>
     /// XMP usage is the extent or scope of the resource.
     /// </remarks>
-    List<string> Coverages { get; set; }
+    //List<string> Coverages { get; set; }
 
     /// <summary>
     /// Credits for persons or organizations, other than members of the cast, who 
@@ -95,7 +78,7 @@ public interface IResource
     /// Examples of a creator include a person, an organization, or a service.
     /// Typically, the name of a creator should be used to indicate the entity.  
     /// </remarks>
-    List<ICreator> Creators { get; set; }
+    List<Creator> Creators { get; set; }
 
     /// <summary>
     /// An account of the resource.
@@ -126,7 +109,7 @@ public interface IResource
     /// Recommended best practice is to identify the resource by
     /// means of a string conforming to a formal identification system.
     /// </remarks>
-    List<Identifier> Identifiers { get; set; }
+    //List<Identifier> Identifiers { get; set; }
 
     /// <summary>
     ///  A name given to the resource.
@@ -157,7 +140,7 @@ public interface IResource
     /// to use a controlled vocabulary. To describe the spatial or 
     /// temporal topic of the resource, use the dc:coverage element.
     /// </remarks>
-    List<string> Subjects { get; set; }
+    //List<string> Subjects { get; set; }
 
     /// <summary>
     /// An entity responsible for making the resource available.
@@ -246,7 +229,7 @@ public interface IResource
     /// Recommended best practice is to identify the related resource
     /// by means of a string conforming to a formal identification system.
     /// </remarks>
-    List<string> Relations { get; set; }
+    //List<string> Relations { get; set; }
 
     /// <summary>
     /// Information about rights held in and over the resource.

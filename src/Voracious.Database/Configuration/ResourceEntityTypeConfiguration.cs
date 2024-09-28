@@ -12,7 +12,7 @@ public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<Resource
             .HasKey(b => b.About);
             
         builder
-        .ToTable("Resource");
+        .ToTable("Resources");
 
         builder
             .Navigation(r => r.Creators)

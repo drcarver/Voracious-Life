@@ -23,42 +23,42 @@ public class Creator : ICreator
     /// <summary>
     /// The alternate script for the creator
     /// </summary>
-    public string AlternateScript { get; set; }
+    public string? AlternateScript { get; set; } = null;
 
     /// <summary>
     /// The name of the person
     /// </summary>
-    public string? Name { get; set; }
+    public string? Name { get; set; } = null;
 
     /// <summary>
     /// The person's alias
     /// </summary>
-    public string? Aliases { get; set; }
+    public string? Aliases { get; set; } = null;
 
     /// <summary>
     /// The date of birth
     /// </summary>
-    public int? BirthDate { get; set; }
+    public int? BirthDate { get; set; } = null;
 
     /// <summary>
     /// The date of death
     /// </summary>
-    public int? DeathDate { get; set; }
+    public int? DeathDate { get; set; } = null;
 
     /// <summary>
     /// The author's web page
     /// </summary>
-    public string? Webpage { get; set; }
+    public string? Webpage { get; set; } = null;
 
     /// <summary>
     /// The sortable version of the author
     /// </summary>
-    public string? FileAs { get; set; }
+    public string? FileAs { get; set; } = null;
 
     /// <summary>
     /// The relator's for the book (creator, illustrator, etc..)
     /// </summary>
-    public RelatorEnum? Role { get; set; }
+    public RelatorEnum? Role { get; set; } = null;
 
     /// <summary>
     /// People include authors, illustrators, etc.

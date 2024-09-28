@@ -326,7 +326,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
         <PackageReference Include="ExCSS" Version="4.2.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />

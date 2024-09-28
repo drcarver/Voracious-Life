@@ -4,7 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -17,11 +16,11 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.6.0" />
     <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
-    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="26.2.14" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Voracious.Database\Voracious.Database.csproj" />
+    <ProjectReference Include="..\Voracious.RDF\Voracious.RDF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

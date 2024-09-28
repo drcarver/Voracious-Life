@@ -33,7 +33,7 @@ public class CatalogDataContext : DbContext
         Directory.CreateDirectory(folder);
         Directory.SetCurrentDirectory(folder);
 
-        optionsBuilder.UseSqlite("DataSource=GutenbergCatalog.db;Cache=Shared", options =>
+        optionsBuilder.UseSqlite("Data Source=CardCatalog.db", options =>
         {
             options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
         });
@@ -42,7 +42,7 @@ public class CatalogDataContext : DbContext
 
     //public DbSet<BookNavigation> BookNavigations { get; set; }
     //public DbSet<FilenameAndFormatDataModel> Files { get; set; }
-    //public DbSet<Creator> Creators { get; set; }
+    public DbSet<Creator> Creators { get; set; }
     public DbSet<Resource> Resources { get; set; }
     //public DbSet<UserNote> UserNotes { get; set; }
     //public DbSet<UserReview> UserReviews { get; set; }

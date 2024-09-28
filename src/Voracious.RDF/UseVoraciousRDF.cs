@@ -1,10 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection;
-
-using Voracious.Core.ViewModel;
 using Voracious.RDF.Interface;
-using Voracious.RDF.ViewModel;
+using Voracious.RDF.Model;
 
 namespace Voracious.Core;
 
@@ -13,12 +10,12 @@ public static class ServiceCollectionExtension
     public static IServiceCollection UseVoraciousRDF(this IServiceCollection collection)
     {
         collection
-            .AddTransient<IBookNavigation, BookNavigationViewModel>()
-            .AddTransient<IResource, ResourceViewModel>()
-            .AddTransient<IFileFormat, FileFormatViewModel>()
-            .AddTransient<ICreator, CreatorViewModel>()
-            .AddTransient<IUserNote, UserNoteViewModel>()
-            .AddTransient<IUserReview, UserReviewViewModel>()
+            .AddTransient<IBookNavigation, BookNavigation>()
+            .AddTransient<IResource, Resource>()
+            .AddTransient<IFileFormat, FileFormat>()
+            .AddTransient<ICreator, Creator>()
+            //.AddTransient<IUserNote, UserNote>()
+            //.AddTransient<IUserReview, UserReview>()
              ;
         return collection;
     }

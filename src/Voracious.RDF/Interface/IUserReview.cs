@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Voracious.RDF.ViewModel;
-
 namespace Voracious.RDF.Interface;
 
 /// <summary>
@@ -11,7 +9,7 @@ public interface IUserReview
 {
     int Id { get; set; }
 
-    ResourceViewModel Book { get; set; }
+    IResource Book { get; set; }
 
     DateTimeOffset CreateDate { get; set; }
 

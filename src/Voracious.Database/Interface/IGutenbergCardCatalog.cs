@@ -1,6 +1,6 @@
 ﻿namespace Voracious.Database.Interface;
 
-public interface IRdfReader
+public interface ICardCatalog
 {
     /// <summary>
     /// Read through the Gutenberg catalog and update new issues or
