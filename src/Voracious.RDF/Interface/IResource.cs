@@ -17,6 +17,12 @@ public interface IResource
     string About { get; set; }
 
     /// <summary>
+    /// The title or creator string to file the resource
+    /// under
+    /// </summary>
+    string FileAs { get; set; }
+
+    /// <summary>
     /// An alternative name for the resource.
     /// </summary>
     string? TitleAlternative { get; set; }

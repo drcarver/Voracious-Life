@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Voracious.RDF.Enum;
 using Voracious.RDF.Interface;
@@ -14,6 +15,12 @@ public class Resource : IResource
     /// </summary>
     public string About { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The title or creator string to file the resource
+    /// under
+    /// </summary>
+    public string FileAs { get; set; } = string.Empty;
+    
     /// <summary>
     /// An alternative name for the resource.
     /// </summary>
@@ -291,4 +298,34 @@ public class Resource : IResource
     //public List<string> Relations { get; set; } = [];
     #endregion
 
+    #region cleanup methods
+    /// <summary>
+    /// Create a file as string for the resource
+    /// </summary>
+    public void CleanupFileResourceAs()
+    {
+        FileAs = Title.ToUpper();
+        Creator creator = Creators.OrderBy(c => c.GetImportance()).FirstOrDefault();
+        
+        if (creator != null) 
+        {
+            FileAs += $" {creator.Role} {creator.FileAs}";
+        }
+        if (FileAs != null)
+        {
+            if (FileAs.StartsWith("A "))
+            {
+                FileAs = FileAs.Substring(2);
+            }
+            if (FileAs.StartsWith("AN "))
+            {
+                FileAs = FileAs.Substring(3);
+            }
+            if (FileAs.StartsWith("THE "))
+            {
+                FileAs = FileAs.Substring(4);
+            }
+        }
+    }
+    #endregion
 }

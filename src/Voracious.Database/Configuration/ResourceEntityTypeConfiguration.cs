@@ -86,5 +86,12 @@ public class ResourceEntityTypeConfiguration : IEntityTypeConfiguration<Resource
         builder
             .Property(b => b.LCC)
             .HasComment("The Library of Congress call number scheme is a standard used in academic libraries nationwide.");
+
+        builder
+            .Property(b => b.FileAs)
+            .HasComment("Title to file the resource under");
+
+        builder
+            .HasIndex(b => b.FileAs);
     }
 }

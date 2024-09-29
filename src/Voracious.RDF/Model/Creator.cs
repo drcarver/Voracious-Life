@@ -11,8 +11,8 @@ public class Creator : ICreator
     public static class Attributes
     {
         public static readonly XName Role = Constants.OpfNamespace + "role";
-        static readonly XName FileAs = Constants.OpfNamespace + "file-as";
-        static readonly XName AlternateScript = Constants.OpfNamespace + "alternate-script";
+        public static readonly XName FileAs = Constants.OpfNamespace + "file-as";
+        public static readonly XName AlternateScript = Constants.OpfNamespace + "alternate-script";
     }
 
     /// <summary>
