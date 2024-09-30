@@ -4,10 +4,10 @@ using SimpleEpubReader.Controls;
 using SimpleEpubReader.Database;
 
 using Voracious.Controls;
-using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
 using Voracious.Interface;
+using Voracious.RDF.Model;
 
 namespace Voracious;
 

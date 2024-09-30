@@ -5,9 +5,9 @@ using System.Xml.Linq;
 using Voracious.EPub.Extensions;
 using Voracious.EPub.NAV;
 
-namespace Voracious.EpubSharp.Format.Readers
+namespace Voracious.EPub.Format.Readers
 {
-    internal static class NavReader
+    static class NavReader
     {
         public static NavDocument Read(XDocument xml)
         {

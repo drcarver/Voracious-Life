@@ -4,9 +4,9 @@ using System.Xml.Linq;
 using Voracious.EPub.Extensions;
 using Voracious.EPub.OCF;
 
-namespace Voracious.EpubSharp.Format.Readers;
+namespace Voracious.EPub.Format.Readers;
 
-internal static class OcfReader
+static class OcfReader
 {
     public static OcfDocument Read(XDocument xml)
     {

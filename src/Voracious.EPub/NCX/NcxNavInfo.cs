@@ -2,5 +2,5 @@
 
 public class NcxNavInfo
 {
-    public string Text { get; internal set; }
+    public string Text { get; set; }
 }

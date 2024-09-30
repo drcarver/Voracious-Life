@@ -5,7 +5,7 @@ namespace Voracious.EPub.OPF;
 
 public class OpfManifestItem
 {
-    internal static class Attributes
+    public static class Attributes
     {
         public static readonly XName Fallback = "fallback";
         public static readonly XName FallbackStyle = "fallback-style";
@@ -17,14 +17,14 @@ public class OpfManifestItem
         public static readonly XName RequiredNamespace = "required-namespace";
     }
 
-    public string Id { get; internal set; }
-    public string Href { get; internal set; }
-    public IList<string> Properties { get; internal set; } = new List<string>();
-    public string MediaType { get; internal set; }
-    public string RequiredNamespace { get; internal set; }
-    public string RequiredModules { get; internal set; }
-    public string Fallback { get; internal set; }
-    public string FallbackStyle { get; internal set; }
+    public string Id { get; set; }
+    public string Href { get; set; }
+    public List<string> Properties { get; set; } = [];
+    public string MediaType { get; set; }
+    public string RequiredNamespace { get; set; }
+    public string RequiredModules { get; set; }
+    public string Fallback { get; set; }
+    public string FallbackStyle { get; set; }
 
     public override string ToString()
     {

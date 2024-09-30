@@ -7,10 +7,10 @@ namespace Voracious.EPub.NCX;
 /// </summary>
 public class NcxDocument
 {
-    public IList<NcxMeta> Meta { get; internal set; } = new List<NcxMeta>();
-    public string DocTitle { get; internal set; }
-    public string DocAuthor { get; internal set; }
-    public NcxNapMap NavMap { get; internal set; } = new NcxNapMap(); // <navMap> is a required element in NCX.
-    public NcxPageList PageList { get; internal set; }
-    public NcxNavList NavList { get; internal set; }
+    public List<NcxMeta> Meta { get; set; } = new List<NcxMeta>();
+    public string DocTitle { get; set; }
+    public string DocAuthor { get; set; }
+    public NcxNapMap NavMap { get; set; } = new NcxNapMap(); // <navMap> is a required element in NCX.
+    public NcxPageList PageList { get; set; }
+    public NcxNavList NavList { get; set; }
 }

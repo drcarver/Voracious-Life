@@ -5,11 +5,11 @@ namespace Voracious.EPub.OPF;
 
 public class OpfSpine
 {
-    internal static class Attributes
+    public static class Attributes
     {
         public static readonly XName Toc = "toc";
     }
 
-    public string Toc { get; internal set; }
-    public IList<OpfSpineItemRef> ItemRefs { get; internal set; } = new List<OpfSpineItemRef>();
+    public string Toc { get; set; }
+    public List<OpfSpineItemRef> ItemRefs { get; set; } = new List<OpfSpineItemRef>();
 }

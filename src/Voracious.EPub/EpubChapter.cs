@@ -13,7 +13,7 @@ public class EpubChapter
     public EpubChapter Parent { get; set; }
     public EpubChapter Previous { get; set; }
     public EpubChapter Next { get; set; }
-    public IList<EpubChapter> SubChapters { get; set; } = new List<EpubChapter>();
+    public List<EpubChapter> SubChapters { get; set; } = new List<EpubChapter>();
 
     public override string ToString()
     {

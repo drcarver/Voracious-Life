@@ -4,11 +4,10 @@ using System.Xml.Linq;
 
 using Voracious.EPub.Enum;
 using Voracious.EPub.OPF;
-using Voracious.EpubSharp;
 
 namespace Voracious.EPub.Format.Writers;
 
-internal class OpfWriter
+class OpfWriter
 {
     public static string Format(OpfDocument opf)
     {

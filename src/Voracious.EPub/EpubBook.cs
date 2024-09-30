@@ -9,12 +9,12 @@ namespace Voracious.EPub;
 
 public class EpubBook
 {
-    internal const string AuthorsSeparator = ", ";
+    const string AuthorsSeparator = ", ";
 
     /// <summary>
     /// Read-only raw epub format structures.
     /// </summary>
-    public EpubFormat Format { get; internal set; }
+    public EpubFormat Format { get; set; }
 
     public string Title => Format.Opf.Metadata.Titles.FirstOrDefault();
 
@@ -23,16 +23,16 @@ public class EpubBook
     /// <summary>
     /// All files within the EPUB.
     /// </summary>
-    public EpubResources Resources { get; internal set; }
+    public EpubResources Resources { get; set; }
 
     /// <summary>
     /// EPUB format specific resources.
     /// </summary>
-    public EpubSpecialResources SpecialResources { get; internal set; }
+    public EpubSpecialResources SpecialResources { get; set; }
 
-    public byte[] CoverImage { get; internal set; }
+    public byte[] CoverImage { get; set; }
 
-    public IList<EpubChapter> TableOfContents { get; internal set; }
+    public List<EpubChapter> TableOfContents { get; set; }
 
     public string ToPlainText()
     {

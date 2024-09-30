@@ -5,16 +5,16 @@ namespace Voracious.EPub.OPF;
 
 public class OpfManifest
 {
-    internal const string ManifestItemCoverImageProperty = "cover-image";
+    public const string ManifestItemCoverImageProperty = "cover-image";
 
-    public IList<OpfManifestItem> Items { get; internal set; } = new List<OpfManifestItem>();
+    public List<OpfManifestItem> Items { get; set; } = new List<OpfManifestItem>();
 
-    internal OpfManifestItem FindCoverItem()
+    public OpfManifestItem FindCoverItem()
     {
         return Items.FirstOrDefault(e => e.Properties.Contains(ManifestItemCoverImageProperty));
     }
 
-    internal void DeleteCoverItem(string id = null)
+    public void DeleteCoverItem(string id = null)
     {
         var item = id != null ? Items.FirstOrDefault(e => e.Id == id) : FindCoverItem();
         if (item != null)

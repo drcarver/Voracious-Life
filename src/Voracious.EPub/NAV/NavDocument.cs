@@ -2,6 +2,6 @@
 
 public class NavDocument
 {
-    public NavHead Head { get; internal set; } = new NavHead();
-    public NavBody Body { get; internal set; } = new NavBody();
+    public NavHead Head { get; set; } = new NavHead();
+    public NavBody Body { get; set; } = new NavBody();
 }

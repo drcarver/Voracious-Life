@@ -6,15 +6,15 @@ namespace Voracious.EPub.OPF;
 
 public class OpfMetadataDate
 {
-    internal static class Attributes
+    public static class Attributes
     {
         public static readonly XName Event = Constants.OpfNamespace + "event";
     }
 
-    public string Text { get; internal set; }
+    public string Text { get; set; }
 
     /// <summary>
     /// i.e. "modification"
     /// </summary>
-    public string Event { get; internal set; }
+    public string Event { get; set; }
 }

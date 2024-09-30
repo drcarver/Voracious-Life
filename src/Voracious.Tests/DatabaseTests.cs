@@ -10,9 +10,9 @@ public class DatabaseTests
     [TestMethod]
     public void CreateDataBaseTest()
     {
-        var db = new MyLibraryDataContext();
+        var db = new CatalogDataContext();
         db.Database.EnsureCreated();
-        Assert.AreEqual(0, db.Books.Count());
+        Assert.AreEqual(0, db.Resources.Count());
 
         // Now delete the database
         db.Database.EnsureDeleted();
@@ -24,9 +24,9 @@ public class DatabaseTests
     [TestMethod]
     public void DatabaseMigrationTest()
     {
-        var db = new MyLibraryDataContext();
+        var db = new CatalogDataContext();
         db.Database.Migrate();
-        Assert.AreEqual(0, db.Books.Count());
+        Assert.AreEqual(0, db.Resources.Count());
 
         // Now delete the database
         db.Database.EnsureDeleted();
@@ -38,7 +38,7 @@ public class DatabaseTests
     [TestMethod]
     public void DatabaseDeleteTest()
     {
-        var db = new MyLibraryDataContext();
+        var db = new CatalogDataContext();
 
         // Now delete the database
         db.Database.EnsureDeleted();

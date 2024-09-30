@@ -1,14 +1,4 @@
-﻿using EpubSharp;
-
-using PCLStorage;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-namespace Voracious.UwpClasses;
+﻿namespace Voracious.UwpClasses;
 
 public static class FileMethods
 {
@@ -40,13 +30,11 @@ public static class FileMethods
         }
 
         return retval;
-        // Old code: var fbuffer= await PathIO.ReadBufferAsync(data.FilePath);
-
     }
 
     public static async Task WriteBytesAsync(this IFile file, List<byte> data)
     {
-        using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite))
+        using (var stream = await file.OpenAsync(FileAccess.ReadWrite))
         {
             var bytes = data.ToArray();
             stream.Write(bytes, 0, bytes.Count());
@@ -54,7 +42,7 @@ public static class FileMethods
     }
     public static async Task WriteBytesAsync(this IFile file, byte[] data)
     {
-        using (var stream = await file.OpenAsync(FileAccess.ReadAndWrite))
+        using (var stream = await file.OpenAsync(FileAccess.ReadWrite))
         {
             stream.Write(data, 0, data.Count());
         }

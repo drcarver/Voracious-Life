@@ -8,6 +8,6 @@ public class NcxNapMap
     /// <summary>
     /// Populated only when an EPUB with NCX is read.
     /// </summary>
-    public XElement Dom { get; internal set; }
-    public IList<NcxNavPoint> NavPoints { get; internal set; } = new List<NcxNavPoint>();
+    public XElement Dom { get; set; }
+    public List<NcxNavPoint> NavPoints { get; set; } = new List<NcxNavPoint>();
 }

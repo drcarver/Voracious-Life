@@ -4,5 +4,5 @@ namespace Voracious.EPub.OPF;
 
 public class OpfGuide
 {
-    public IList<OpfGuideReference> References { get; internal set; } = new List<OpfGuideReference>();
+    public List<OpfGuideReference> References { get; set; } = new List<OpfGuideReference>();
 }

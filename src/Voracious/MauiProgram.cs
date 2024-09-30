@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Voracious;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()

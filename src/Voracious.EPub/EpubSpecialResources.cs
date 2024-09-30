@@ -4,7 +4,7 @@ namespace Voracious.EPub;
 
 public class EpubSpecialResources
 {
-    public EpubTextFile Ocf { get; internal set; }
-    public EpubTextFile Opf { get; internal set; }
-    public IList<EpubTextFile> HtmlInReadingOrder { get; internal set; } = new List<EpubTextFile>();
+    public EpubTextFile Ocf { get; set; }
+    public EpubTextFile Opf { get; set; }
+    public List<EpubTextFile> HtmlInReadingOrder { get; set; } = new List<EpubTextFile>();
 }

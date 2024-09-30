@@ -7,20 +7,20 @@ namespace Voracious.EPub.OPF;
 
 public class OpfDocument
 {
-    internal static class Attributes
+    public static class Attributes
     {
         public static readonly XName UniqueIdentifier = "unique-identifier";
         public static readonly XName Version = "version";
     }
 
-    public string UniqueIdentifier { get; internal set; }
-    public EpubVersionEnum EpubVersion { get; internal set; }
-    public OpfMetadata Metadata { get; internal set; } = new OpfMetadata();
-    public OpfManifest Manifest { get; internal set; } = new OpfManifest();
-    public OpfSpine Spine { get; internal set; } = new OpfSpine();
-    public OpfGuide Guide { get; internal set; } = new OpfGuide();
+    public string UniqueIdentifier { get; set; }
+    public EpubVersionEnum EpubVersion { get; set; }
+    public OpfMetadata Metadata { get; set; } = new OpfMetadata();
+    public OpfManifest Manifest { get; set; } = new OpfManifest();
+    public OpfSpine Spine { get; set; } = new OpfSpine();
+    public OpfGuide Guide { get; set; } = new OpfGuide();
 
-    internal string FindCoverPath()
+    public string FindCoverPath()
     {
         var coverMetaItem = Metadata.FindCoverMeta();
         if (coverMetaItem != null)
@@ -36,7 +36,7 @@ public class OpfDocument
         return coverItem?.Href;
     }
 
-    internal string FindAndRemoveCover()
+    public string FindAndRemoveCover()
     {
         var path = FindCoverPath();
         var meta = Metadata.FindAndDeleteCoverMeta();
@@ -44,7 +44,7 @@ public class OpfDocument
         return path;
     }
 
-    internal string FindNcxPath()
+    public string FindNcxPath()
     {
         string path = null;
 
@@ -72,7 +72,7 @@ public class OpfDocument
         return path;
     }
 
-    internal string FindNavPath()
+    public string FindNavPath()
     {
         var navItem = Manifest.Items.FirstOrDefault(e => e.Properties.Contains("nav"));
         return navItem?.Href;

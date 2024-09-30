@@ -4,7 +4,7 @@ namespace Voracious.EPub.NCX;
 
 public class NcxPageList
 {
-    public NcxNavInfo NavInfo { get; internal set; }
+    public NcxNavInfo NavInfo { get; set; }
 
-    public IList<NcxPageTarget> PageTargets { get; internal set; } = new List<NcxPageTarget>();
+    public List<NcxPageTarget> PageTargets { get; set; } = new List<NcxPageTarget>();
 }

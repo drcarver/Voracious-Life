@@ -1,13 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 
 using Voracious.Core.Model;
-using Voracious.EbookReader;
-using Voracious.EpubSharp;
-using Voracious.Interface;
+using Voracious.EPub;
+using Voracious.EPub.Extensions;
+using Voracious.EPub.Interface;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
-namespace Voracious.Controls;
+namespace Voracious.Reader.Controls;
 
 public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapters
 {
@@ -19,7 +17,7 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
         this.InitializeComponent();
     }
 
-    public ObservableCollection<EpubChapterData> Chapters { get; } = new ObservableCollection<EpubChapterData>();
+    public ObservableCollection<EpubChapter> Chapters { get; } = new ObservableCollection<EpubChapterData>();
     private EpubBookExt Book { get; set; }
     public void SetChapters(EpubBookExt book, IList<EpubChapter> chapters)
     {
@@ -30,7 +28,7 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
 
     const int MAX_CHAPTER_DEPTH = 3;
     /// <summary>
-    /// Proper recusion for adding chapters.
+    /// Proper recursion for adding chapters.
     /// </summary>
     private void SetChaptersHelper(IList<EpubChapter> chapters, int level)
     {
@@ -42,7 +40,7 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
 
         foreach (var chapter in chapters)
         {
-            Chapters.Add(new EpubChapterData(chapter, level));
+            Chapters.Add(new EpubChapter(chapter, level));
             if (chapter.SubChapters != null && chapter.SubChapters.Count > 0)
             {
                 if (level >= MAX_CHAPTER_DEPTH)
@@ -76,7 +74,7 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
         {
             chapterid = nav.MainBookHandler.GetChapterContainingId(location.Location, location.HtmlIndex);
         }
-        EpubChapterData foundChapter = null;
+        EpubChapter foundChapter = null;
 
         if (foundChapter == null && location.HtmlIndex >= 0)
         {
@@ -156,24 +154,13 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
         }
     }
 
-    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        //We just do taps now -- working via selection has two different problems:
-        //1. selection because of some other control's navigation would trigger this callback, 
-        //     resulting in user navigation loops
-        //2. Tappingn on an already-selected chapter didn't reselect even though we want it to.
-
-        //if (e.AddedItems.Count != 1) return;
-        //EpubChapter chapter = e.AddedItems[0] as EpubChapter;
-    }
-
-    private void OnSelectionTapped(object sender, TappedRoutedEventArgs e)
+    private void OnSelectionTapped(object sender, TappedEventArgs e)
     {
         var chapter = (sender as FrameworkElement).DataContext as EpubChapterData;
         UserDidNavigationRequest(chapter);
     }
 
-    private void UserDidNavigationRequest(EpubChapterData chapter)
+    private void UserDidNavigationRequest(EpubChapter chapter)
     {
         if (chapter == null) return;
         var nav = Navigator.Get();
@@ -190,7 +177,7 @@ public sealed partial class ChapterDisplay : ContentView, INavigateTo, ISetChapt
         }
         else
         {
-            location = EpubChapterData.FromChapter(chapter);
+            location = EpubChapter.FromChapter(chapter);
         }
         nav.UserNavigatedTo(ControlId, location);
     }

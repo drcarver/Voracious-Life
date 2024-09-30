@@ -1,6 +1,4 @@
-﻿using Voracious.EPub;
-
-namespace Voracious.EpubSharp;
+﻿namespace Voracious.EPub;
 
 public class EpubWriteException : EpubException
 {
