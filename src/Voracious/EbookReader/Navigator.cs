@@ -1,5 +1,5 @@
-﻿using Voracious.Core.Model;
-using Voracious.Database;
+﻿using Voracious.Database;
+using Voracious.RDF.Model;
 
 namespace Voracious.EbookReader;
 
@@ -60,7 +60,7 @@ public class Navigator
     /// <summary>
     /// The bookhandler is the class+object that knows all the details of the book
     /// </summary>
-    public BookHandler MainBookHandler { internal get; set; } = null;
+    public BookHandler MainBookHandler { get; set; } = null;
 
     /// <summary>
     /// Setup routine called just a few times at app startup. Tells the navigator which

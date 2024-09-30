@@ -5,29 +5,29 @@ namespace Voracious.EPub.OPF;
 
 public class OpfMetadata
 {
-    public IList<string> Titles { get; internal set; } = new List<string>();
-    public IList<string> Subjects { get; internal set; } = new List<string>();
-    public IList<string> Descriptions { get; internal set; } = new List<string>();
-    public IList<string> Publishers { get; internal set; } = new List<string>();
-    public IList<OpfMetadataCreator> Creators { get; internal set; } = new List<OpfMetadataCreator>();
-    public IList<OpfMetadataCreator> Contributors { get; internal set; } = new List<OpfMetadataCreator>();
-    public IList<OpfMetadataDate> Dates { get; internal set; } = new List<OpfMetadataDate>();
-    public IList<string> Types { get; internal set; } = new List<string>();
-    public IList<string> Formats { get; internal set; } = new List<string>();
-    public IList<OpfMetadataIdentifier> Identifiers { get; internal set; } = new List<OpfMetadataIdentifier>();
-    public IList<string> Sources { get; internal set; } = new List<string>();
-    public IList<string> Languages { get; internal set; } = new List<string>();
-    public IList<string> Relations { get; internal set; } = new List<string>();
-    public IList<string> Coverages { get; internal set; } = new List<string>();
-    public IList<string> Rights { get; internal set; } = new List<string>();
-    public IList<OpfMetadataMeta> Metas { get; internal set; } = new List<OpfMetadataMeta>();
+    public List<string> Titles { get; set; } = new List<string>();
+    public List<string> Subjects { get; set; } = new List<string>();
+    public List<string> Descriptions { get; set; } = new List<string>();
+    public List<string> Publishers { get; set; } = new List<string>();
+    public List<OpfMetadataCreator> Creators { get; set; } = new List<OpfMetadataCreator>();
+    public List<OpfMetadataCreator> Contributors { get; set; } = new List<OpfMetadataCreator>();
+    public List<OpfMetadataDate> Dates { get; set; } = new List<OpfMetadataDate>();
+    public List<string> Types { get; set; } = new List<string>();
+    public List<string> Formats { get; set; } = new List<string>();
+    public List<OpfMetadataIdentifier> Identifiers { get; set; } = new List<OpfMetadataIdentifier>();
+    public List<string> Sources { get; set; } = new List<string>();
+    public List<string> Languages { get; set; } = new List<string>();
+    public List<string> Relations { get; set; } = new List<string>();
+    public List<string> Coverages { get; set; } = new List<string>();
+    public List<string> Rights { get; set; } = new List<string>();
+    public List<OpfMetadataMeta> Metas { get; set; } = new List<OpfMetadataMeta>();
 
-    internal OpfMetadataMeta FindCoverMeta()
+    public OpfMetadataMeta FindCoverMeta()
     {
         return Metas.FirstOrDefault(metaItem => metaItem.Name == "cover");
     }
 
-    internal OpfMetadataMeta FindAndDeleteCoverMeta()
+    public OpfMetadataMeta FindAndDeleteCoverMeta()
     {
         var meta = FindCoverMeta();
         if (meta == null) return null;

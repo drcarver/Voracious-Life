@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Voracious.EPub.Format;
 
-internal class Constants
+class Constants
 {
     public static readonly string Html5Doctype = "<!DOCTYPE html>";
 

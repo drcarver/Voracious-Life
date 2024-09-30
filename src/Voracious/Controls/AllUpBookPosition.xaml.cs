@@ -1,18 +1,14 @@
-﻿using Voracious.EbookReader;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
-namespace Voracious.Controls;
+﻿namespace Voracious.Reader.Controls;
 
 /// <summary>
-/// Scrollbar for the entire book; vertical hashmarks show the positions of the different
-/// html files that make up the ebook. 
+/// Scrollbar for the entire book; vertical hash marks show the positions of the 
+/// different HTML files that make up the ebook. 
 /// </summary>
 public sealed partial class AllUpBookPosition : ContentView
 {
     const Navigator.NavigateControlId ControlId = Navigator.NavigateControlId.AllUpBookPosition;
     AllUpBookPositionCalculations Calculations = new AllUpBookPositionCalculations();
-    
+
     public AllUpBookPosition()
     {
         InitializeComponent();
@@ -33,7 +29,7 @@ public sealed partial class AllUpBookPosition : ContentView
         DrawLines();
     }
 
-    private void OnPositionTapped(object sender, TappedRoutedEventArgs e)
+    private void OnPositionTapped(object sender, TappedEventArgs e)
     {
         if (uiPosition.ActualWidth < 1) return;
 

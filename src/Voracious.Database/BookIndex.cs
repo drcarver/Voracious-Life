@@ -1,6 +1,5 @@
 ﻿using System.Text;
-
-using Voracious.Core.ViewModel;
+using Voracious.RDF.Model;
 
 namespace Voracious.Database;
 
@@ -14,35 +13,25 @@ public class BookIndex
         return $"{BookId}\t{Text}"; // assumes bookId will never include a tab.
     }
 
-    public static BookIndex FromBookData(BookViewModel bookData)
+    public static BookIndex FromBookData(Resource resource)
     {
         var sb = new StringBuilder();
-        Append(sb, bookData.Title);
-        Append(sb, bookData.TitleAlternative);
-        Append(sb, bookData.Review?.Tags);
-        Append(sb, bookData.Review?.Review);
-        Append(sb, bookData.BookSeries);
-        Append(sb, bookData.Imprint);
-        Append(sb, bookData.LCC);
-        Append(sb, bookData.LCCN);
-        Append(sb, bookData.LCSH);
-        if (bookData.Notes != null)
-        {
-            foreach (var note in bookData.Notes.Notes)
-            {
-                Append(sb, note.Tags);
-                Append(sb, note.Text);
-            }
-        }
-        foreach (var people in bookData.People)
-        {
-            Append(sb, people.Aliases);
-            Append(sb, people.Name);
-        }
+        Append(sb, resource.Title);
+        Append(sb, resource.TitleAlternative);
+        Append(sb, resource.BookSeries);
+        Append(sb, resource.Imprint);
+        Append(sb, resource.LCC);
+        Append(sb, resource.LCCN);
+        Append(sb, resource.LCSH);
+        //foreach (var people in resource.People)
+        //{
+        //    Append(sb, people.Aliases);
+        //    Append(sb, people.Name);
+        //}
 
         var retval = new BookIndex()
         {
-            BookId = bookData.BookId,
+            BookId = resource.About,
             Text = sb.ToString(),
         };
         return retval;

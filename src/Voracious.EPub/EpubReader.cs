@@ -13,7 +13,6 @@ using Voracious.EPub.Format.Readers;
 using Voracious.EPub.Misc;
 using Voracious.EPub.NAV;
 using Voracious.EPub.NCX;
-using Voracious.EpubSharp.Format.Readers;
 
 namespace Voracious.EPub;
 

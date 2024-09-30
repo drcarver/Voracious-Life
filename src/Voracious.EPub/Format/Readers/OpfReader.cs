@@ -9,7 +9,7 @@ using Voracious.EPub.OPF;
 
 namespace Voracious.EPub.Format.Readers;
 
-internal static class OpfReader
+static class OpfReader
 {
     public static OpfDocument Read(XDocument xml)
     {
@@ -87,7 +87,7 @@ internal static class OpfReader
                     Href = (string)elem.Attribute(OpfManifestItem.Attributes.Href),
                     Id = (string)elem.Attribute(OpfManifestItem.Attributes.Id),
                     MediaType = (string)elem.Attribute(OpfManifestItem.Attributes.MediaType),
-                    Properties = ((string)elem.Attribute(OpfManifestItem.Attributes.Properties))?.Split(' ') ?? new string[0],
+                    Properties = ((string)elem.Attribute(OpfManifestItem.Attributes.Properties))?.Split(' ').ToList<string>() ?? new List<string>(),
                     RequiredModules = (string)elem.Attribute(OpfManifestItem.Attributes.RequiredModules),
                     RequiredNamespace = (string)elem.Attribute(OpfManifestItem.Attributes.RequiredNamespace)
                 })

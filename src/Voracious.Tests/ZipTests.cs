@@ -1,7 +1,7 @@
 using System.Formats.Tar;
 using System.IO.Compression;
 
-using Voracious.Core.Extension;
+using Voracious.RDF.Extension;
 
 namespace Voracious.Tests;
 

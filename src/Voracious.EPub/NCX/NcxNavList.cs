@@ -4,8 +4,8 @@ namespace Voracious.EPub.NCX;
 
 public class NcxNavList
 {
-    public string Id { get; internal set; }
-    public string Class { get; internal set; }
-    public string Label { get; internal set; }
-    public IList<NcxNavTarget> NavTargets { get; internal set; } = new List<NcxNavTarget>();
+    public string Id { get; set; }
+    public string Class { get; set; }
+    public string Label { get; set; }
+    public List<NcxNavTarget> NavTargets { get; set; } = new List<NcxNavTarget>();
 }

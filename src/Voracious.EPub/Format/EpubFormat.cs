@@ -7,10 +7,10 @@ namespace Voracious.EPub.Format;
 
 public class EpubFormat
 {
-    public EpubFormatPaths Paths { get; internal set; } = new EpubFormatPaths();
+    public EpubFormatPaths Paths { get; set; } = new EpubFormatPaths();
 
-    public OcfDocument Ocf { get; internal set; }
-    public OpfDocument Opf { get; internal set; }
-    public NcxDocument Ncx { get; internal set; }
-    public NavDocument Nav { get; internal set; }
+    public OcfDocument Ocf { get; set; }
+    public OpfDocument Opf { get; set; }
+    public NcxDocument Ncx { get; set; }
+    public NavDocument Nav { get; set; }
 }

@@ -8,18 +8,20 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400" 
-    HorizontalAlignment="Stretch">
+    HorizontalOptions="FillAndExpand">
 
-    <Grid HorizontalAlignment="Stretch">
+    <Grid HorizontalOptions="FillAndExpand">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{Binding Summary}" Style="{StaticResource BodyTextBlockStyle}" FontStyle="Italic" 
-                        FontFamily="{Binding StandardFF, Source={StaticResource UserCustomization}}"
-                        FontSize="{Binding PeopleFontSize, Source={StaticResource UserCustomization}}" 
-                   />
+        <Label Grid.Column="0" Text="{Binding Summary}" 
+               FontAttributes="Italic" 
+               FontFamily="{Binding StandardFF, Source={StaticResource UserCustomization}}"
+               FontSize="{Binding PeopleFontSize, Source={StaticResource UserCustomization}}" 
+               Style="{StaticResource BodyTextBlockStyle}" 
+            />
         <HyperlinkButton Grid.Column="1" x:Name="uiWeb" Content="WEB" NavigateUri="{Binding WebpageUri}" >
             <HyperlinkButton.ContentTemplate>
                 <DataTemplate>

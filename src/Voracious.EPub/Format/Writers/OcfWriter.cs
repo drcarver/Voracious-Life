@@ -6,7 +6,7 @@ using Voracious.EPub.OCF;
 
 namespace Voracious.EPub.Format.Writers;
 
-internal class OcfWriter
+class OcfWriter
 {
     public static string Format(string opfPath)
     {

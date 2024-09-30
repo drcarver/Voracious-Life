@@ -31,7 +31,7 @@ public class SearchAtom : ISearch
     }
     public bool Matches(IGetSearchArea searchObject)
     {
-        IList<string> inputList = searchObject.GetSearchArea(SearchArea);
+        List<string> inputList = searchObject.GetSearchArea(SearchArea);
         // might be just one string, like title:apple or might be everything like brown
         int index;
         switch (Type)

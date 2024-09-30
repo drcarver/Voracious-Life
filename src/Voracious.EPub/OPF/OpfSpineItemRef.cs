@@ -5,7 +5,7 @@ namespace Voracious.EPub.OPF;
 
 public class OpfSpineItemRef
 {
-    internal static class Attributes
+    public static class Attributes
     {
         public static readonly XName IdRef = "idref";
         public static readonly XName Linear = "linear";
@@ -13,10 +13,10 @@ public class OpfSpineItemRef
         public static readonly XName Properties = "properties";
     }
 
-    public string IdRef { get; internal set; }
-    public bool Linear { get; internal set; }
-    public string Id { get; internal set; }
-    public IList<string> Properties { get; internal set; } = new List<string>();
+    public string IdRef { get; set; }
+    public bool Linear { get; set; }
+    public string Id { get; set; }
+    public List<string> Properties { get; set; } = new List<string>();
 
     public override string ToString()
     {

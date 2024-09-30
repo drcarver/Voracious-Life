@@ -1,10 +1,6 @@
-﻿using Voracious.Database;
-using Voracious.EbookReader;
-using Voracious.UwpClasses;
+﻿using Windows.UI.Popups;
 
-using Windows.UI.Popups;
-
-namespace Voracious.Controls;
+namespace Voracious.Reader.Controls;
 
 /// <summary>
 /// Display a BookCard using a BookData object
@@ -23,31 +19,13 @@ public sealed partial class BookCard : ContentView
         EnableDownloadPanel(isSelected && AllowEnableDownloadPanel);
     }
 
-    private void BookCard_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
-    {
-        var book = DataContext as BookDataViewModel;
-        //System.Diagnostics.Debug.WriteLine($"DBG: BookCard: DataContext: changed: {book?.Title}");
-        SetupUINicely();
-    }
-
-    private void BookCard_Loaded(object sender, RoutedEventArgs e)
-    {
-        var book = DataContext as BookDataViewModel;
-        //System.Diagnostics.Debug.WriteLine($"DBG: BookCard: Loaded: changed: {book?.Title}");
-        SetupUINicely();
-    }
-
     private Visibility Vis(string value1, string value2=null, string value3=null)
     {
-        return string.IsNullOrWhiteSpace(value1) && string.IsNullOrWhiteSpace(value2) && string.IsNullOrWhiteSpace(value3) 
+        return string.IsNullOrWhiteSpace(value1) 
+            && string.IsNullOrWhiteSpace(value2) 
+            && string.IsNullOrWhiteSpace(value3) 
             ? Visibility.Collapsed 
             : Visibility.Visible;
-    }
-
-    public BookDataViewModel GetBookData()
-    {
-        var book = DataContext as BookDataViewModel;
-        return book;
     }
 
     bool AllowEnableDownloadPanel = false;
@@ -218,29 +196,7 @@ public sealed partial class BookCard : ContentView
             uiDownloadProgress.IsIndeterminate = true;
             uiDownloadProgress.ShowError = false;
             var getTask = hc.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
-#if NEVER_EVER_DEFINED
-            getTask.Progress += async (response, progress) =>
-            {
-                await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                    () =>
-                    {
-                        if (totalLength == 0 && progress.TotalBytesToReceive.HasValue && progress.TotalBytesToReceive.Value > 0)
-                        {
-                            // Now we know how many bytes we will get!
-                            uiDownloadProgress.IsIndeterminate = false;
-                            uiDownloadProgress.Minimum = 0;
-                            uiDownloadProgress.Maximum = progress.TotalBytesToReceive.Value;
-                            uiDownloadProgress.Value = 0;
-                            totalLength = progress.TotalBytesToReceive.Value;
-                        }
-                        if (progress.BytesReceived > 0)
-                        {
-                            uiDownloadProgress.Value = progress.BytesReceived;
-                        }
-                        NotifyUser ($"GET Progress: stage {progress.Stage} bytes={progress.BytesReceived} of {progress.TotalBytesToReceive}");
-                    });
-            };
-#endif
+
             // Get some level of progress....
             var responseMessage = await getTask;
             var contentLengthHeader = responseMessage.Content.Headers.ContentLength;

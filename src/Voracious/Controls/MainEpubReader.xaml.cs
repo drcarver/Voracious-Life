@@ -5,6 +5,7 @@ using SimpleEpubReader.Controls;
 using Voracious.Core.Model;
 using Voracious.Database;
 using Voracious.EbookReader;
+using Voracious.EPub.Interface;
 using Voracious.EpubSharp;
 using Voracious.FileWizards;
 using Voracious.Interface;

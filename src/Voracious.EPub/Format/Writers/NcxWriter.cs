@@ -7,7 +7,7 @@ using Voracious.EPub.NCX;
 
 namespace Voracious.EPub.Format.Writers;
 
-internal class NcxWriter
+class NcxWriter
 {
     public static string Format(NcxDocument ncx)
     {

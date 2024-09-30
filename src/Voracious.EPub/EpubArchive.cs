@@ -4,7 +4,6 @@ using System.IO.Compression;
 
 using Voracious.EPub.Extensions;
 using Voracious.EPub.Format;
-using Voracious.EpubSharp.Format;
 
 namespace Voracious.EPub;
 
