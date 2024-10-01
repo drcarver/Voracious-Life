@@ -10,18 +10,32 @@ using Voracious.EPub.Enum;
 using Voracious.EPub.Extensions;
 using Voracious.EPub.Format;
 using Voracious.EPub.Format.Readers;
+using Voracious.EPub.Interface;
 using Voracious.EPub.Misc;
 using Voracious.EPub.NAV;
 using Voracious.EPub.NCX;
 
 namespace Voracious.EPub;
 
-public class EpubReader
+public class EpubReader : IEpubReader
 {
+    #region Public API
+    /// <summary>
+    /// Read a EPUB from a file
+    /// </summary>
+    /// <param name="filePath">The file path to open</param>
+    /// <param name="encoding">The encoding of the file</param>
+    /// <returns>The EpubBook we have just read in</returns>
     public EpubBook Read(string filePath, Encoding encoding = null)
     {
-        if (filePath == null) throw new ArgumentNullException(nameof(filePath));
-        if (encoding == null) encoding = Constants.DefaultEncoding;
+        if (filePath == null)
+        {
+            throw new ArgumentNullException(nameof(filePath));
+        }
+        if (encoding == null)
+        {
+            encoding = Constants.DefaultEncoding;
+        }
 
         if (!File.Exists(filePath))
         {
@@ -31,16 +45,38 @@ public class EpubReader
         return Read(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read), false, encoding);
     }
 
+    /// <summary>
+    /// Read a EPUB from a byte array
+    /// </summary>
+    /// <param name="epubData">The epub as a byte array</param>
+    /// <param name="encoding">The encoding of the file</param>
+    /// <returns>The EpubBook we have just read in</returns>
     public EpubBook Read(byte[] epubData, Encoding encoding = null)
     {
-        if (encoding == null) encoding = Constants.DefaultEncoding;
+        if (encoding == null)
+        {
+            encoding = Constants.DefaultEncoding;
+        }
         return Read(new MemoryStream(epubData), false, encoding);
     }
 
+    /// <summary>
+    /// Read a EPUB from a stream
+    /// </summary>
+    /// <param name="stream">The epub as a stream</param>
+    /// <param name="leaveOpen">Leave the stream open</param>
+    /// <param name="encoding">The encoding of the file</param>
+    /// <returns>The EpubBook we have just read in</returns>
     public EpubBook Read(Stream stream, bool leaveOpen, Encoding encoding = null)
     {
-        if (stream == null) throw new ArgumentNullException(nameof(stream));
-        if (encoding == null) encoding = Constants.DefaultEncoding;
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+        if (encoding == null)
+        {
+            encoding = Constants.DefaultEncoding;
+        }
 
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen, encoding))
         {
@@ -78,7 +114,9 @@ public class EpubReader
             return book;
         }
     }
+    #endregion
 
+    #region methods to load the epub
     private byte[] LoadCoverImage(EpubBook book)
     {
         if (book == null) throw new ArgumentNullException(nameof(book));
@@ -115,7 +153,10 @@ public class EpubReader
 
     private List<EpubChapter> LoadChaptersFromNav(string navAbsolutePath, XElement element, EpubChapter parentChapter = null)
     {
-        if (element == null) throw new ArgumentNullException(nameof(element));
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
         var ns = element.Name.Namespace;
 
         var result = new List<EpubChapter>();
@@ -360,4 +401,5 @@ public class EpubReader
 
         return result;
     }
+    #endregion
 }
