@@ -186,9 +186,18 @@ public class FileFormat : IFileFormat
                 return ProcessedFileEnum.Html;
 
             case "image/jpeg": // cover images
-                if (string.IsNullOrEmpty(FileName)) return ProcessedFileEnum.CoverSmall;
-                if (FileName.Contains("cover.small")) return ProcessedFileEnum.CoverSmall;
-                if (FileName.Contains("cover.medium")) return ProcessedFileEnum.CoverMedium;
+                if (string.IsNullOrEmpty(FileName))
+                { 
+                    return ProcessedFileEnum.CoverSmall; 
+                }
+                if (FileName.Contains("cover.small"))
+                {
+                    return ProcessedFileEnum.CoverSmall;
+                }
+                if (FileName.Contains("cover.medium"))
+                {
+                    return ProcessedFileEnum.CoverMedium;
+                }
                 return ProcessedFileEnum.CoverSmall;
 
             case "text/html":
@@ -206,6 +215,7 @@ public class FileFormat : IFileFormat
 
             case "text/plain; charset=utf-8":
                 return ProcessedFileEnum.Text;
+
             default:
                 return ProcessedFileEnum.Unknown;
         }
@@ -223,7 +233,7 @@ public class FileFormat : IFileFormat
                 case "application/epub+zip":
                 case "application/msword": // word doc e.g. 10681 and 80+ others
                 case "application/octet-stream": // seemingly obsolete -- used for old books only?
-                case "application/pdf": // PDF file
+                case "application/pdf":
                 case "application/postscript": // postscript, of course
                 case "application/prs.tei": // XML text file (about 520) -- see https://en.wikipedia.org/wiki/Text_Encoding_Initiative
                 case "application/prs.tex": // TEX files!

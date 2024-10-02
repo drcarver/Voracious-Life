@@ -41,7 +41,7 @@ public class CatalogDataContext : DbContext
     }
 
     //public DbSet<BookNavigation> BookNavigations { get; set; }
-    //public DbSet<FilenameAndFormatDataModel> Files { get; set; }
+    public DbSet<FileFormat> FileFormats { get; set; }
     public DbSet<Creator> Creators { get; set; }
     public DbSet<Resource> Resources { get; set; }
     //public DbSet<UserNote> UserNotes { get; set; }

@@ -381,7 +381,7 @@ public partial class CardCatalog : ICardCatalog
                                 haveEpub = true;
                                 break;
                         }
-                        //book.Files.Add(format);
+                        book.FileFormats.Add(format);
                     }
                     break;
                 case "dcterms:issued": // <... rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2015-03-06</...>
@@ -682,11 +682,12 @@ public partial class CardCatalog : ICardCatalog
                 }
 
                 retval.FileName = childFile.Attributes["rdf:about"].Value; // The super critical part!
-                //var formatData = Catalogdb.Files.FirstOrDefault(f => f.FileName == retval.FileName);
-                //if (formatData != null)
-                //{
-                //    return formatData;
-                //}
+                
+                var formatData = Catalogdb.FileFormats.FirstOrDefault(f => f.FileName == retval.FileName);
+                if (formatData != null)
+                {
+                    return formatData;
+                }
                 foreach (var valueObj in childFile.ChildNodes)
                 {
                     var value = valueObj as XmlNode;

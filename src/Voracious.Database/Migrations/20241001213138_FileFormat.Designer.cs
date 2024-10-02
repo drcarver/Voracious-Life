@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Voracious.Database;
 
@@ -10,9 +11,11 @@ using Voracious.Database;
 namespace Voracious.Database.Migrations
 {
     [DbContext(typeof(CatalogDataContext))]
-    partial class CatalogDataContextModelSnapshot : ModelSnapshot
+    [Migration("20241001213138_FileFormat")]
+    partial class FileFormat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");

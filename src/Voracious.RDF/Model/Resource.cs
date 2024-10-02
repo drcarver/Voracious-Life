@@ -84,7 +84,7 @@ public class Resource : IResource
     /// practice is to use a controlled vocabulary such as the list of
     /// Internet Media Types[MIME]
     /// </remarks>
-    public string? Formats { get; set; } = string.Empty;
+    public List<FileFormat> FileFormats { get; set; } = [];
 
     /// <summary>
     ///  A name given to the resource.
