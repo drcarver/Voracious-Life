@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
 
-namespace Voracious.RDF.Model;
+namespace Voracious.Core.Model;
 
-public class FileFormat : IFileFormatCore
+public class FileFormatCore : IFileFormatCore
 {
     /// <summary>
     /// The primary key of the file
@@ -41,7 +41,7 @@ public class FileFormat : IFileFormatCore
     /// <summary>
     /// The resource the file is associated with
     /// </summary>
-    public Resource Resource { get; set; }
+    public ResourceCore Resource { get; set; }
 
     /// <summary>
     /// The file extent
@@ -62,7 +62,7 @@ public class FileFormat : IFileFormatCore
     /// </summary>
     /// <param name="start"></param>
     /// <returns></returns>
-    public List<FileFormat> GetProcessedFileList(List<FileFormat> start)
+    public List<FileFormatCore> GetProcessedFileList(List<FileFormatCore> start)
     {
         // For example: if there's an epub with images, don't include the epub without images.
         // If there's a high-res cover, don't include a low-res cover.
@@ -73,8 +73,8 @@ public class FileFormat : IFileFormatCore
         // text versions.
         // FAIL: actually, the audio books includes a bazillion OGG etc files.
 
-        var sortedlist = new List<FileFormat>();
-        var retval = new List<FileFormat>();
+        var sortedlist = new List<FileFormatCore>();
+        var retval = new List<FileFormatCore>();
 
         foreach (var item in start) sortedlist.Add(item);
         sortedlist.Sort((a, b) => { return a.GetFileType().CompareTo(b.GetFileType()); });
@@ -187,8 +187,8 @@ public class FileFormat : IFileFormatCore
 
             case "image/jpeg": // cover images
                 if (string.IsNullOrEmpty(FileName))
-                { 
-                    return ProcessedFileEnum.CoverSmall; 
+                {
+                    return ProcessedFileEnum.CoverSmall;
                 }
                 if (FileName.Contains("cover.small"))
                 {

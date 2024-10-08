@@ -6,9 +6,9 @@ using System.Xml;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using Voracious.Core.Enum;
 using Voracious.Database.Interface;
 using Voracious.EPub;
-using Voracious.RDF.Enum;
 using Voracious.RDF.Extension;
 using Voracious.RDF.Model;
 

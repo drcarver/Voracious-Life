@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
+
+using Voracious.RDF.Model;
 
 namespace Voracious.RDF.Extension;
 

@@ -3,12 +3,12 @@
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
 
-namespace Voracious.RDF.Model;
+namespace Voracious.Core.Model;
 
-public partial class BookNavigation : IBookNavigationCore
+public partial class BookNavigationCore : IBookNavigationCore
 {
     public int Id { get; set; }
-    public IResourceCore? Resource { get; set; }
+    public ResourceCore? Resource { get; set; }
     public DateTime MostRecentNavigationDate { get; set; } = DateTime.Now;
     public int NumberOfCatalogViews { get; set; }
     public int NumberOfSwipeRight { get; set; }

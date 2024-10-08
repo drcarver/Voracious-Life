@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Voracious.RDF.Enum;
-using Voracious.RDF.Interface;
+using Voracious.Core.Enum;
+using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
-namespace Voracious.RDF.Model;
+namespace Voracious.Core.Model;
 
-public class Resource : IResource
+public class ResourceCore : IResourceCore
 {
     #region properties
     /// <summary>
@@ -199,7 +200,7 @@ public class Resource : IResource
     /// the dcterms: namespace. See the Introduction to the document DCMI Meta-data 
     /// Terms for an explanation.
     /// </remarks>
-    public List<Creator> Creators { get; set; } = [];
+    public List<CreatorCore> Creators { get; set; } = [];
 
     /// <summary>
     /// The file format, physical medium, or dimensions of the resource.
@@ -215,7 +216,7 @@ public class Resource : IResource
     /// practice is to use a controlled vocabulary such as the list of
     /// Internet Media Types[MIME]
     /// </remarks>
-    public List<FileFormat> FileFormats { get; set; } = [];
+    public List<FileFormatCore> FileFormats { get; set; } = [];
 
     ////
     //// Next is all of the user-settable things
@@ -260,36 +261,5 @@ public class Resource : IResource
     /// by means of a string conforming to a formal identification system.
     /// </remarks>
     //public List<string> Relations { get; set; } = [];
-    #endregion
-
-    #region cleanup methods
-    /// <summary>
-    /// Create a file as string for the resource
-    /// </summary>
-    public void CleanupFileResourceAs()
-    {
-        FileAs = Title.ToUpper();
-        Creator creator = Creators.OrderBy(c => c.GetImportance()).FirstOrDefault();
-        
-        if (creator != null) 
-        {
-            FileAs += $" {creator.Role} {creator.FileAs}";
-        }
-        if (FileAs != null)
-        {
-            if (FileAs.StartsWith("A "))
-            {
-                FileAs = FileAs.Substring(2);
-            }
-            if (FileAs.StartsWith("AN "))
-            {
-                FileAs = FileAs.Substring(3);
-            }
-            if (FileAs.StartsWith("THE "))
-            {
-                FileAs = FileAs.Substring(4);
-            }
-        }
-    }
     #endregion
 }

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
-using Voracious.RDF.Enum;
-using Voracious.RDF.Interface;
+using Voracious.Core.Enum;
+using Voracious.Core.Interface;
 
 namespace Voracious.RDF.Model;
 
-public class Creator : ICreator
+public class Creator : ICreatorCore
 {
     public static class Attributes
     {
@@ -63,7 +63,7 @@ public class Creator : ICreator
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    public List<Resource> Resources { get; set; } = [];
+    public List<IResourceCore> Resources { get; set; } = [];
 
     /// <summary>
     /// Add the alias for the person

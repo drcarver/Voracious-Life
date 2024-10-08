@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Voracious.Core\Voracious.Core.csproj" />
     <ProjectReference Include="..\Voracious.EPub\Voracious.EPub.csproj" />
     <ProjectReference Include="..\Voracious.RDF\Voracious.RDF.csproj" />
   </ItemGroup>
