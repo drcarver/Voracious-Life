@@ -2,6 +2,7 @@
 using Android.Runtime;
 
 namespace Voracious.Life;
+
 [Application]
 public class MainApplication : MauiApplication
 {

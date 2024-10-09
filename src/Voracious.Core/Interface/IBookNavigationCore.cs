@@ -4,7 +4,7 @@ using Voracious.Core.Enum;
 
 namespace Voracious.Core.Interface;
 
-public interface IBookNavigation
+public interface IBookNavigationCore
 {
     int Id { get; set; }
     DateTime MostRecentNavigationDate { get; set; }

@@ -3,7 +3,7 @@ using Voracious.RDF.Model;
 
 namespace Voracious.RDF.Interface;
 
-public interface IBookNavigationModel : IBookNavigation
+public interface IBookNavigation : IBookNavigationCore
 {
-    ResourceModel Resource { get; set; }
+    Resource Resource { get; set; }
 }

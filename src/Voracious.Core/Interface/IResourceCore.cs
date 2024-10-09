@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 
 using Voracious.Core.Enum;
+using Voracious.Core.Model;
 
 namespace Voracious.Core.Interface;
 
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public interface IResource
+public interface IResourceCore
 {
     /// <summary>
     /// The primary key
@@ -69,21 +70,6 @@ public interface IResource
     /// Marc508 e.g. Produced by Biblioteca Nacional Digital (http://bnd.bn.pt),
     /// </remarks>
     string? CreationProductionCreditsNote { get; set; }
-
-    /// <summary>
-    /// An entity primarily responsible for making the resource.
-    /// <para>
-    /// dc:creator
-    /// </para>
-    /// <para>
-    /// Ordered array of ProperName
-    /// </para>
-    /// </summary>
-    /// <remarks>
-    /// Examples of a creator include a person, an organization, or a service.
-    /// Typically, the name of a creator should be used to indicate the entity.  
-    /// </remarks>
-    List<CreatorCore> Creators { get; set; }
 
     /// <summary>
     /// An account of the resource.

@@ -11,7 +11,7 @@ namespace Voracious.Life.ViewModel;
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public partial class ResourceViewModel : ObservableObject, IResource, IGetSearchAreaCore
+public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSearchAreaCore
 {
     private const string BookSourceGutenberg = "Project Gutenberg";
     private const int NICE_MIN_LEN = 20;
@@ -562,7 +562,7 @@ public partial class ResourceViewModel : ObservableObject, IResource, IGetSearch
     public string? BestAuthorDefaultIsNull => Creators.OrderBy(p => p.GetImportance()).FirstOrDefault()?.Name;
 
     public string FileAs { get; set; }
-    FileTypeEnum? IResource.BookType { get; set; }
+    FileTypeEnum? IResourceCore.BookType { get; set; }
 
     /// <summary>
     /// Get a shortened title with author name suitable for being a filename.

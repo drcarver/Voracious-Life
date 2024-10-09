@@ -2,11 +2,12 @@
 using System.Xml.Linq;
 
 using Voracious.Core.Enum;
-using Voracious.Core.Interface;
+using Voracious.Core.Model;
+using Voracious.RDF.Interface;
 
 namespace Voracious.RDF.Model;
 
-public class Creator : ICreatorCore
+public class Creator : CreatorCore, ICreator
 {
     public static class Attributes
     {
@@ -15,55 +16,12 @@ public class Creator : ICreatorCore
         public static readonly XName AlternateScript = Constants.OpfNamespace + "alternate-script";
     }
 
-    /// <summary>
-    /// The primary key
-    /// </summary>
-    public string About { get; set; }
-
-    /// <summary>
-    /// The alternate script for the creator
-    /// </summary>
-    public string? AlternateScript { get; set; } = null;
-
-    /// <summary>
-    /// The name of the person
-    /// </summary>
-    public string? Name { get; set; } = null;
-
-    /// <summary>
-    /// The person's alias
-    /// </summary>
-    public string? Aliases { get; set; } = null;
-
-    /// <summary>
-    /// The date of birth
-    /// </summary>
-    public int? BirthDate { get; set; } = null;
-
-    /// <summary>
-    /// The date of death
-    /// </summary>
-    public int? DeathDate { get; set; } = null;
-
-    /// <summary>
-    /// The author's web page
-    /// </summary>
-    public string? Webpage { get; set; } = null;
-
-    /// <summary>
-    /// The sortable version of the author
-    /// </summary>
-    public string? FileAs { get; set; } = null;
-
-    /// <summary>
-    /// The relator's for the book (creator, illustrator, etc..)
-    /// </summary>
-    public RelatorEnum? Role { get; set; } = null;
-
+    #region Navigation Properties
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    public List<IResource> Resources { get; set; } = [];
+    public List<Resource> Resources { get; set; } = [];
+    #endregion
 
     /// <summary>
     /// Add the alias for the person

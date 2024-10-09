@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
-using Voracious.Core.Enum;
-using Voracious.Core.Model;
-using Voracious.RDF.Interface;
+using Voracious.Core.Interface;
+using Voracious.RDF.Model;
 
-namespace Voracious.RDF.Model;
+namespace Voracious.RDF.Interface;
 
-public class Resource : ResourceCore, IResource
+public interface IResource : IResourceCore
 {
-    #region navigation properties and commands
     /// <summary>
-    /// An entity primarily responsible for making the resource
+    /// An entity primarily responsible for making the resource.
+    /// <para>
+    /// dc:creator
+    /// </para>
+    /// <para>
+    /// Ordered array of ProperName
+    /// </para>
     /// </summary>
     /// <remarks>
-    /// A second property with the same name as this property has been declared in 
-    /// the dcterms: namespace. See the Introduction to the document DCMI Meta-data 
-    /// Terms for an explanation.
+    /// Examples of a creator include a person, an organization, or a service.
+    /// Typically, the name of a creator should be used to indicate the entity.  
     /// </remarks>
-    public List<Creator> Creators { get; set; } = [];
+    List<Creator> Creators { get; set; }
 
     /// <summary>
     /// The file format, physical medium, or dimensions of the resource.
@@ -35,7 +36,7 @@ public class Resource : ResourceCore, IResource
     /// practice is to use a controlled vocabulary such as the list of
     /// Internet Media Types[MIME]
     /// </remarks>
-    public List<FileFormat> FileFormats { get; set; } = [];
+    List<FileFormat> FileFormats { get; set; }
 
     ////
     //// Next is all of the user-settable things
@@ -80,36 +81,4 @@ public class Resource : ResourceCore, IResource
     /// by means of a string conforming to a formal identification system.
     /// </remarks>
     //public List<string> Relations { get; set; } = [];
-    #endregion
-
-    #region cleanup methods
-    /// <summary>
-    /// Create a file as string for the resource
-    /// </summary>
-    public void CleanupFileResourceAs()
-    {
-        FileAs = Title.ToUpper();
-        Creator creator = Creators.OrderBy(c => c.GetImportance()).FirstOrDefault();
-        
-        if (creator != null) 
-        {
-            FileAs += $" {creator.Role} {creator.FileAs}";
-        }
-        if (FileAs != null)
-        {
-            if (FileAs.StartsWith("A "))
-            {
-                FileAs = FileAs.Substring(2);
-            }
-            if (FileAs.StartsWith("AN "))
-            {
-                FileAs = FileAs.Substring(3);
-            }
-            if (FileAs.StartsWith("THE "))
-            {
-                FileAs = FileAs.Substring(4);
-            }
-        }
-    }
-    #endregion
 }

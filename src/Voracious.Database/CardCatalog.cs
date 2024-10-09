@@ -32,7 +32,7 @@ public partial class CardCatalog : ICardCatalog
     private List<Resource> Books = [];
     private List<Resource> ExistingBooks;
 
-    private List<CreatorCore> Creators = [];
+    private List<Creator> Creators = [];
 
     private ObservableCollection<FileFormat> Files = [];
 
@@ -574,9 +574,9 @@ public partial class CardCatalog : ICardCatalog
     /// </summary>
     /// <param name="parentnode">The creator rdf node</param>
     /// <returns>The Person model for the creator</returns>
-    private CreatorCore ExtractCreator(XmlNode parentnode)
+    private Creator ExtractCreator(XmlNode parentnode)
     {
-        CreatorCore retval = new();
+        Creator retval = new();
         try
         {
             string? str = string.Empty;

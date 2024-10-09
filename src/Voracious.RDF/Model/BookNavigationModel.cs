@@ -5,10 +5,9 @@ using Voracious.RDF.Interface;
 
 namespace Voracious.RDF.Model;
 
-public partial class BookNavigationModel : IBookNavigationModel
+public partial class BookNavigation : IBookNavigation
 {
     public int Id { get; set; }
-    public ResourceModel? Resource { get; set; }
     public DateTime MostRecentNavigationDate { get; set; } = DateTime.Now;
     public int NumberOfCatalogViews { get; set; }
     public int NumberOfSwipeRight { get; set; }
@@ -20,4 +19,7 @@ public partial class BookNavigationModel : IBookNavigationModel
     public DateTime TimeMarkedDone { get; set; } = DateTime.MinValue;
     public DateTime FirstNavigationDate { get; set; } = DateTime.Now;
     public bool IsDone { get; set; } = false;
+
+    public Resource? Resource { get; set; }
+
 }

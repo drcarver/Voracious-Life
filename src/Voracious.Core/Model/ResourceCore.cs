@@ -8,7 +8,7 @@ using Voracious.Core.Model;
 
 namespace Voracious.Core.Model;
 
-public class ResourceCore : IResource
+public class ResourceCore : IResourceCore
 {
     #region properties
     /// <summary>
