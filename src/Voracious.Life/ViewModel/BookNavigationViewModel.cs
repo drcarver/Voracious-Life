@@ -1,8 +1,7 @@
-﻿using Voracious.RDF.Enum;
-using Voracious.RDF.Interface;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using Voracious.Core.Enum;
+using Voracious.Core.Model;
 
 namespace Voracious.Life.ViewModel;
 
@@ -12,7 +11,7 @@ public partial class BookNavigationViewModel : ObservableObject
     private int id;
 
     [ObservableProperty]
-    private IResource resource;
+    private ResourceCore resource;
 
     [ObservableProperty]
     private DateTime mostRecentNavigationDate = DateTime.Now;

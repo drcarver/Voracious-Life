@@ -1,13 +1,12 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using Voracious.RDF.Enum;
-using Voracious.RDF.Interface;
+using Voracious.Core.Enum;
+using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
 namespace Voracious.Life.ViewModel;
 
-public partial class FileFormatViewModel : ObservableObject, IFileFormat
+public partial class FileFormatViewModel : ObservableObject, IFileFormatCore
 {
     [ObservableProperty]
     private int id;
@@ -28,7 +27,7 @@ public partial class FileFormatViewModel : ObservableObject, IFileFormat
     private DateTime downloadDate = DateTime.Now;
 
     [ObservableProperty]
-    private IResource resource;
+    private ResourceCore resource;
 
     [ObservableProperty]
     private int extent = -1;

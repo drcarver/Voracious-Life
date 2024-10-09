@@ -13,9 +13,9 @@ public interface IUserNoteCore
 
     ResourceCore Book { get; set; }
 
-    DateTimeOffset CreateDate { get; set; }
+    DateTime CreateDate { get; set; }
 
-    DateTimeOffset MostRecentModificationDate { get; set; }
+    DateTime MostRecentModificationDate { get; set; }
 
     string Location { get; set; }
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using Voracious.Core.Enum;
+using Voracious.Core.Model;
 using Voracious.Database.Interface;
 using Voracious.EPub;
 using Voracious.RDF.Extension;
@@ -31,7 +32,7 @@ public partial class CardCatalog : ICardCatalog
     private List<Resource> Books = [];
     private List<Resource> ExistingBooks;
 
-    private List<Creator> Creators = [];
+    private List<CreatorCore> Creators = [];
 
     private ObservableCollection<FileFormat> Files = [];
 
@@ -573,9 +574,9 @@ public partial class CardCatalog : ICardCatalog
     /// </summary>
     /// <param name="parentnode">The creator rdf node</param>
     /// <returns>The Person model for the creator</returns>
-    private Creator ExtractCreator(XmlNode parentnode)
+    private CreatorCore ExtractCreator(XmlNode parentnode)
     {
-        Creator retval = new();
+        CreatorCore retval = new();
         try
         {
             string? str = string.Empty;

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Voracious.RDF.Enum;
+using Voracious.Core.Enum;
 using Voracious.RDF.Interface;
 
 namespace Voracious.RDF.Model;
 
-public class Resource : IResource
+public class ResourceModel : IResourceModel
 {
     #region properties
     /// <summary>

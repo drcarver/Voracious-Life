@@ -8,7 +8,7 @@ using Voracious.Core.Model;
 
 namespace Voracious.Core.Model;
 
-public class ResourceCore : IResourceCore
+public class ResourceCore : IResource
 {
     #region properties
     /// <summary>
@@ -218,11 +218,10 @@ public class ResourceCore : IResourceCore
     /// </remarks>
     public List<FileFormatCore> FileFormats { get; set; } = [];
 
-    ////
-    //// Next is all of the user-settable things
-    ////
-    ////[ObservableProperty]
-    ////public UserReviewViewModel? review;
+    //
+    // Next is all of the user-settable things
+    //
+    public UserReviewCore? review;
 
     ////[ObservableProperty]
     ////public List<UserNoteViewModel>? notes;

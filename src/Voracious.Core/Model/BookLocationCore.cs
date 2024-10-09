@@ -2,18 +2,20 @@
 using System.Text;
 
 using Newtonsoft.Json;
+using Voracious.Core.Interface;
 
 namespace Voracious.Core.Model;
 
 /// <summary>
 /// Is the location within a book. Does not include the book ID.
 /// </summary>
-public class BookLocationCore
+public class BookLocationCore : IBookLocation
 {
     public BookLocationCore()
     {
 
     }
+
     public BookLocationCore(int htmlIndex, string location)
     {
         HtmlIndex = htmlIndex;

@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 
 using Voracious.Core.Enum;
-using Voracious.Core.Model;
 
 namespace Voracious.Core.Interface;
 
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public interface IResourceCore
+public interface IResource
 {
     /// <summary>
     /// The primary key

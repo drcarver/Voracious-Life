@@ -1,14 +1,12 @@
 ﻿using System;
 
 using Voracious.Core.Enum;
-using Voracious.Core.Model;
 
 namespace Voracious.Core.Interface;
 
-public interface IBookNavigationCore
+public interface IBookNavigation
 {
     int Id { get; set; }
-    ResourceCore Resource { get; set; }
     DateTime MostRecentNavigationDate { get; set; }
     int NumberOfCatalogViews { get; set; }
     int NumberOfSwipeRight { get; set; }

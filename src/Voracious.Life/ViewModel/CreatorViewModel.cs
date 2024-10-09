@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
+using Voracious.Core.Model;
 using Voracious.RDF.Model;
 
 namespace Voracious.Life.ViewModel;
@@ -16,7 +17,7 @@ namespace Voracious.Life.ViewModel;
 /// <summary>
 /// Person can be used for Author, Illustrator, Editor, Translator, etc.
 /// </summary>
-public partial class CreatorViewModel : ObservableObject, ICreator
+public partial class CreatorViewModel : ObservableObject, ICreatorCore
 {
     /// <summary>
     /// The primary key
@@ -105,8 +106,7 @@ public partial class CreatorViewModel : ObservableObject, ICreator
     /// <summary>
     /// The resources the creator has a role in
     /// </summary>
-    public List<Resource> Resources { get; set; }
-    List<RDF.Model.Resource> ICreator.Resources { get; set; }
+    public List<ResourceCore> Resources { get; set; }
 
     /// <summary>
     /// Constructor

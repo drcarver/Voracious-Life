@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Voracious.Core\Voracious.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interface\" />
-  </ItemGroup>
-
 </Project>

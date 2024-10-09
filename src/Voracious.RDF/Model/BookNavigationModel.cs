@@ -1,14 +1,14 @@
 ﻿using System;
 
 using Voracious.Core.Enum;
-using Voracious.Core.Interface;
+using Voracious.RDF.Interface;
 
 namespace Voracious.RDF.Model;
 
-public partial class BookNavigation : IBookNavigationCore
+public partial class BookNavigationModel : IBookNavigationModel
 {
     public int Id { get; set; }
-    public IResourceCore? Resource { get; set; }
+    public ResourceModel? Resource { get; set; }
     public DateTime MostRecentNavigationDate { get; set; } = DateTime.Now;
     public int NumberOfCatalogViews { get; set; }
     public int NumberOfSwipeRight { get; set; }

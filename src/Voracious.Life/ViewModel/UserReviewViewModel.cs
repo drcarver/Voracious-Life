@@ -2,26 +2,27 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using Voracious.RDF.Interface;
+using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
 namespace Voracious.Life.ViewModel;
 
 /// <summary>
 /// User reviews a single book
 /// </summary>
-public partial class UserReviewViewModel : ObservableObject, IUserReview
+public partial class UserReviewViewModel : ObservableObject, IUserReviewCore
 {
     [ObservableProperty]
     private int id;
 
     [ObservableProperty]
-    private ResourceViewModel book;
+    private ResourceCore book;
 
     [ObservableProperty]
-    private DateTimeOffset createDate = DateTimeOffset.UtcNow;
+    private DateTime createDate = DateTime.UtcNow;
 
     [ObservableProperty]
-    private DateTimeOffset mostRecentModificationDate = DateTimeOffset.Now;
+    private DateTime mostRecentModificationDate = DateTime.Now;
 
     [ObservableProperty]
     private double nStars = 0;

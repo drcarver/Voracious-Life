@@ -5,7 +5,7 @@ using Voracious.Core.Interface;
 
 namespace Voracious.Core.Model;
 
-public partial class BookNavigationCore : IBookNavigationCore
+public partial class BookNavigationCore : IBookNavigation
 {
     public int Id { get; set; }
     public ResourceCore? Resource { get; set; }

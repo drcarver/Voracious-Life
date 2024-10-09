@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
-using Voracious.RDF.Model;
+using Voracious.Core.Model;
 
 namespace Voracious.Life.ViewModel;
 
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
 /// </summary>
-public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSearchAreaCore
+public partial class ResourceViewModel : ObservableObject, IResource, IGetSearchAreaCore
 {
     private const string BookSourceGutenberg = "Project Gutenberg";
     private const int NICE_MIN_LEN = 20;
@@ -69,7 +66,7 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// These contributors should not include those listed in dc:creator.
     /// </remarks>
     [ObservableProperty]
-    private List<ICreator> contributors;
+    private List<CreatorCore> contributors;
 
     /// <summary>
     /// The spatial or temporal topic of the resource, the spatial 
@@ -311,7 +308,7 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// Terms for an explanation.
     /// </remarks>
     [ObservableProperty]
-    private List<ICreator> creators = [];
+    private List<CreatorCore> creators = [];
 
     /// <summary>
     /// List of all of the files for this book and their formats.
@@ -562,7 +559,10 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
         if (!string.IsNullOrEmpty(BookSeries)) retval.Add(BookSeries);
     }
 
-    public string? BestAuthorDefaultIsNull => Creators.Cast<Creator>().OrderBy<Creator,>(p => p.GetImportance()).FirstOrDefault()?.Name;
+    public string? BestAuthorDefaultIsNull => Creators.OrderBy(p => p.GetImportance()).FirstOrDefault()?.Name;
+
+    public string FileAs { get; set; }
+    FileTypeEnum? IResource.BookType { get; set; }
 
     /// <summary>
     /// Get a shortened title with author name suitable for being a filename.

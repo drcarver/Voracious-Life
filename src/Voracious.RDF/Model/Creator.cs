@@ -63,7 +63,7 @@ public class Creator : ICreatorCore
     /// <summary>
     /// People include authors, illustrators, etc.
     /// </summary>
-    public List<IResourceCore> Resources { get; set; } = [];
+    public List<IResource> Resources { get; set; } = [];
 
     /// <summary>
     /// Add the alias for the person

@@ -2,27 +2,27 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using Voracious.RDF.Interface;
-using Voracious.RDF.Model;
+using Voracious.Core.Interface;
+using Voracious.Core.Model;
 
 namespace Voracious.Life.ViewModel;
 
 /// <summary>
 /// A user note is also the bookmark system. 
 /// </summary>
-public partial class UserNoteViewModel : ObservableObject, IUserNote
+public partial class UserNoteViewModel : ObservableObject, IUserNoteCore
 {
     [ObservableProperty]
     private int id;
 
     [ObservableProperty]
-    private ResourceViewModel book;
+    private ResourceCore book;
 
     [ObservableProperty]
-    private DateTimeOffset createDate = DateTimeOffset.Now;
+    private DateTime createDate = DateTime.UtcNow;
 
     [ObservableProperty]
-    private DateTimeOffset mostRecentModificationDate = DateTimeOffset.Now;
+    private DateTime mostRecentModificationDate = DateTime.UtcNow;
 
     [ObservableProperty]
     private string location = "";
@@ -84,7 +84,7 @@ public partial class UserNoteViewModel : ObservableObject, IUserNote
             && SelectedText == note.SelectedText;
     }
 
-    public BookLocation LocationToBookLocation()
+    public BookLocationCore LocationToBookLocation()
     {
         return null;
     }

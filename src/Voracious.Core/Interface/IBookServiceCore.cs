@@ -12,7 +12,7 @@ public interface IBookServiceCore
 
     int BookCount();
 
-    IResourceCore? GetBook(string bookId);
+    IResource? GetBook(string bookId);
 
     /// <summary>
     /// List of books in the Gutenberg Top 100
@@ -37,11 +37,11 @@ public interface IBookServiceCore
     /// <param name="bookdb"></param>
     /// <param name="bookId"></param>
     /// <returns></returns>
-    IResourceCore? GetBookFiles(string bookId);
+    IResource? GetBookFiles(string bookId);
 
-    ObservableCollection<IResourceCore> GetAllBookWhichHaveUserData();
+    ObservableCollection<IResource> GetAllBookWhichHaveUserData();
 
-    ObservableCollection<IResourceCore> GetBookRecentWhichHaveUserData();
+    ObservableCollection<IResource> GetBookRecentWhichHaveUserData();
 
     IUserNoteCore? FindBookNote(string bookId);
 
