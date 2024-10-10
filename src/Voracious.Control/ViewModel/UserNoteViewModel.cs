@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Voracious.Core.Interface;
 using Voracious.Core.Model;
 
-namespace Voracious.Life.ViewModel;
+namespace Voracious.Control.ViewModel;
 
 /// <summary>
 /// A user note is also the bookmark system. 

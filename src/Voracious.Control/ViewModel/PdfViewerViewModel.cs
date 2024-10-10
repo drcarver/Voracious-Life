@@ -4,9 +4,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.Extensions.Logging;
 
-using Voracious.Life.Interface;
+using Voracious.Control.Interface;
 
-namespace Voracious.Life.ViewModel;
+namespace Voracious.Control.ViewModel;
 
 public partial class PdfViewerViewModel : ObservableObject, IPdfViewer
 {

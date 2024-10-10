@@ -1,6 +1,6 @@
 using System.Threading;
 
-using Voracious.Life.Interface;
+using Voracious.Control.Interface;
 
 namespace Voracious.Life.View;
 

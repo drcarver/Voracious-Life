@@ -6,7 +6,7 @@ using Voracious.Core.Enum;
 using Voracious.Core.Interface;
 using Voracious.Core.Model;
 
-namespace Voracious.Life.ViewModel;
+namespace Voracious.Control.ViewModel;
 
 /// <summary>
 /// One Gutenberg record for a book (not all data is saved)
@@ -66,7 +66,7 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// These contributors should not include those listed in dc:creator.
     /// </remarks>
     [ObservableProperty]
-    private List<CreatorCore> contributors;
+    private List<CreatorViewModel> contributors;
 
     /// <summary>
     /// The spatial or temporal topic of the resource, the spatial 
@@ -129,7 +129,7 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// Internet Media Types[MIME]
     /// </remarks>
     [ObservableProperty]
-    private List<IFileFormatCore> formats = [];
+    private List<FileFormatViewModel> formats = [];
 
     /// <summary>
     ///  A name given to the resource.
@@ -308,13 +308,13 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// Terms for an explanation.
     /// </remarks>
     [ObservableProperty]
-    private List<CreatorCore> creators = [];
+    private List<CreatorViewModel> creators = [];
 
     /// <summary>
     /// List of all of the files for this book and their formats.
     /// </summary>
     [ObservableProperty]
-    public List<IFileFormatCore> files = [];
+    public List<FileFormatViewModel> files = [];
 
     ////
     //// Next is all of the user-settable things

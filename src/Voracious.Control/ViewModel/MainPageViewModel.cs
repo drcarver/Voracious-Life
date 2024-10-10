@@ -3,10 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Extensions.Logging;
 
+using Voracious.Control.Interface;
 using Voracious.Database.Interface;
-using Voracious.Life.Interface;
 
-namespace Voracious.Life.ViewModel;
+namespace Voracious.Control.ViewModel;
 
 public partial class MainPageViewModel : ObservableObject, IMainPage
 {

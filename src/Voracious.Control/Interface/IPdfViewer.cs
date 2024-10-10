@@ -1,4 +1,4 @@
-﻿namespace Voracious.Life.Interface;
+﻿namespace Voracious.Control.Interface;
 
 public interface IPdfViewer
 {

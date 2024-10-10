@@ -4,7 +4,7 @@ using Voracious.Core.Enum;
 using Voracious.Core.Interface;
 using Voracious.Core.Model;
 
-namespace Voracious.Life.ViewModel;
+namespace Voracious.Control.ViewModel;
 
 public partial class FileFormatViewModel : ObservableObject, IFileFormatCore
 {

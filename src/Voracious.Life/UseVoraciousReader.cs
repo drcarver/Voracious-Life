@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 
-using Voracious.Life.Interface;
+using Voracious.Control.Interface;
+using Voracious.Control.ViewModel;
 using Voracious.Life.View;
-using Voracious.Life.ViewModel;
 
 namespace Voracious.Life;
 
