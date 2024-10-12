@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.PdfViewer;assembly=Syncfusion.Maui.PdfViewer"
+             xmlns:viewmodel="clr-namespace:Voracious.Control.ViewModel;assembly=Voracious.Control"
+             xmlns:local="clr-namespace:Voracious.Life"
+             x:Class="Voracious.Life.View.MainPage"
+             x:DataType="viewmodel:MainPageViewModel">
+
+    <VerticalStackLayout>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" />
+        <!--<CollectionView ItemsSource="{Binding Monkeys}" />-->
+        <Button Text="LoadCatalog" 
+                HorizontalOptions="CenterAndExpand"
+                Command="{Binding UpdateCatalogCommand}" 
+                 />
+    </VerticalStackLayout>
+</ContentPage>

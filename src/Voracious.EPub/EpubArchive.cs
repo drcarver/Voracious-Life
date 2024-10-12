@@ -13,7 +13,10 @@ public class EpubArchive
 
     public EpubArchive(string filePath)
     {
-        if (filePath == null) throw new ArgumentNullException(nameof(filePath));
+        if (filePath == null)
+        {
+            throw new ArgumentNullException(nameof(filePath));
+        }
 
         if (!File.Exists(filePath))
         {
@@ -45,7 +48,10 @@ public class EpubArchive
     /// <returns></returns>
     public ZipArchiveEntry FindEntry(string path)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
         return archive.TryGetEntryImproved(path);
     }
 }

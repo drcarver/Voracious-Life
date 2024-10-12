@@ -142,6 +142,8 @@ public static class ZipArchiveExt
     {
         var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore };
         using (var reader = XmlReader.Create(stream, settings))
+        {
             return XDocument.Load(reader);
+        }
     }
 }

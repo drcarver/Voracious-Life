@@ -35,24 +35,24 @@ static class OpfReader
             EpubVersion = epubVersion,
             Metadata = new OpfMetadata
             {
-                Creators = metadata?.Elements(OpfElements.Creator).AsObjectList(readCreator),
-                Contributors = metadata?.Elements(OpfElements.Contributor).AsObjectList(readCreator),
-                Coverages = metadata?.Elements(OpfElements.Coverages).AsStringList(),
-                Dates = metadata?.Elements(OpfElements.Date).AsObjectList(elem => new OpfMetadataDate
+                Creators = (List<OpfMetadataCreator>)(metadata?.Elements(OpfElements.Creator).AsObjectList(readCreator)),
+                Contributors = (List<OpfMetadataCreator>)(metadata?.Elements(OpfElements.Contributor).AsObjectList(readCreator)),
+                Coverages = (List<string>)(metadata?.Elements(OpfElements.Coverages).AsStringList()),
+                Dates = (List<OpfMetadataDate>)(metadata?.Elements(OpfElements.Date).AsObjectList(elem => new OpfMetadataDate
                 {
                     Text = elem.Value,
                     Event = (string)elem.Attribute(OpfMetadataDate.Attributes.Event)
-                }),
-                Descriptions = metadata?.Elements(OpfElements.Description).AsStringList(),
-                Formats = metadata?.Elements(OpfElements.Format).AsStringList(),
-                Identifiers = metadata?.Elements(OpfElements.Identifier).AsObjectList(elem => new OpfMetadataIdentifier
+                })),
+                Descriptions = (List<string>)(metadata?.Elements(OpfElements.Description).AsStringList()),
+                Formats = (List<string>)(metadata?.Elements(OpfElements.Format).AsStringList()),
+                Identifiers = (List<OpfMetadataIdentifier>)(metadata?.Elements(OpfElements.Identifier).AsObjectList(elem => new OpfMetadataIdentifier
                 {
                     Id = (string)elem.Attribute(OpfMetadataIdentifier.Attributes.Id),
                     Scheme = (string)elem.Attribute(OpfMetadataIdentifier.Attributes.Scheme),
                     Text = elem.Value
-                }),
-                Languages = metadata?.Elements(OpfElements.Language).AsStringList(),
-                Metas = metadata?.Elements(OpfElements.Meta).AsObjectList(elem => new OpfMetadataMeta
+                })),
+                Languages = (List<string>)(metadata?.Elements(OpfElements.Language).AsStringList()),
+                Metas = (List<OpfMetadataMeta>)(metadata?.Elements(OpfElements.Meta).AsObjectList(elem => new OpfMetadataMeta
                 {
                     Id = (string)elem.Attribute(OpfMetadataMeta.Attributes.Id),
                     Name = (string)elem.Attribute(OpfMetadataMeta.Attributes.Name),
@@ -60,14 +60,14 @@ static class OpfReader
                     Scheme = (string)elem.Attribute(OpfMetadataMeta.Attributes.Scheme),
                     Property = (string)elem.Attribute(OpfMetadataMeta.Attributes.Property),
                     Text = epubVersion == EpubVersionEnum.Epub2 ? (string)elem.Attribute(OpfMetadataMeta.Attributes.Content) : elem.Value
-                }),
-                Publishers = metadata?.Elements(OpfElements.Publisher).AsStringList(),
-                Relations = metadata?.Elements(OpfElements.Relation).AsStringList(),
-                Rights = metadata?.Elements(OpfElements.Rights).AsStringList(),
-                Sources = metadata?.Elements(OpfElements.Source).AsStringList(),
-                Subjects = metadata?.Elements(OpfElements.Subject).AsStringList(),
-                Titles = metadata?.Elements(OpfElements.Title).AsStringList(),
-                Types = metadata?.Elements(OpfElements.Type).AsStringList()
+                })),
+                Publishers = (List<string>)(metadata?.Elements(OpfElements.Publisher).AsStringList()),
+                Relations = (List<string>)(metadata?.Elements(OpfElements.Relation).AsStringList()),
+                Rights = (List<string>)(metadata?.Elements(OpfElements.Rights).AsStringList()),
+                Sources = (List<string>)(metadata?.Elements(OpfElements.Source).AsStringList()),
+                Subjects = (List<string>)(metadata?.Elements(OpfElements.Subject).AsStringList()),
+                Titles = (List<string>)(metadata?.Elements(OpfElements.Title).AsStringList()),
+                Types = (List<string>)(metadata?.Elements(OpfElements.Type).AsStringList())
             },
             Guide = guide == null ? null : new OpfGuide
             {
@@ -94,13 +94,13 @@ static class OpfReader
             },
             Spine = new OpfSpine
             {
-                ItemRefs = spine?.Elements(OpfElements.ItemRef).AsObjectList(elem => new OpfSpineItemRef
+                ItemRefs = (List<OpfSpineItemRef>)(spine?.Elements(OpfElements.ItemRef).AsObjectList(elem => new OpfSpineItemRef
                 {
                     IdRef = (string)elem.Attribute(OpfSpineItemRef.Attributes.IdRef),
                     Linear = (string)elem.Attribute(OpfSpineItemRef.Attributes.Linear) != "no",
                     Id = (string)elem.Attribute(OpfSpineItemRef.Attributes.Id),
                     Properties = ((string)elem.Attribute(OpfSpineItemRef.Attributes.Properties))?.Split(' ').ToList() ?? new List<string>()
-                }),
+                })),
                 Toc = spine?.Attribute(OpfSpine.Attributes.Toc)?.Value
             }
         };

@@ -38,7 +38,7 @@ public class EpubBookExt
                 var list = inner.SpecialResources.HtmlInReadingOrder;
                 if (list != null && list.Count > 0)
                 {
-                    return inner.SpecialResources.HtmlInReadingOrder;
+                    return (List<EpubTextFile>)inner.SpecialResources.HtmlInReadingOrder;
                 }
             }
 
@@ -161,7 +161,7 @@ public class EpubBookExt
     List<EpubChapter> _TableOfContentsExt = null;
     public List<EpubChapter> TableOfContents
     {
-        get { return _TableOfContentsExt ?? inner?.TableOfContents; }
+        get { return (List<EpubChapter>)(_TableOfContentsExt ?? inner?.TableOfContents); }
         set { _TableOfContentsExt = value; }
     }
 }

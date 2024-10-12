@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.PdfViewer;assembly=Syncfusion.Maui.PdfViewer"
+             xmlns:control="clr-namespace:Voracious.Control.Component;assembly=Voracious.Control"
+             xmlns:viewmodel="clr-namespace:Voracious.Control.ViewModel;assembly=Voracious.Control"
+             x:Class="Voracious.Life.View.PDFViewerPage"
+             x:DataType="viewmodel:PdfViewerViewModel">
+
+    <Grid>
+        <syncfusion:SfPdfViewer x:Name="PdfViewer"
+                DocumentSource="{Binding PdfDocumentStream}"
+                PasswordRequested="PdfViewer_PasswordRequested"
+                DocumentLoadFailed="PdfViewer_DocumentLoadFailed">
+            <control:PasswordDialogBox x:Name="PasswordDialog"
+                IsVisible="false" 
+                PasswordEntered="PasswordEntered"/>
+            <!--<control:MessageBox x:Name="MessageBox"
+                IsVisible="False"
+                OkClicked="MessageBox_OkClicked" />
+            <HorizontalStackLayout HorizontalOptions="Start">
+                <Button Text="&#xe75f;" 
+                    FontFamily="Maui Material Assets"
+                    Clicked="Button_Clicked"
+                    HorizontalOptions="Start">
+                </Button>
+            </HorizontalStackLayout>-->
+            <control:FlattenOptions x:Name="flattenOptions" 
+                IsVisible="false">
+            </control:FlattenOptions>
+        </syncfusion:SfPdfViewer>
+    </Grid>
+</ContentPage>

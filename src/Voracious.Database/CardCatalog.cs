@@ -6,8 +6,10 @@ using System.Xml;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using Voracious.Core.Enum;
+using Voracious.Core.Model;
 using Voracious.Database.Interface;
-using Voracious.RDF.Enum;
+using Voracious.EPub;
 using Voracious.RDF.Extension;
 using Voracious.RDF.Model;
 
@@ -18,8 +20,6 @@ public partial class CardCatalog : ICardCatalog
     private ILogger<CardCatalog> logger;
 
     private CatalogDataContext Catalogdb { get; }
-
-    private Resource book;
 
     private int SaveAfterNFiles = 0;
     private int SaveSkipCount = 100;
@@ -38,6 +38,7 @@ public partial class CardCatalog : ICardCatalog
 
     public static DateOnly LastUpdateDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-31);
 
+    #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
@@ -62,8 +63,9 @@ public partial class CardCatalog : ICardCatalog
         var ex = e.Exception;
         throw ex;
     }
+    #endregion
 
-    #region Update the Card Catalog from Project Gutenberg
+    #region Pubic API
     /// <summary>
     /// Read through the Gutenberg catalog and update new issues or
     /// add new entries.
@@ -142,6 +144,50 @@ public partial class CardCatalog : ICardCatalog
         }
 
         return Books.Count;
+    }
+
+    /// <summary>
+    /// Import a folder of EPUB files into the card catalog
+    /// </summary>
+    /// <param name="folderPath">The folder of epubs to import</param>
+    /// <returns></returns>
+    public List<EpubBook> ImportEpubFolder(string? fileMask = "*.epub")
+    {
+        string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), $@"Voracious\Import");
+        Directory.CreateDirectory(folder);
+        Directory.SetCurrentDirectory(folder);
+        var epubs = new List<EpubBook>();
+
+        foreach (var file in Directory.GetFiles(folder, fileMask))
+        {
+            var reader = new EpubReader();
+            var epub = reader.Read(file);
+            epubs.Add(epub);
+            Catalogdb.Resources.Add(EpubToResource(file, epub));
+        }
+        return epubs;
+    }
+    #endregion
+
+    #region Convert nodes to card catalog models and properties
+    // Bad MARC records
+    private int NUnknownMarcRecords = 0;
+
+    /// <summary>
+    /// Convert a imported epub to a card catalog resource
+    /// </summary>
+    /// <param name="epub">The epub to convert</param>
+    /// <returns>THe resource for the epub</returns>
+    private Resource EpubToResource(string filepath, EpubBook epub)
+    {
+        string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), $@"Voracious\Library");
+        Directory.CreateDirectory(folder);
+        Directory.SetCurrentDirectory(folder);
+
+        var resource = new Resource();
+        resource.Title = epub.Title;
+        //resource.Issued = epub.Format.Opf.Metadata.Titles
+        return resource;
     }
 
     /// <summary>
@@ -275,23 +321,6 @@ public partial class CardCatalog : ICardCatalog
         }
         return retval;
     }
-    #endregion
-
-    #region Import pubs
-    /// <summary>
-    /// Import a folder of EPUB files into the card catalog
-    /// </summary>
-    /// <param name="folderPath">The folder of epubs to import</param>
-    /// <returns></returns>
-    public async Task ImportEpubFolder(string folderPath)
-    {
-
-    }
-    #endregion
-
-    #region Convert nodes to card catalog models and properties
-    // Bad MARC records
-    private int NUnknownMarcRecords = 0;
 
     /// <summary>
     /// Extract the resource entry from the Catalog
@@ -353,7 +382,7 @@ public partial class CardCatalog : ICardCatalog
                                 haveEpub = true;
                                 break;
                         }
-                        //book.Files.Add(format);
+                        book.FileFormats.Add(format);
                     }
                     break;
                 case "dcterms:issued": // <... rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2015-03-06</...>
@@ -654,11 +683,12 @@ public partial class CardCatalog : ICardCatalog
                 }
 
                 retval.FileName = childFile.Attributes["rdf:about"].Value; // The super critical part!
-                //var formatData = Catalogdb.Files.FirstOrDefault(f => f.FileName == retval.FileName);
-                //if (formatData != null)
-                //{
-                //    return formatData;
-                //}
+                
+                var formatData = Catalogdb.FileFormats.FirstOrDefault(f => f.FileName == retval.FileName);
+                if (formatData != null)
+                {
+                    return formatData;
+                }
                 foreach (var valueObj in childFile.ChildNodes)
                 {
                     var value = valueObj as XmlNode;

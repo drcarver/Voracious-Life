@@ -74,6 +74,58 @@ namespace Voracious.Database.Migrations
                     b.ToTable("Creators", (string)null);
                 });
 
+            modelBuilder.Entity("Voracious.RDF.Model.FileFormat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasComment("The key of the file.");
+
+                    b.Property<int>("CurrentFileStatus")
+                        .HasColumnType("INTEGER")
+                        .HasComment("Current file status.");
+
+                    b.Property<DateTime>("DownloadDate")
+                        .HasColumnType("TEXT")
+                        .HasComment("The download date");
+
+                    b.Property<int>("Extent")
+                        .HasColumnType("INTEGER")
+                        .HasComment("The file extent.");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasComment("The name of the file with this format.");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasComment("The type of the file with this format.");
+
+                    b.Property<DateTime?>("LastModified")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasComment("The date and time the file was created.");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasComment("The file Mime Type.");
+
+                    b.Property<string>("ResourceAbout")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileName");
+
+                    b.HasIndex("ResourceAbout");
+
+                    b.ToTable("FileFormats", (string)null);
+                });
+
             modelBuilder.Entity("Voracious.RDF.Model.Resource", b =>
                 {
                     b.Property<string>("About")
@@ -103,9 +155,6 @@ namespace Voracious.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasComment("Title to file the resource under");
-
-                    b.Property<string>("Formats")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Imprint")
                         .HasColumnType("TEXT")
@@ -181,6 +230,22 @@ namespace Voracious.Database.Migrations
                         .HasForeignKey("ResourcesAbout")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Voracious.RDF.Model.FileFormat", b =>
+                {
+                    b.HasOne("Voracious.RDF.Model.Resource", "Resource")
+                        .WithMany("FileFormats")
+                        .HasForeignKey("ResourceAbout")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Resource");
+                });
+
+            modelBuilder.Entity("Voracious.RDF.Model.Resource", b =>
+                {
+                    b.Navigation("FileFormats");
                 });
 #pragma warning restore 612, 618
         }
