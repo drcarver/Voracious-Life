@@ -79,13 +79,18 @@ public partial class PDFViewerPage : ContentPage
         }
     }
 
-    // Event handler for Button click event, toggles the visibility of flattenOptions.
-    private void Save_Clicked(object sender, EventArgs e)
+    private void MessageBox_OkClicked_1(object sender, EventArgs e)
     {
-        // Toggles the visibility of flattenOptions.
-        if (flattenOptions.IsVisible)
-            flattenOptions.IsVisible = false; // Hides flattenOptions if it's currently visible.
-        else
-            flattenOptions.IsVisible = true; // Shows flattenOptions if it's currently hidden.
+
     }
+
+    // Event handler for Button click event, toggles the visibility of flattenOptions.
+    //private void Button_Clicked(object sender, EventArgs e)
+    //{
+    //    // Toggles the visibility of flattenOptions.
+    //    if (flattenOptions.IsVisible)
+    //        flattenOptions.IsVisible = false; // Hides flattenOptions if it's currently visible.
+    //    else
+    //        flattenOptions.IsVisible = true; // Shows flattenOptions if it's currently hidden.
+    //}
 }

@@ -1,8 +1,8 @@
 ﻿<maui:MauiWinUIApplication
-    x:Class="Voracious.Reader.WinUI.App"
+    x:Class="Voracious.Life.WinUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:Voracious.Reader.WinUI">
+    xmlns:local="using:Voracious.Life.WinUI">
 
 </maui:MauiWinUIApplication>

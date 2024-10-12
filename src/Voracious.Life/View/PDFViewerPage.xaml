@@ -17,13 +17,14 @@
                 PasswordEntered="PasswordEntered"/>
             <!--<control:MessageBox x:Name="MessageBox"
                 IsVisible="False"
-                OkClicked="MessageBox_OkClicked" />-->
+                OkClicked="MessageBox_OkClicked" />
             <HorizontalStackLayout HorizontalOptions="Start">
                 <Button Text="&#xe75f;" 
-                FontFamily="Maui Material Assets"
-                Clicked="Save_Clicked"
-                HorizontalOptions="Start"></Button>
-            </HorizontalStackLayout>
+                    FontFamily="Maui Material Assets"
+                    Clicked="Button_Clicked"
+                    HorizontalOptions="Start">
+                </Button>
+            </HorizontalStackLayout>-->
             <control:FlattenOptions x:Name="flattenOptions" 
                 IsVisible="false">
             </control:FlattenOptions>
