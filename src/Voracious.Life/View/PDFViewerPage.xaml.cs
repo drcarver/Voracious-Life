@@ -1,6 +1,5 @@
-using System.Threading;
-
 using Voracious.Control.Interface;
+using Voracious.Control.PDF;
 
 namespace Voracious.Life.View;
 
@@ -79,18 +78,13 @@ public partial class PDFViewerPage : ContentPage
         }
     }
 
-    private void MessageBox_OkClicked_1(object sender, EventArgs e)
-    {
-
-    }
-
     // Event handler for Button click event, toggles the visibility of flattenOptions.
-    //private void Button_Clicked(object sender, EventArgs e)
-    //{
-    //    // Toggles the visibility of flattenOptions.
-    //    if (flattenOptions.IsVisible)
-    //        flattenOptions.IsVisible = false; // Hides flattenOptions if it's currently visible.
-    //    else
-    //        flattenOptions.IsVisible = true; // Shows flattenOptions if it's currently hidden.
-    //}
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        // Toggles the visibility of flattenOptions.
+        if (flattenOptions.IsVisible)
+            flattenOptions.IsVisible = false; // Hides flattenOptions if it's currently visible.
+        else
+            flattenOptions.IsVisible = true; // Shows flattenOptions if it's currently hidden.
+    }
 }

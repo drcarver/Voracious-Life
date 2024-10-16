@@ -34,27 +34,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Component\FlattenOptions.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-		<Compile Update="Component\MessageBox.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-		<Compile Update="Component\PasswordDialogBox.xaml.cs">
+		<Compile Update="PDF\MessageBox.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiXaml Update="Component\FlattenOptions.xaml">
+		<MauiXaml Update="PDF\FlattenOptions.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Component\MessageBox.xaml">
+		<MauiXaml Update="PDF\MessageBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Component\PasswordDialogBox.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="CardCatalog\" />
 	</ItemGroup>
 
 </Project>
