@@ -218,6 +218,11 @@ public class ResourceCore : IResourceCore
     /// </remarks>
     public List<FileFormatCore> FileFormats { get; set; } = [];
 
+    /// <summary>
+    /// The status of the enum file
+    /// </summary>
+    public FileStatusEnum FileStatus { get; set; }
+
     //
     // Next is all of the user-settable things
     //

@@ -20,7 +20,12 @@ public interface IResourceCore
     /// The title or creator string to file the resource
     /// under
     /// </summary>
-    string FileAs { get; set; }
+    string? FileAs { get; set; }
+
+    /// <summary>
+    /// The File Status of the epub file
+    /// </summary>
+    FileStatusEnum FileStatus { get; set; }
 
     /// <summary>
     /// An alternative name for the resource.

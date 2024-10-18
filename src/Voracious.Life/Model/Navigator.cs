@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Logging;
 
 using Voracious.Control.ViewModel;
+using Voracious.Core.Enum;
 using Voracious.EPub.Interface;
 using Voracious.Life.Enum;
 using Voracious.Life.Interface;
@@ -70,7 +71,7 @@ public partial class Navigator : INavigator
         if (MainBookHandler == null) return false;
 
         // Is the book actually downloaded?
-        if (bookData.DownloadData == null || bookData.DownloadData.CurrFileStatus != DownloadData.FileStatus.Downloaded)
+        if (bookData.FileStatus != FileStatusEnum.Downloaded)
         {
             // TODO: download the book
             return false;

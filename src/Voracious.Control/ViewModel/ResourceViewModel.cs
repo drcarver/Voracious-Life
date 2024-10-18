@@ -48,7 +48,14 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// file format, physical medium, or dimensions of the resource, 
     /// </remarks>
     [ObservableProperty]
-    private FileTypeEnum bookType;
+    private FileTypeEnum? bookType;
+
+    /// <summary>
+    /// The title or creator string to file the resource
+    /// under
+    /// </summary>
+    [ObservableProperty]
+    private string? fileAs = string.Empty;
 
     /// <summary>
     /// An entity responsible for making contributions to the resource.
@@ -113,6 +120,12 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     /// </summary>
     [ObservableProperty]
     private int? downloads;
+
+    /// <summary>
+    /// The file status for the ebook
+    /// </summary>
+    [ObservableProperty]
+    private FileStatusEnum fileStatus;
 
     /// <summary>
     /// The file format, physical medium, or dimensions of the resource.
@@ -560,9 +573,6 @@ public partial class ResourceViewModel : ObservableObject, IResourceCore, IGetSe
     }
 
     public string? BestAuthorDefaultIsNull => Creators.OrderBy(p => p.GetImportance()).FirstOrDefault()?.Name;
-
-    public string FileAs { get; set; }
-    FileTypeEnum? IResourceCore.BookType { get; set; }
 
     /// <summary>
     /// Get a shortened title with author name suitable for being a filename.
