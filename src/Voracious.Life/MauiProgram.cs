@@ -13,7 +13,7 @@ namespace Voracious.Life;
 
 public static class MauiProgram
 {
-    static ILogger logger;
+    static ILogger? logger;
 
     public static MauiApp CreateMauiApp()
     {

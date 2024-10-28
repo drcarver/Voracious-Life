@@ -1,6 +1,6 @@
 ﻿namespace Voracious.EPub.Extensions;
 
-public static class EPubFileExtensionMethods
+public static class EPubFileExt
 {
     public static string FileName(this EpubChapter epub)
     {

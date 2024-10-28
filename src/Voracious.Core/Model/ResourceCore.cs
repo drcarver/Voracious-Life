@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 using Voracious.Core.Enum;
 using Voracious.Core.Interface;
-using Voracious.Core.Model;
 
 namespace Voracious.Core.Model;
 
@@ -20,6 +19,7 @@ public class ResourceCore : IResourceCore
     /// The title or creator string to file the resource
     /// under
     /// </summary>
+    [NotMapped]
     public string FileAs { get; set; } = string.Empty;
     
     /// <summary>
